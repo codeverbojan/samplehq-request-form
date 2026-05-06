@@ -5,11 +5,30 @@
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-**A WordPress plugin purpose-built for collecting product sample requests.**
+A WordPress plugin purpose-built for collecting structured product sample requests.
 
-Normal contact forms are too generic for sample workflows. SampleHQ Request Form gives you a dedicated sample library, a visual form builder with a unique sample picker field, and a submissions dashboard -- all free, all local to your WordPress site.
+Generic contact forms are not built for sample workflows. SampleHQ Request Form gives you a dedicated sample library, a visual form builder, a unique sample picker field, and a submissions dashboard -- all local to your WordPress site.
 
-For teams that need fulfillment tracking, CRM attribution, analytics, multi-user workflows, and revenue visibility, use the full [SampleHQ platform](https://samplehq.io).
+Use it when you need a lightweight WordPress intake system. Use the full [SampleHQ platform](https://samplehq.io) when you need fulfillment tracking, CRM attribution, analytics, team workflows, and revenue visibility.
+
+---
+
+## Current Status
+
+SampleHQ Request Form is in final review before WordPress.org submission. The plugin is suitable for local testing and developer review, but a packaged public release has not been published yet.
+
+Do not use this on production sites with real customer data until a tagged release has been published and tested in your environment.
+
+---
+
+## At a Glance
+
+- **Purpose:** Collect structured product sample requests in WordPress
+- **Best for:** B2B manufacturers, packaging companies, material suppliers, flooring companies, and WooCommerce stores
+- **Embeds:** Shortcode, Gutenberg block, Elementor widget
+- **Data:** Stored locally in WordPress -- no external service required
+- **SaaS required:** No
+- **Status:** Final review before WordPress.org submission
 
 ---
 
@@ -34,6 +53,26 @@ No external accounts. No API keys. No quotas. Install and go.
 - **Any B2B company** that sends physical product samples as part of their sales process
 
 If you're currently using a generic contact form for sample requests and wishing it understood products, this is for you.
+
+---
+
+## Why Not a Normal Form Plugin?
+
+Generic form plugins collect text. Sample requests are product-based.
+
+A real sample request workflow needs product images, SKUs, categories, quantities, structured selections, request history, exportable submissions, and optional WooCommerce product sourcing.
+
+SampleHQ Request Form is built around that workflow from the start.
+
+---
+
+## Demo Flow
+
+1. Create sample records with images, SKUs, categories, and descriptions.
+2. Build a request form using the Sample Picker field.
+3. Embed the form on a product, landing, or catalog page.
+4. Visitors select samples and submit their details.
+5. Manage, filter, star, export, or follow up on requests from WordPress.
 
 ---
 
@@ -76,22 +115,46 @@ Three layers always active with zero configuration: honeypot field, IP-based rat
 - Full WordPress Privacy API integration: personal data export and erasure by email
 
 ### Accessibility
-All forms meet WCAG 2.2 Level AA. Proper `<label>` associations, `aria-required`, `aria-describedby` for errors, `fieldset`/`legend` for groups, keyboard navigation, visible focus rings, screen reader announcements via `aria-live`, and `prefers-reduced-motion` support.
+Built with WCAG 2.2 Level AA accessibility practices in mind, including proper labels, keyboard navigation, visible focus states, screen reader announcements, and reduced-motion support.
 
 ---
 
 ## Screenshots
 
-| # | Screen | What It Shows |
-|---|--------|---------------|
-| 1 | ![Form Builder](.wordpress-org/screenshot-1.png) | **Visual Form Builder** -- drag-and-drop with field palette, sample picker, multi-column rows, form settings panel |
-| 2 | ![Frontend Card Grid](.wordpress-org/screenshot-2.png) | **Frontend Form (Card Grid)** -- sample picker with product images, category tabs, and descriptions |
-| 3 | ![Dashboard](.wordpress-org/screenshot-3.png) | **Dashboard** -- stat cards (samples, forms, submissions, unread), quick actions, recent forms, recent submissions |
-| 4 | ![Frontend Detail](.wordpress-org/screenshot-4.png) | **Frontend Form (Detail)** -- sample picker with search, category filtering, and product details |
-| 5 | ![Submissions](.wordpress-org/screenshot-5.png) | **Submissions Dashboard** -- list table with email, status, star, date, form filter, bulk actions, CSV export |
-| 6 | ![Sample Library](.wordpress-org/screenshot-6.png) | **Sample Library** -- product list with images, SKUs, categories, request counts, and status |
-| 7 | ![Frontend List](.wordpress-org/screenshot-7.png) | **Frontend Form (List View)** -- checklist layout with category tabs and search |
-| 8 | ![Settings](.wordpress-org/screenshot-8.png) | **Settings** -- tabs for General, Spam Protection, Email, SampleHQ Connection, and WooCommerce |
+<p align="center">
+  <img src=".wordpress-org/screenshot-1.png" alt="Visual Form Builder" width="800" /><br />
+  <strong>Visual Form Builder</strong> -- drag-and-drop with field palette, sample picker, multi-column rows, form settings panel
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-2.png" alt="Frontend Form (Card Grid)" width="800" /><br />
+  <strong>Frontend Form (Card Grid)</strong> -- sample picker with product images, category tabs, and descriptions
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-3.png" alt="Dashboard" width="800" /><br />
+  <strong>Dashboard</strong> -- stat cards, quick actions, recent forms, recent submissions
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-7.png" alt="Frontend Form (List View)" width="800" /><br />
+  <strong>Frontend Form (List View)</strong> -- checklist layout with category tabs and search
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-5.png" alt="Submissions Dashboard" width="800" /><br />
+  <strong>Submissions Dashboard</strong> -- filter, search, star, bulk actions, CSV export
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-6.png" alt="Sample Library" width="800" /><br />
+  <strong>Sample Library</strong> -- products with images, SKUs, categories, request counts, and status
+</p>
+
+<p align="center">
+  <img src=".wordpress-org/screenshot-8.png" alt="Settings" width="800" /><br />
+  <strong>Settings</strong> -- tabs for General, Spam Protection, Email, SampleHQ Connection, and WooCommerce
+</p>
 
 ---
 
@@ -262,7 +325,7 @@ npx wp-env clean all      # Reset database
 
 ### Building Assets
 ```bash
-npm run build             # Production build → assets/build/
+npm run build             # Production build -> assets/build/
 npm run start             # Development mode with file watching
 ```
 
@@ -329,7 +392,7 @@ tests/                     86 test files, 18,000+ lines
 
 ## Roadmap
 
-### v1.0.0 (current)
+### Target v1.0.0 Scope
 - Sample library with categories, images, custom fields, CSV import
 - Visual form builder with 17 field types
 - Sample picker (card grid, checklist, list view)
@@ -341,12 +404,12 @@ tests/                     86 test files, 18,000+ lines
 - Email notifications (admin + submitter confirmation)
 - Spam protection (honeypot, rate limiting, Turnstile)
 - Privacy API integration (export + erasure)
-- WCAG 2.2 Level AA accessibility
+- Accessibility (WCAG 2.2 AA practices)
 - Form import/export (JSON), form duplication
 
 ### Post-launch (v1.x)
-- **SampleHQ platform connection** -- one-click sync of submissions to the SampleHQ platform for approval workflows, CRM integration, shipping labels, and revenue attribution
-- One-time data migration wizard (samples, categories, and submission history to the platform)
+- **SampleHQ platform connection** -- sync submissions to the SampleHQ platform for approval workflows, CRM integration, shipping labels, and revenue attribution
+- Data migration wizard (samples, categories, and submission history to the platform)
 
 ### v2
 - **Form builder migration** -- import existing sample request data from Gravity Forms, Contact Form 7, WPForms, Ninja Forms, Formidable Forms, and Fluent Forms into SampleHQ Request Form, with automatic sample library creation from imported submission data
@@ -359,7 +422,7 @@ tests/                     86 test files, 18,000+ lines
 
 **SampleHQ** is the full sample management platform. Use it when you need sample fulfillment tracking, team workflows, approval pipelines, CRM attribution (Salesforce/HubSpot), shipping labels (Shippo), analytics, revenue visibility, and multi-user dashboards.
 
-**The upgrade path:** Install this plugin, build your sample library, collect requests. When you outgrow WordPress-only management, create a SampleHQ account and connect -- your samples, categories, and submission history migrate with one click. Nothing is lost.
+**The upgrade path:** Install this plugin, build your sample library, collect requests. When you outgrow WordPress-only management, SampleHQ will provide a migration path for samples, categories, and submission history.
 
 The plugin works fully standalone. No SampleHQ account is ever required. No features degrade over time. No submission quotas.
 
