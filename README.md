@@ -97,11 +97,18 @@ All forms meet WCAG 2.2 Level AA. Proper `<label>` associations, `aria-required`
 
 ## Installation
 
-1. Download the plugin zip from the repository
-2. Go to **Plugins > Add New > Upload Plugin** in your WordPress admin
-3. Upload the zip and activate
+This plugin has not been published to WordPress.org yet. It is in final review before submission.
 
-The plugin will be available on WordPress.org after the initial review process.
+**For local testing:**
+
+```bash
+git clone https://github.com/codeverbojan/samplehq-request-form.git
+cd samplehq-request-form
+composer install
+npm install && npm run build
+```
+
+Then place the plugin folder in `wp-content/plugins/` and activate "SampleHQ Request Form" from the WordPress admin.
 
 ### Requirements
 - WordPress 6.0+
@@ -346,24 +353,11 @@ tests/                     86 test files, 18,000+ lines
 
 ---
 
-## SampleHQ Request Form vs. SampleHQ Platform
+## SampleHQ Request Form vs. SampleHQ
 
-This plugin and the SampleHQ platform solve different problems at different scales.
+**SampleHQ Request Form** is the lightweight WordPress intake plugin. Use it when you only need to collect structured sample requests on a WordPress site.
 
-| | **This Plugin (Free)** | **SampleHQ Platform** |
-|---|---|---|
-| **What it is** | WordPress plugin for collecting sample requests | Cloud SaaS for managing the full sample lifecycle |
-| **Sample library** | Local to your WordPress site | Cloud-hosted, shared across your team |
-| **Forms** | Built and embedded in WordPress | Built and embedded in WordPress (via this plugin) |
-| **Submissions** | Stored in WordPress, viewed in wp-admin | Synced to SampleHQ, managed in a team dashboard |
-| **Email** | Admin notification + submitter confirmation | Workflow emails: assignment, approval, decline, status |
-| **Approval workflow** | -- | Review, approve, decline pipeline with team assignment |
-| **CRM** | -- | Salesforce and HubSpot sync (contacts, deals) |
-| **Shipping** | -- | Shippo integration for rate shopping + label printing |
-| **Analytics** | -- | Revenue attribution: which samples drive deals |
-| **Team** | Single admin | Roles, assignment, per-user dashboards |
-| **AI** | -- | AI assistant that knows your sample operation |
-| **Price** | Free forever | Paid plans at [samplehq.io](https://samplehq.io) |
+**SampleHQ** is the full sample management platform. Use it when you need sample fulfillment tracking, team workflows, approval pipelines, CRM attribution (Salesforce/HubSpot), shipping labels (Shippo), analytics, revenue visibility, and multi-user dashboards.
 
 **The upgrade path:** Install this plugin, build your sample library, collect requests. When you outgrow WordPress-only management, create a SampleHQ account and connect -- your samples, categories, and submission history migrate with one click. Nothing is lost.
 
