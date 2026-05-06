@@ -437,8 +437,7 @@ class SettingsPage {
 			echo '<tr><th><label for="shqf-woo-cats">' . esc_html__( 'Sample Categories', 'samplehq-request-form' ) . '</label></th>';
 			echo '<td><select id="shqf-woo-cats" name="shqf_woo_sample_categories[]" multiple style="min-width:300px;min-height:120px;">';
 			foreach ( $wc_categories as $wc_cat ) {
-				$sel = in_array( (int) $wc_cat->term_id, array_map( 'intval', $selected_cats ), true ) ? ' selected' : '';
-				echo '<option value="' . esc_attr( (string) $wc_cat->term_id ) . '"' . esc_attr( $sel ) . '>';
+				echo '<option value="' . esc_attr( (string) $wc_cat->term_id ) . '"' . selected( in_array( (int) $wc_cat->term_id, array_map( 'intval', $selected_cats ), true ), true, false ) . '>';
 				echo esc_html( $wc_cat->name ) . '</option>';
 			}
 			echo '</select>';

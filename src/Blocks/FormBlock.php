@@ -100,6 +100,8 @@ class FormBlock {
 				'render_callback' => [ $this, 'render' ],
 			]
 		);
+
+		wp_set_script_translations( 'samplehq-form-form-editor-script', 'samplehq-request-form' );
 	}
 
 	/**

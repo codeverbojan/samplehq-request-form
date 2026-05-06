@@ -155,7 +155,7 @@ class SampleImagesTable {
 		// Fetch all images for the requested samples, ordered so the featured
 		// image (lowest sort_order, then lowest id for ties) comes first per sample.
 		$sql = $this->wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constructor, placeholders from array_fill.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from constructor, placeholders from array_fill.
 			"SELECT sample_id, attachment_id FROM {$this->table} WHERE sample_id IN ({$placeholders}) ORDER BY sort_order ASC, id ASC",
 			$sample_ids
 		);

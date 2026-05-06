@@ -92,7 +92,7 @@ class TextareaField extends AbstractField {
 			if ( '' !== $custom_msg ) {
 				return $custom_msg;
 			}
-			/* translators: 1: field label, 2: minimum character count */
+			/* translators: 1: field label, 2: min length */
 			return sprintf( __( '%1$s must be at least %2$d characters.', 'samplehq-request-form' ), $label, (int) $validation['min_length'] );
 		}
 
@@ -100,7 +100,7 @@ class TextareaField extends AbstractField {
 			if ( '' !== $custom_msg ) {
 				return $custom_msg;
 			}
-			/* translators: 1: field label, 2: maximum character count */
+			/* translators: 1: field label, 2: max length */
 			return sprintf( __( '%1$s must be at most %2$d characters.', 'samplehq-request-form' ), $label, (int) $validation['max_length'] );
 		}
 

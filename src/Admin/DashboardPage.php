@@ -175,8 +175,14 @@ class DashboardPage {
 		$table = $wpdb->prefix . 'shqf_submissions';
 
 		// Count submissions that are status=new AND is_read=0.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $wpdb->prefix, not user input.
-		$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'new' AND is_read = 0" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$table} WHERE status = %s AND is_read = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix, not user input.
+				'new',
+				0
+			)
+		);
 
 		set_transient( 'shqf_unread_count', $count, 60 );
 

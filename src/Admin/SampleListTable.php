@@ -398,7 +398,7 @@ class SampleListTable extends \WP_List_Table {
 		$views['all'] = '<a href="' . esc_url( $base_url ) . '"'
 			. ( empty( $current ) ? ' class="current"' : '' ) . '>'
 			. sprintf(
-				/* translators: %s: total count */
+				/* translators: %s: total form count */
 				__( 'All (%s)', 'samplehq-request-form' ),
 				number_format_i18n( $total )
 			) . '</a>';
@@ -424,7 +424,7 @@ class SampleListTable extends \WP_List_Table {
 			$views['trashed'] = '<a href="' . esc_url( add_query_arg( 'status', 'trashed', $base_url ) ) . '"'
 				. ( 'trashed' === $current ? ' class="current"' : '' ) . '>'
 				. sprintf(
-					/* translators: %s: trashed count */
+					/* translators: %s: trashed form count */
 					__( 'Trash (%s)', 'samplehq-request-form' ),
 					number_format_i18n( $trashed )
 				) . '</a>';

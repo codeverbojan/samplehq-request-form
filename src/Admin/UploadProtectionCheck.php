@@ -93,7 +93,7 @@ class UploadProtectionCheck {
 			return $is_protected;
 		} finally {
 			// Always clean up the probe file.
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink, WordPress.PHP.NoSilencedErrors.Discouraged -- Cleanup of temp probe file; failure is harmless.
 			@unlink( $probe_path );
 		}
 	}

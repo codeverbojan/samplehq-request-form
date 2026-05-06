@@ -80,20 +80,23 @@ class PublicEndpoints {
 						'sanitize_callback' => 'absint',
 					],
 					'shqf_token'            => [
-						'required' => true,
-						'type'     => 'string',
+						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'shqf_hp'               => [
-						'type'    => 'string',
-						'default' => '',
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'shqf_fields'           => [
 						'type'    => 'object',
 						'default' => [],
 					],
 					'cf_turnstile_response' => [
-						'type'    => 'string',
-						'default' => '',
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			]

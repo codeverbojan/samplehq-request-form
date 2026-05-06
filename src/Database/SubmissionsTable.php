@@ -420,7 +420,11 @@ class SubmissionsTable {
 	public function get_distinct_months(): array {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $this->wpdb->get_results(
-			"SELECT DISTINCT YEAR(created_at) AS year, MONTH(created_at) AS month FROM {$this->table} WHERE status NOT IN ('trash','spam') ORDER BY year DESC, month DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$this->wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- false positive; prepare() IS being called here.
+				"SELECT DISTINCT YEAR(created_at) AS year, MONTH(created_at) AS month FROM {$this->table} WHERE status NOT IN (%s,%s) ORDER BY year DESC, month DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix, not user input.
+				'trash',
+				'spam'
+			),
 			ARRAY_A
 		);
 

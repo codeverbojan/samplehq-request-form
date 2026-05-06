@@ -78,6 +78,69 @@ advanced features like approval workflows, CRM sync, and shipping integration.
 Yes. All features listed in the description are free and will remain free. There are
 no time limits, submission quotas, or locked features.
 
+= How do I create a form? =
+
+Go to SampleHQ Forms > Forms > Create Form. The drag-and-drop builder lets you add
+fields from the palette on the left, arrange them in columns, and configure settings
+on the right. Save when done, then embed the form on any page.
+
+= How do I embed a form on a page? =
+
+Three options: use the native **Gutenberg block** (search for "SampleHQ Form" in the
+block inserter), the **Elementor widget**, or the **shortcode** `[samplehq_form id="123"]`
+(replace 123 with your form ID). All three work with any theme.
+
+= How does WooCommerce integration work? =
+
+Install and activate WooCommerce, then go to SampleHQ Forms > Settings > WooCommerce
+(the tab only appears when WooCommerce is active). When enabled, the sample picker
+field uses your WooCommerce products instead of the built-in sample library. A
+"Request a Sample" button is added to product pages, and you can filter which product
+categories are available for sampling.
+
+= How do I configure the sample picker? =
+
+Add a "Sample Picker" field in the form builder. Choose between card grid, list, or
+checklist display modes. Set a maximum selection count, enable category filtering, and
+optionally allow quantity selection. The picker supports search and category tabs.
+
+= How do I set up email notifications? =
+
+Go to SampleHQ Forms > Settings > Email. Configure the admin notification address and
+sender name. Enable submitter confirmation emails to send an automatic reply with the
+submitted data. Individual forms can override the global email settings.
+
+= How do I export submissions? =
+
+Open SampleHQ Forms > Submissions and click the "Export CSV" button. The export includes
+all submission data, custom field values, and metadata. Files are UTF-8 encoded with
+Excel compatibility and formula injection prevention built in.
+
+= What spam protection is available? =
+
+Three layers are always active: a honeypot field, rate limiting (10 submissions per form
+per IP per hour), and CSRF token validation. You can optionally add Cloudflare Turnstile
+(free invisible CAPTCHA) under Settings > Spam Protection.
+
+= Does the plugin support conditional logic? =
+
+Yes. Any field can have conditional visibility rules. Fields hidden by conditions are
+automatically excluded from validation and sanitization, so users are never blocked by
+fields they cannot see.
+
+= How does the multi-step wizard work? =
+
+Set the form layout to "Wizard (Multi-step)" in the form builder settings. The form
+renders as a multi-step flow with a step indicator, step labels, and navigation buttons.
+Each step validates its fields before allowing the user to proceed.
+
+= Is the plugin GDPR compliant? =
+
+The plugin integrates with the WordPress Privacy API for personal data export and
+erasure requests. It includes a consent field type for collecting GDPR consent, IP
+address collection can be disabled, and IP retention can be configured with automatic
+purging after a set number of days.
+
 = Is the plugin accessible? =
 
 Yes. All forms are built following WCAG 2.2 Level AA guidelines, including proper
@@ -85,11 +148,11 @@ labels, keyboard navigation, screen reader support, and focus management.
 
 == Screenshots ==
 
-1. **Sample Library** -- Manage your product samples with categories, images, SKUs, and descriptions.
-2. **Visual Form Builder** -- Drag-and-drop builder with 15+ field types including the unique sample picker.
-3. **Submissions Dashboard** -- View, search, filter, star, and export form submissions.
+1. **Visual Form Builder** -- Drag-and-drop builder with 15+ field types, multi-column layouts, and the unique sample picker field.
+2. **Sample Library** -- Manage your product samples with categories, images, SKUs, and descriptions.
+3. **Submissions Dashboard** -- View, search, filter, star, and export form submissions with real-time status tracking.
 4. **Frontend Form** -- Multi-step wizard form with sample picker, category filters, and search.
-5. **Settings** -- Configure privacy, spam protection, email notifications, and WooCommerce integration.
+5. **Settings** -- Configure spam protection (Cloudflare Turnstile, honeypot, rate limiting), email notifications, and WooCommerce integration.
 6. **Sample Editor** -- Rich editor for sample details with custom fields, categories, and images.
 7. **Product Grid** -- Frontend sample picker with product cards, images, and category filtering.
 

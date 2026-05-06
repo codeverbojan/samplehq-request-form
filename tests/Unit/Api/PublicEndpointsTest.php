@@ -119,4 +119,29 @@ class PublicEndpointsTest extends TestCase {
 
 		unset( $_SERVER['REMOTE_ADDR'] );
 	}
+
+	public function test_register_routes_includes_sanitize_callback(): void {
+		$captured_args = null;
+
+		Monkey\Functions\expect( 'register_rest_route' )
+			->once()
+			->with(
+				'samplehq-form/v1',
+				'/submissions',
+				\Mockery::capture( $captured_args )
+			);
+
+		$processor = \Mockery::mock( FormProcessor::class );
+		$endpoints = new PublicEndpoints( $processor );
+		$endpoints->register_routes();
+
+		$this->assertNotNull( $captured_args );
+		$args = $captured_args['args'];
+
+		$this->assertSame( 'sanitize_text_field', $args['shqf_token']['sanitize_callback'] );
+		$this->assertSame( 'sanitize_text_field', $args['shqf_hp']['sanitize_callback'] );
+		$this->assertSame( 'sanitize_text_field', $args['cf_turnstile_response']['sanitize_callback'] );
+		$this->assertSame( 'absint', $args['form_id']['sanitize_callback'] );
+		$this->assertArrayNotHasKey( 'sanitize_callback', $args['shqf_fields'] );
+	}
 }

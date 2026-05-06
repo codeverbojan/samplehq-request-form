@@ -24,6 +24,7 @@
 /phpstan-constants.php
 /phpunit.xml.dist
 /phpunit-integration.xml.dist
+/assets/src
 /node_modules
 /vendor
 /tests

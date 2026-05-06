@@ -66,7 +66,8 @@ class FormsPage {
 			return;
 		}
 
-		// "new", "duplicate", "export", "delete" handled by handle_early_redirects().
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found -- Routing note, not commented-out code.
+		// Actions "new", "duplicate", "export", "delete" handled by handle_early_redirects().
 
 		// Template selector (choose a template before creating a new form).
 		if ( 'templates' === $action ) {

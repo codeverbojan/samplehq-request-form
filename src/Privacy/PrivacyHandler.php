@@ -180,7 +180,7 @@ class PrivacyHandler {
 	 * @param int    $page          Page number (for pagination).
 	 * @return array{items_removed: int, items_retained: int, messages: string[], done: bool}
 	 */
-	public function erase_personal_data( string $email_address, int $page = 1 ): array {
+	public function erase_personal_data( string $email_address, int $page = 1 ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $page required by WP privacy eraser signature.
 		$submissions = $this->submissions->find_by_email( $email_address, self::PAGE_SIZE );
 		$removed     = 0;
 		$ips_cleaned = [];

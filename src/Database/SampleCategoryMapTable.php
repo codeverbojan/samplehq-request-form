@@ -194,7 +194,7 @@ class SampleCategoryMapTable {
 		$placeholders = implode( ',', array_fill( 0, count( $sample_ids ), '%d' ) );
 
 		$sql = $this->wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constructor, placeholders from array_fill.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from constructor, placeholders from array_fill.
 			"SELECT sample_id, category_id FROM {$this->table} WHERE sample_id IN ({$placeholders})",
 			$sample_ids
 		);

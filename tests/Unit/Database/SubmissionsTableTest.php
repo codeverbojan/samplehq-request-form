@@ -315,4 +315,46 @@ class SubmissionsTableTest extends TestCase {
 
 		$this->table->create( 1, [], [ 'user_agent' => $long_ua ] );
 	}
+
+	public function test_get_distinct_months_uses_prepare(): void {
+		$this->wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with(
+				Mockery::on(
+					static fn( string $sql ) => str_contains( $sql, 'SELECT DISTINCT YEAR' )
+						&& str_contains( $sql, 'status NOT IN' )
+				),
+				'trash',
+				'spam'
+			)
+			->andReturn( "SELECT DISTINCT YEAR(created_at) AS year, MONTH(created_at) AS month FROM wp_shqf_submissions WHERE status NOT IN ('trash','spam') ORDER BY year DESC, month DESC" );
+
+		$this->wpdb->shouldReceive( 'get_results' )
+			->once()
+			->andReturn( [
+				[ 'year' => '2026', 'month' => '5' ],
+				[ 'year' => '2026', 'month' => '4' ],
+			] );
+
+		$result = $this->table->get_distinct_months();
+
+		$this->assertCount( 2, $result );
+		$this->assertSame( 2026, $result[0]['year'] );
+		$this->assertSame( 5, $result[0]['month'] );
+		$this->assertSame( 4, $result[1]['month'] );
+	}
+
+	public function test_get_distinct_months_returns_empty_for_no_results(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( '' );
+		$this->wpdb->shouldReceive( 'get_results' )->once()->andReturn( [] );
+
+		$this->assertSame( [], $this->table->get_distinct_months() );
+	}
+
+	public function test_get_distinct_months_returns_empty_on_null_db_error(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( '' );
+		$this->wpdb->shouldReceive( 'get_results' )->once()->andReturn( null );
+
+		$this->assertSame( [], $this->table->get_distinct_months() );
+	}
 }

@@ -250,7 +250,7 @@ class Mailer {
 	 * @param array<string, mixed> $form       Form data.
 	 * @return string HTML email body.
 	 */
-	private function build_confirmation_body( array $submission, array $meta, array $form ): string {
+	private function build_confirmation_body( array $submission, array $meta, array $form ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $meta and $form passed to template via compact().
 		$submitter_name = trim( ( $submission['first_name'] ?? '' ) . ' ' . ( $submission['last_name'] ?? '' ) );
 		$site_name      = get_bloginfo( 'name' );
 

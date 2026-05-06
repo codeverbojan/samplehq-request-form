@@ -668,11 +668,13 @@ class SubmissionsPage {
 			return (string) $value;
 		}
 
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found -- JSON schema documentation, not commented-out code.
 		// Name field: { "first_name": "...", "last_name": "..." }.
 		if ( isset( $decoded['first_name'] ) || isset( $decoded['last_name'] ) ) {
 			return trim( ( $decoded['first_name'] ?? '' ) . ' ' . ( $decoded['last_name'] ?? '' ) );
 		}
 
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found -- JSON schema documentation, not commented-out code.
 		// Address field: { "street": "...", "city": "...", ... }.
 		if ( isset( $decoded['street'] ) || isset( $decoded['city'] ) ) {
 			$parts = array_filter(
@@ -688,6 +690,7 @@ class SubmissionsPage {
 			return implode( ', ', $parts );
 		}
 
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found -- JSON schema documentation, not commented-out code.
 		// Sample picker: [ { "id": 33, "quantity": 1, "name": "...", ... }, ... ].
 		if ( isset( $decoded[0]['id'] ) ) {
 			$items = [];

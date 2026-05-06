@@ -115,7 +115,7 @@ class AdminMenu {
 	 * @param string $hook_suffix Current admin page hook.
 	 * @return void
 	 */
-	public function enqueue_admin_assets( string $hook_suffix ): void {
+	public function enqueue_admin_assets( string $hook_suffix ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $hook_suffix required by admin_enqueue_scripts hook signature.
 		// Only load on our plugin pages.
 		$screen = get_current_screen();
 		if ( null === $screen || false === strpos( $screen->id, 'shqf' ) ) {

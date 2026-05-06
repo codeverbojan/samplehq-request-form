@@ -107,6 +107,7 @@ class TextField extends AbstractField {
 		if ( ! empty( $validation['pattern'] ) ) {
 			$pattern = $validation['pattern'];
 			// Wrap in delimiters, escape slashes inside.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- User-provided regex may be invalid; @ suppresses PHP warning, treats as non-match.
 			if ( ! @preg_match( '/' . str_replace( '/', '\\/', $pattern ) . '/', $str ) ) {
 				if ( '' !== $custom_msg ) {
 					return $custom_msg;

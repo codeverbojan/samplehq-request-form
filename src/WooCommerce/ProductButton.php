@@ -95,7 +95,7 @@ class ProductButton {
 	 * @param array       $args    Optional button args (may not be passed by all callers).
 	 * @return string Modified HTML with sample badge appended.
 	 */
-	public function filter_loop_link( string $link, $product, $args = [] ): string {
+	public function filter_loop_link( string $link, $product, $args = [] ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args required by woocommerce_loop_add_to_cart_link filter signature.
 		if ( ! $product instanceof \WC_Product ) {
 			return $link;
 		}

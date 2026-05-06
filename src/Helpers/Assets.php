@@ -39,6 +39,8 @@ class Assets {
 			true
 		);
 
+		wp_set_script_translations( 'shqf-' . $handle, 'samplehq-request-form' );
+
 		// Ensure the REST API nonce is available for apiFetch.
 		wp_localize_script(
 			'shqf-' . $handle,
