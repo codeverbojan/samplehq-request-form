@@ -132,6 +132,7 @@ html.shqf-modal-open {
 
 /* Mobile: full viewport modal. */
 @media (max-width: 640px) {
+
 	.shqf-woo-modal {
 		padding: 0;
 	}

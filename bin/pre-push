@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Pre-push hook: runs PHPCS, PHPStan, and unit tests.
-# Prevents pushing code that would fail CI.
+# Pre-push hook: mirrors CI checks locally before every push.
+# Runs PHPCS, PHPStan, ESLint, Stylelint, and unit tests.
 #
 # Install: cp bin/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 # Or run: composer run setup-hooks
@@ -29,6 +29,24 @@ if ! php -d memory_limit=2G vendor/bin/phpstan analyze --no-progress --memory-li
     exit 1
 fi
 echo "  ✓ PHPStan passed"
+
+# ESLint
+echo "▸ ESLint..."
+if ! npm run lint:js 2>&1; then
+    echo ""
+    echo "❌ ESLint failed. Fix JS lint errors before pushing."
+    exit 1
+fi
+echo "  ✓ ESLint passed"
+
+# Stylelint
+echo "▸ Stylelint..."
+if ! npm run lint:css 2>&1; then
+    echo ""
+    echo "❌ Stylelint failed. Fix CSS lint errors before pushing."
+    exit 1
+fi
+echo "  ✓ Stylelint passed"
 
 # Unit tests
 echo "▸ Unit tests..."

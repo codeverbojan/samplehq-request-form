@@ -278,7 +278,7 @@ function createField( type ) {
 
 /**
  * Flatten all leaf fields from a (possibly nested) fields array.
- * @param fields
+ * @param {Array} fields
  */
 function flattenFields( fields ) {
 	const flat = [];
@@ -296,8 +296,8 @@ function flattenFields( fields ) {
 
 /**
  * Find a field anywhere in the tree by ID.
- * @param fields
- * @param id
+ * @param {Array}  fields
+ * @param {string} id
  */
 function findFieldInTree( fields, id ) {
 	for ( const field of fields ) {
@@ -318,8 +318,8 @@ function findFieldInTree( fields, id ) {
 
 /**
  * Remove a field from anywhere in the tree. Returns a new array.
- * @param fields
- * @param id
+ * @param {Array}  fields
+ * @param {string} id
  */
 function removeFieldFromTree( fields, id ) {
 	const result = [];
@@ -344,8 +344,8 @@ function removeFieldFromTree( fields, id ) {
 
 /**
  * Update a field anywhere in the tree. Returns a new array.
- * @param fields
- * @param updatedField
+ * @param {Array}  fields
+ * @param {Object} updatedField
  */
 function updateFieldInTree( fields, updatedField ) {
 	return fields.map( ( field ) => {
@@ -367,9 +367,9 @@ function updateFieldInTree( fields, updatedField ) {
 
 /**
  * Insert a field before a target ID anywhere in the tree.
- * @param fields
- * @param targetId
- * @param newField
+ * @param {Array}  fields
+ * @param {string} targetId
+ * @param {Object} newField
  */
 function insertBeforeInTree( fields, targetId, newField ) {
 	const result = [];
@@ -398,9 +398,9 @@ function insertBeforeInTree( fields, targetId, newField ) {
 
 /**
  * Insert a field after a target ID anywhere in the tree.
- * @param fields
- * @param targetId
- * @param newField
+ * @param {Array}  fields
+ * @param {string} targetId
+ * @param {Object} newField
  */
 function insertAfterInTree( fields, targetId, newField ) {
 	const result = [];
@@ -429,10 +429,10 @@ function insertAfterInTree( fields, targetId, newField ) {
 
 /**
  * Insert a field at the end of a specific row column.
- * @param fields
- * @param rowId
- * @param colIndex
- * @param newField
+ * @param {Array}  fields
+ * @param {string} rowId
+ * @param {number} colIndex
+ * @param {Object} newField
  */
 function insertIntoColumn( fields, rowId, colIndex, newField ) {
 	return fields.map( ( field ) => {
@@ -457,8 +457,8 @@ function insertIntoColumn( fields, rowId, colIndex, newField ) {
 /**
  * Find which container a field is in and its index.
  * Returns { container, index, rowId?, colIndex? } or null.
- * @param fields
- * @param id
+ * @param {Array}  fields
+ * @param {string} id
  */
 function findFieldLocation( fields, id ) {
 	for ( let i = 0; i < fields.length; i++ ) {
@@ -487,11 +487,11 @@ function findFieldLocation( fields, id ) {
 
 /**
  * Reorder within a specific column using arrayMove.
- * @param fields
- * @param rowId
- * @param colIndex
- * @param oldIdx
- * @param newIdx
+ * @param {Array}  fields
+ * @param {string} rowId
+ * @param {number} colIndex
+ * @param {number} oldIdx
+ * @param {number} newIdx
  */
 function reorderInColumn( fields, rowId, colIndex, oldIdx, newIdx ) {
 	return fields.map( ( field ) => {
@@ -515,8 +515,8 @@ function reorderInColumn( fields, rowId, colIndex, oldIdx, newIdx ) {
 
 /**
  * Field preview -- shows a visual representation of the field.
- * @param root0
- * @param root0.field
+ * @param {Object} root0
+ * @param {Object} root0.field
  */
 function FieldPreview( { field } ) {
 	const ph = field.placeholder || '';
@@ -810,7 +810,7 @@ function FieldPreview( { field } ) {
 
 /**
  * Get a human-readable label for a field type.
- * @param type
+ * @param {string} type
  */
 function getFieldLabel( type ) {
 	const def = ALL_FIELD_TYPES.find( ( t ) => t.type === type );
@@ -826,9 +826,9 @@ function getFieldLabel( type ) {
  */
 /**
  * Draggable palette item -- can be dragged onto the canvas to insert at position.
- * @param root0
- * @param root0.fieldType
- * @param root0.onAdd
+ * @param {Object}   root0
+ * @param {Object}   root0.fieldType
+ * @param {Function} root0.onAdd
  */
 function DraggablePaletteItem( { fieldType, onAdd } ) {
 	const dragId = 'new_' + fieldType.type;
@@ -848,6 +848,11 @@ function DraggablePaletteItem( { fieldType, onAdd } ) {
 			role="button"
 			tabIndex={ 0 }
 			onClick={ () => onAdd( fieldType.type ) }
+			onKeyDown={ ( e ) => {
+				if ( e.key === 'Enter' || e.key === ' ' ) {
+					onAdd( fieldType.type );
+				}
+			} }
 		>
 			<IconComponent size={ 20 } strokeWidth={ 1.5 } aria-hidden="true" />
 			<span>{ fieldType.label }</span>
@@ -908,9 +913,9 @@ function FieldPalette( { onAdd } ) {
 /**
  * Sample Picker settings -- source filter, layout, quantities.
  * Fetches categories and samples from REST API for the filter controls.
- * @param root0
- * @param root0.field
- * @param root0.onChange
+ * @param {Object}   root0
+ * @param {Object}   root0.field
+ * @param {Function} root0.onChange
  */
 function SamplePickerSettings( { field, onChange } ) {
 	const [ categories, setCategories ] = useState( [] );
@@ -962,10 +967,7 @@ function SamplePickerSettings( { field, onChange } ) {
 		<>
 			{ wooEnabled && (
 				<PanelBody
-					title={ __(
-						'Product Source',
-						'samplehq-request-form'
-					) }
+					title={ __( 'Product Source', 'samplehq-request-form' ) }
 					initialOpen
 				>
 					<SelectControl
@@ -1012,147 +1014,164 @@ function SamplePickerSettings( { field, onChange } ) {
 			) }
 
 			{ source !== 'woocommerce' && (
-			<PanelBody
-				title={ __( 'Sample Source', 'samplehq-request-form' ) }
-				initialOpen
-			>
-				<SelectControl
-					label={ __( 'Show Samples', 'samplehq-request-form' ) }
-					value={ mode }
-					options={ [
-						{
-							label: __(
-								'All active samples',
-								'samplehq-request-form'
-							),
-							value: 'all',
-						},
-						{
-							label: __(
-								'From specific categories',
-								'samplehq-request-form'
-							),
-							value: 'categories',
-						},
-						{
-							label: __(
-								'Specific samples only',
-								'samplehq-request-form'
-							),
-							value: 'selected',
-						},
-					] }
-					onChange={ ( val ) => updateFilter( { mode: val } ) }
-				/>
+				<PanelBody
+					title={ __( 'Sample Source', 'samplehq-request-form' ) }
+					initialOpen
+				>
+					<SelectControl
+						label={ __( 'Show Samples', 'samplehq-request-form' ) }
+						value={ mode }
+						options={ [
+							{
+								label: __(
+									'All active samples',
+									'samplehq-request-form'
+								),
+								value: 'all',
+							},
+							{
+								label: __(
+									'From specific categories',
+									'samplehq-request-form'
+								),
+								value: 'categories',
+							},
+							{
+								label: __(
+									'Specific samples only',
+									'samplehq-request-form'
+								),
+								value: 'selected',
+							},
+						] }
+						onChange={ ( val ) => updateFilter( { mode: val } ) }
+					/>
 
-				{ mode === 'categories' && (
-					<div className="shqf-settings-checklist">
-						<p className="shqf-settings-checklist-label">
-							{ __(
-								'Select categories:',
-								'samplehq-request-form'
+					{ mode === 'categories' && (
+						<div className="shqf-settings-checklist">
+							<p className="shqf-settings-checklist-label">
+								{ __(
+									'Select categories:',
+									'samplehq-request-form'
+								) }
+							</p>
+							{ loading && (
+								<p className="description">
+									{ __(
+										'Loading…',
+										'samplehq-request-form'
+									) }
+								</p>
 							) }
-						</p>
-						{ loading && (
-							<p className="description">
-								{ __( 'Loading…', 'samplehq-request-form' ) }
-							</p>
-						) }
-						{ ! loading && categories.length === 0 && (
-							<p className="description">
-								{ __(
-									'No categories found. Create categories in the Samples section.',
-									'samplehq-request-form'
-								) }
-							</p>
-						) }
-						<div className="shqf-settings-checklist-items">
-							{ categories.map( ( cat ) => {
-								const catId = parseInt( cat.id, 10 );
-								const checked = (
-									filter.category_ids || []
-								).includes( catId );
-								return (
-									<label
-										key={ catId }
-										className="shqf-settings-checklist-item"
-									>
-										<input
-											type="checkbox"
-											checked={ checked }
-											onChange={ () =>
-												updateFilter( {
-													category_ids:
-														toggleArrayItem(
-															filter.category_ids ||
-																[],
-															catId
-														),
-												} )
-											}
-										/>
-										{ cat.name }
-									</label>
-								);
-							} ) }
+							{ ! loading && categories.length === 0 && (
+								<p className="description">
+									{ __(
+										'No categories found. Create categories in the Samples section.',
+										'samplehq-request-form'
+									) }
+								</p>
+							) }
+							<div className="shqf-settings-checklist-items">
+								{ categories.map( ( cat ) => {
+									const catId = parseInt( cat.id, 10 );
+									const checked = (
+										filter.category_ids || []
+									).includes( catId );
+									const inputId = `shqf-cat-${ catId }`;
+									return (
+										<label
+											key={ catId }
+											htmlFor={ inputId }
+											className="shqf-settings-checklist-item"
+										>
+											<input
+												id={ inputId }
+												type="checkbox"
+												checked={ checked }
+												onChange={ () =>
+													updateFilter( {
+														category_ids:
+															toggleArrayItem(
+																filter.category_ids ||
+																	[],
+																catId
+															),
+													} )
+												}
+											/>
+											{ cat.name }
+										</label>
+									);
+								} ) }
+							</div>
 						</div>
-					</div>
-				) }
+					) }
 
-				{ mode === 'selected' && (
-					<div className="shqf-settings-checklist">
-						<p className="shqf-settings-checklist-label">
-							{ __( 'Select samples:', 'samplehq-request-form' ) }
-						</p>
-						{ loading && (
-							<p className="description">
-								{ __( 'Loading…', 'samplehq-request-form' ) }
-							</p>
-						) }
-						{ ! loading && samples.length === 0 && (
-							<p className="description">
+					{ mode === 'selected' && (
+						<div className="shqf-settings-checklist">
+							<p className="shqf-settings-checklist-label">
 								{ __(
-									'No samples found. Add samples in the Sample Library.',
+									'Select samples:',
 									'samplehq-request-form'
 								) }
 							</p>
-						) }
-						<div className="shqf-settings-checklist-items">
-							{ samples.map( ( sample ) => {
-								const sId = parseInt( sample.id, 10 );
-								const checked = (
-									filter.sample_ids || []
-								).includes( sId );
-								return (
-									<label
-										key={ sId }
-										className="shqf-settings-checklist-item"
-									>
-										<input
-											type="checkbox"
-											checked={ checked }
-											onChange={ () =>
-												updateFilter( {
-													sample_ids: toggleArrayItem(
-														filter.sample_ids || [],
-														sId
-													),
-												} )
-											}
-										/>
-										{ sample.name }
-										{ sample.sku && (
-											<span className="shqf-settings-sku">
-												{ sample.sku }
-											</span>
-										) }
-									</label>
-								);
-							} ) }
+							{ loading && (
+								<p className="description">
+									{ __(
+										'Loading…',
+										'samplehq-request-form'
+									) }
+								</p>
+							) }
+							{ ! loading && samples.length === 0 && (
+								<p className="description">
+									{ __(
+										'No samples found. Add samples in the Sample Library.',
+										'samplehq-request-form'
+									) }
+								</p>
+							) }
+							<div className="shqf-settings-checklist-items">
+								{ samples.map( ( sample ) => {
+									const sId = parseInt( sample.id, 10 );
+									const checked = (
+										filter.sample_ids || []
+									).includes( sId );
+									const sInputId = `shqf-sample-${ sId }`;
+									return (
+										<label
+											key={ sId }
+											htmlFor={ sInputId }
+											className="shqf-settings-checklist-item"
+										>
+											<input
+												id={ sInputId }
+												type="checkbox"
+												checked={ checked }
+												onChange={ () =>
+													updateFilter( {
+														sample_ids:
+															toggleArrayItem(
+																filter.sample_ids ||
+																	[],
+																sId
+															),
+													} )
+												}
+											/>
+											{ sample.name }
+											{ sample.sku && (
+												<span className="shqf-settings-sku">
+													{ sample.sku }
+												</span>
+											) }
+										</label>
+									);
+								} ) }
+							</div>
 						</div>
-					</div>
-				) }
-			</PanelBody>
+					) }
+				</PanelBody>
 			) }
 
 			<PanelBody
@@ -1226,7 +1245,7 @@ function SamplePickerSettings( { field, onChange } ) {
 
 /**
  * Slugify a string for use as a field key.
- * @param str
+ * @param {string} str
  */
 function slugify( str ) {
 	return str
@@ -1238,20 +1257,20 @@ function slugify( str ) {
 
 /**
  * Form-level settings panel -- shown when no field is selected.
- * @param root0
- * @param root0.subtitle
- * @param root0.layout
- * @param root0.behavior
- * @param root0.appearance
- * @param root0.display
- * @param root0.email
- * @param root0.meta
- * @param root0.onSubtitle
- * @param root0.onLayout
- * @param root0.onBehavior
- * @param root0.onAppearance
- * @param root0.onDisplay
- * @param root0.onEmail
+ * @param {Object}   root0
+ * @param {string}   root0.subtitle
+ * @param {Object}   root0.layout
+ * @param {Object}   root0.behavior
+ * @param {Object}   root0.appearance
+ * @param {Object}   root0.display
+ * @param {Object}   root0.email
+ * @param {Object}   root0.meta
+ * @param {Function} root0.onSubtitle
+ * @param {Function} root0.onLayout
+ * @param {Function} root0.onBehavior
+ * @param {Function} root0.onAppearance
+ * @param {Function} root0.onDisplay
+ * @param {Function} root0.onEmail
  */
 function FormSettingsPanel( {
 	subtitle,
@@ -1549,10 +1568,11 @@ function FormSettingsPanel( {
 					initialOpen={ false }
 				>
 					<div className="shqf-settings-color-row">
-						<label>
+						<label htmlFor="shqf-primary-color">
 							{ __( 'Primary Color', 'samplehq-request-form' ) }
 						</label>
 						<input
+							id="shqf-primary-color"
 							type="color"
 							value={ appearance.primary_color || '#0F766E' }
 							onChange={ ( e ) =>
@@ -1565,10 +1585,11 @@ function FormSettingsPanel( {
 						<code>{ appearance.primary_color || '#0F766E' }</code>
 					</div>
 					<div className="shqf-settings-color-row">
-						<label>
+						<label htmlFor="shqf-button-color">
 							{ __( 'Button Color', 'samplehq-request-form' ) }
 						</label>
 						<input
+							id="shqf-button-color"
 							type="color"
 							value={
 								appearance.button_color ||
@@ -1878,8 +1899,8 @@ function FieldSettings( { field, fields: allFields, onChange } ) {
 
 	/**
 	 * Generate a unique key by appending _2, _3 etc. if the key already exists.
-	 * @param baseKey
-	 * @param currentFieldId
+	 * @param {string} baseKey
+	 * @param {string} currentFieldId
 	 */
 	const uniqueKey = ( baseKey, currentFieldId ) => {
 		const otherKeys = flattenFields( allFields || [] )
@@ -2681,14 +2702,14 @@ function FieldSettings( { field, fields: allFields, onChange } ) {
 
 /**
  * Single sortable field card in the canvas.
- * @param root0
- * @param root0.field
- * @param root0.isSelected
- * @param root0.onSelect
- * @param root0.onRemove
- * @param root0.onDuplicate
- * @param root0.isCanvasDragging
- * @param root0.confirmingDeleteId
+ * @param {Object}      root0
+ * @param {Object}      root0.field
+ * @param {boolean}     root0.isSelected
+ * @param {Function}    root0.onSelect
+ * @param {Function}    root0.onRemove
+ * @param {Function}    root0.onDuplicate
+ * @param {boolean}     root0.isCanvasDragging
+ * @param {string|null} root0.confirmingDeleteId
  */
 function SortableField( {
 	field,
@@ -2816,17 +2837,17 @@ function SortableField( {
 
 /**
  * Droppable column zone inside a row group.
- * @param root0
- * @param root0.rowId
- * @param root0.colIndex
- * @param root0.colFields
- * @param root0.selectedId
- * @param root0.onSelect
- * @param root0.onRemove
- * @param root0.onDuplicate
- * @param root0.isDraggingField
- * @param root0.isCanvasDragging
- * @param root0.confirmingDeleteId
+ * @param {Object}      root0
+ * @param {string}      root0.rowId
+ * @param {number}      root0.colIndex
+ * @param {Array}       root0.colFields
+ * @param {string|null} root0.selectedId
+ * @param {Function}    root0.onSelect
+ * @param {Function}    root0.onRemove
+ * @param {Function}    root0.onDuplicate
+ * @param {boolean}     root0.isDraggingField
+ * @param {boolean}     root0.isCanvasDragging
+ * @param {string|null} root0.confirmingDeleteId
  */
 function ColumnDropZone( {
 	rowId,
@@ -2885,15 +2906,15 @@ function ColumnDropZone( {
 
 /**
  * Sortable row group -- renders a row container with column drop zones.
- * @param root0
- * @param root0.row
- * @param root0.isSelected
- * @param root0.selectedId
- * @param root0.onSelect
- * @param root0.onRemove
- * @param root0.onDuplicate
- * @param root0.isDraggingField
- * @param root0.confirmingDeleteId
+ * @param {Object}      root0
+ * @param {Object}      root0.row
+ * @param {boolean}     root0.isSelected
+ * @param {string|null} root0.selectedId
+ * @param {Function}    root0.onSelect
+ * @param {Function}    root0.onRemove
+ * @param {Function}    root0.onDuplicate
+ * @param {boolean}     root0.isDraggingField
+ * @param {string|null} root0.confirmingDeleteId
  */
 function SortableRowGroup( {
 	row,
@@ -2929,10 +2950,19 @@ function SortableRowGroup( {
 			className={ `shqf-builder-row ${
 				isSelected ? 'shqf-builder-row--selected' : ''
 			}` }
+			role="button"
+			tabIndex={ 0 }
 			onClick={ ( e ) => {
 				// Only select row when clicking the row header, not column contents.
 				if ( e.target.closest( '.shqf-builder-row-header' ) ) {
 					onSelect( row.id );
+				}
+			} }
+			onKeyDown={ ( e ) => {
+				if ( e.key === 'Enter' || e.key === ' ' ) {
+					if ( e.target.closest( '.shqf-builder-row-header' ) ) {
+						onSelect( row.id );
+					}
 				}
 			} }
 		>
@@ -3053,9 +3083,18 @@ function FormCanvas( {
 			className={ `shqf-builder-canvas-wrap ${
 				isDragging ? 'shqf-builder-canvas-wrap--dragging' : ''
 			}` }
+			role="button"
+			tabIndex={ 0 }
 			onClick={ ( e ) => {
 				if ( e.target === e.currentTarget ) {
 					onSelect( null );
+				}
+			} }
+			onKeyDown={ ( e ) => {
+				if ( e.key === 'Enter' || e.key === ' ' ) {
+					if ( e.target === e.currentTarget ) {
+						onSelect( null );
+					}
 				}
 			} }
 		>
@@ -3231,7 +3270,7 @@ function FormBuilder( {
 		setFields( ( prev ) => [ ...prev, newField ] );
 		setSelectedId( newField.id );
 		// Scroll to the new field after React renders it.
-		requestAnimationFrame( () => {
+		window.requestAnimationFrame( () => {
 			const el =
 				document.querySelector(
 					`[data-id="${ newField.id }"], #${ newField.id }`
@@ -3469,10 +3508,12 @@ function FormBuilder( {
 
 			// Undo: Ctrl/Cmd+Z (without Shift).
 			if ( mod && e.key === 'z' && ! e.shiftKey ) {
+				// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 				const tag = document.activeElement?.tagName;
 				if (
 					tag === 'INPUT' ||
 					tag === 'TEXTAREA' ||
+					// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 					document.activeElement?.isContentEditable
 				) {
 					return; // Let native undo handle text inputs.
@@ -3487,10 +3528,12 @@ function FormBuilder( {
 				( mod && e.key === 'z' && e.shiftKey ) ||
 				( mod && e.key === 'y' )
 			) {
+				// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 				const tag = document.activeElement?.tagName;
 				if (
 					tag === 'INPUT' ||
 					tag === 'TEXTAREA' ||
+					// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 					document.activeElement?.isContentEditable
 				) {
 					return;
@@ -3515,10 +3558,12 @@ function FormBuilder( {
 			}
 
 			// Don't trigger when typing in inputs, textareas, selects, or contenteditable.
+			// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 			const tag = document.activeElement?.tagName;
 			if ( tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' ) {
 				return;
 			}
+			// eslint-disable-next-line @wordpress/no-global-active-element -- global keydown handler, no ref available.
 			if ( document.activeElement?.isContentEditable ) {
 				return;
 			}
@@ -3634,7 +3679,7 @@ function FormBuilder( {
 				}
 
 				setSelectedId( newField.id );
-				requestAnimationFrame( () => {
+				window.requestAnimationFrame( () => {
 					const el = document.querySelector(
 						'.shqf-builder-canvas > :last-child'
 					);
@@ -3717,7 +3762,7 @@ function FormBuilder( {
 							'samplehq-request-form'
 						) }
 						onClick={ ( e ) => {
-							// eslint-disable-next-line no-alert
+							/* eslint-disable no-alert */
 							if (
 								isDirty &&
 								! window.confirm(
@@ -3729,6 +3774,7 @@ function FormBuilder( {
 							) {
 								e.preventDefault();
 							}
+							/* eslint-enable no-alert */
 						} }
 					>
 						<ArrowLeft size={ 18 } />

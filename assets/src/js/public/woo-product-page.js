@@ -5,7 +5,7 @@
  * product pages. The form HTML is pre-rendered server-side and initialized
  * by form-frontend.js. This script only manages modal UX.
  *
- * @package SampleHQForm
+ * @package
  */
 
 import '../../css/public/woo-modal.css';
@@ -15,6 +15,7 @@ import '../../css/public/woo-modal.css';
 
 	const MODAL_ID = 'shqf-woo-modal';
 	let modal = null;
+	// eslint-disable-next-line no-unused-vars -- Retained for future focus-management use.
 	let triggerButton = null;
 	let previouslyFocused = null;
 
@@ -78,13 +79,13 @@ import '../../css/public/woo-modal.css';
 		}
 
 		triggerButton = btn;
+		// eslint-disable-next-line @wordpress/no-global-active-element -- No component ref available in vanilla JS context.
 		previouslyFocused = document.activeElement;
 
 		const productId = btn.dataset.productId;
-		const productName = btn.dataset.productName;
 
 		// Pre-select the product in the sample picker if present.
-		preselectProduct( productId, productName );
+		preselectProduct( productId );
 
 		// Show modal.
 		modal.style.display = 'flex';
@@ -129,7 +130,7 @@ import '../../css/public/woo-modal.css';
 	/**
 	 * Check if the modal is currently open.
 	 *
-	 * @return {boolean}
+	 * @return {boolean} Whether the modal is currently visible.
 	 */
 	function isOpen() {
 		return modal && modal.style.display !== 'none';
@@ -141,10 +142,9 @@ import '../../css/public/woo-modal.css';
 	 * Finds the checkbox matching the product ID, checks it, and triggers
 	 * the change event so the picker JS updates its selection state.
 	 *
-	 * @param {string} productId  WC product ID.
-	 * @param {string} productName Product name (for fallback matching).
+	 * @param {string} productId WC product ID.
 	 */
-	function preselectProduct( productId, productName ) {
+	function preselectProduct( productId ) {
 		if ( ! modal || ! productId ) {
 			return;
 		}
@@ -185,37 +185,49 @@ import '../../css/public/woo-modal.css';
 
 		// Uncheck all sample picker checkboxes and remove selected state.
 		let didUncheck = false;
-		modal.querySelectorAll( '.shqf-picker-item--selected' ).forEach( ( item ) => {
-			item.classList.remove( 'shqf-picker-item--selected' );
-			item.removeAttribute( 'aria-checked' );
-			const cb = item.querySelector( 'input[type="checkbox"]' );
-			if ( cb && cb.checked ) {
-				cb.checked = false;
-				didUncheck = true;
-			}
-		} );
+		modal
+			.querySelectorAll( '.shqf-picker-item--selected' )
+			.forEach( ( item ) => {
+				item.classList.remove( 'shqf-picker-item--selected' );
+				item.removeAttribute( 'aria-checked' );
+				const cb = item.querySelector( 'input[type="checkbox"]' );
+				if ( cb && cb.checked ) {
+					cb.checked = false;
+					didUncheck = true;
+				}
+			} );
 
 		// Dispatch change to sync form-frontend.js internal state (selection bar, count).
 		if ( didUncheck ) {
-			const firstCb = modal.querySelector( '.shqf-picker-item input[type="checkbox"]' );
+			const firstCb = modal.querySelector(
+				'.shqf-picker-item input[type="checkbox"]'
+			);
 			if ( firstCb ) {
-				firstCb.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+				firstCb.dispatchEvent(
+					new Event( 'change', { bubbles: true } )
+				);
 			}
 		}
 
 		// Reset quantity values to 1.
-		modal.querySelectorAll( '.shqf-picker-item-qty-value' ).forEach( ( el ) => {
-			el.textContent = '1';
-		} );
-		modal.querySelectorAll( '.shqf-picker-item-qty' ).forEach( ( input ) => {
-			input.value = '1';
-		} );
+		modal
+			.querySelectorAll( '.shqf-picker-item-qty-value' )
+			.forEach( ( el ) => {
+				el.textContent = '1';
+			} );
+		modal
+			.querySelectorAll( '.shqf-picker-item-qty' )
+			.forEach( ( input ) => {
+				input.value = '1';
+			} );
 
 		// Clear search input.
 		const searchInput = modal.querySelector( '.shqf-picker-search' );
 		if ( searchInput ) {
 			searchInput.value = '';
-			searchInput.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			searchInput.dispatchEvent(
+				new Event( 'input', { bubbles: true } )
+			);
 		}
 
 		// Reset category pills to "All".
@@ -256,7 +268,11 @@ import '../../css/public/woo-modal.css';
 		const siblings = document.body.children;
 		for ( let i = 0; i < siblings.length; i++ ) {
 			const el = siblings[ i ];
-			if ( el === modal || el.tagName === 'SCRIPT' || el.tagName === 'LINK' ) {
+			if (
+				el === modal ||
+				el.tagName === 'SCRIPT' ||
+				el.tagName === 'LINK'
+			) {
 				continue;
 			}
 			if ( inert ) {
@@ -289,10 +305,12 @@ import '../../css/public/woo-modal.css';
 		const last = focusable[ focusable.length - 1 ];
 
 		if ( e.shiftKey ) {
+			// eslint-disable-next-line @wordpress/no-global-active-element -- No component ref available in vanilla JS context.
 			if ( document.activeElement === first ) {
 				e.preventDefault();
 				last.focus();
 			}
+			// eslint-disable-next-line @wordpress/no-global-active-element -- No component ref available in vanilla JS context.
 		} else if ( document.activeElement === last ) {
 			e.preventDefault();
 			first.focus();

@@ -211,6 +211,7 @@ import '../../css/public/form.css';
 				console.error( '[SampleHQ Form] Submission failed:', result );
 			}
 		} catch ( err ) {
+			// eslint-disable-next-line no-console -- Intentional error logging for network failures.
 			console.error( '[SampleHQ Form] Network error:', err );
 			showMessage(
 				messagesEl,
@@ -399,9 +400,7 @@ import '../../css/public/form.css';
 			if ( stepEl && stepEl.getAttribute( 'aria-hidden' ) === 'true' ) {
 				return;
 			}
-			const checked = picker.querySelectorAll(
-				'.shqf-sr-only:checked'
-			);
+			const checked = picker.querySelectorAll( '.shqf-sr-only:checked' );
 			if ( checked.length === 0 ) {
 				const errorId = picker.getAttribute( 'aria-describedby' );
 				if ( errorId ) {
@@ -784,17 +783,21 @@ import '../../css/public/form.css';
 
 			// Update "Next: {step label}" text dynamically.
 			if ( ! isLast ) {
-				const form = nextBtn.closest( 'form' ) || nextBtn.closest( '.shqf-form-wrapper' )?.querySelector( 'form' );
-				const labelsInput = form?.querySelector( 'input[name="shqf_step_labels"]' );
+				const form =
+					nextBtn.closest( 'form' ) ||
+					nextBtn
+						.closest( '.shqf-form-wrapper' )
+						?.querySelector( 'form' );
+				const labelsInput = form?.querySelector(
+					'input[name="shqf_step_labels"]'
+				);
 				if ( labelsInput ) {
 					try {
 						const labels = JSON.parse( labelsInput.value );
 						const nextLabel = labels[ current + 1 ] || '';
 						// Preserve the SVG icon (last child).
 						const icon = nextBtn.querySelector( 'svg' );
-						const text = nextLabel
-							? 'Next: ' + nextLabel
-							: 'Next';
+						const text = nextLabel ? 'Next: ' + nextLabel : 'Next';
 						nextBtn.textContent = text;
 						if ( icon ) {
 							nextBtn.appendChild( icon );
@@ -815,6 +818,7 @@ import '../../css/public/form.css';
 	 *
 	 * @param {Element|null} wrapper Form wrapper element.
 	 * @param {number}       current Current step index (0-based).
+	 * @param {number}       _total
 	 */
 	// eslint-disable-next-line no-unused-vars -- Kept for API compatibility.
 	function updateStepper( wrapper, current, _total ) {
@@ -994,9 +998,7 @@ import '../../css/public/form.css';
 			'.shqf-picker[aria-required="true"]'
 		);
 		pickers.forEach( ( picker ) => {
-			const checked = picker.querySelectorAll(
-				'.shqf-sr-only:checked'
-			);
+			const checked = picker.querySelectorAll( '.shqf-sr-only:checked' );
 			if ( checked.length === 0 ) {
 				const errorId = picker.getAttribute( 'aria-describedby' );
 				if ( errorId ) {
@@ -1016,6 +1018,7 @@ import '../../css/public/form.css';
 	 * @return {string|null} Error message or null.
 	 */
 	function validateInput( input, form ) {
+		// eslint-disable-next-line @wordpress/no-unused-vars-before-return -- Used in both branches of the required check below.
 		const value = input.value.trim();
 
 		// Required check.
@@ -1154,9 +1157,7 @@ import '../../css/public/form.css';
 					item.addEventListener( 'click', ( e ) => {
 						// Don't toggle if clicking on qty controls.
 						if (
-							e.target.closest(
-								'.shqf-picker-item-qty-controls'
-							)
+							e.target.closest( '.shqf-picker-item-qty-controls' )
 						) {
 							return;
 						}
@@ -1187,11 +1188,11 @@ import '../../css/public/form.css';
 					} );
 				} );
 
-				// Quantity stepper +/- buttons.
-				setupQuantitySteppers( picker );
+			// Quantity stepper +/- buttons.
+			setupQuantitySteppers( picker );
 
-				// Search and category pill filtering.
-				setupPickerFiltering( picker );
+			// Search and category pill filtering.
+			setupPickerFiltering( picker );
 		} );
 	}
 
@@ -1230,9 +1231,7 @@ import '../../css/public/form.css';
 		}
 
 		function filterItems() {
-			const query = ( searchInput?.value || '' )
-				.toLowerCase()
-				.trim();
+			const query = ( searchInput?.value || '' ).toLowerCase().trim();
 			const isFiltering = query !== '' || activeCategory !== '';
 
 			let visibleCount = 0;
@@ -1333,8 +1332,12 @@ import '../../css/public/form.css';
 				return;
 			}
 
-			const hiddenInput = controls.querySelector( '.shqf-picker-item-qty' );
-			const display = controls.querySelector( '.shqf-picker-item-qty-value' );
+			const hiddenInput = controls.querySelector(
+				'.shqf-picker-item-qty'
+			);
+			const display = controls.querySelector(
+				'.shqf-picker-item-qty-value'
+			);
 			if ( ! hiddenInput || ! display ) {
 				return;
 			}
