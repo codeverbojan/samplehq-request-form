@@ -90,9 +90,9 @@ class ProductButton {
 	/**
 	 * Append a "Free sample available" badge after the Add to Cart link in shop loops.
 	 *
-	 * @param string      $link    The existing Add to Cart link HTML.
-	 * @param \WC_Product $product The product.
-	 * @param array       $args    Optional button args (may not be passed by all callers).
+	 * @param string               $link    The existing Add to Cart link HTML.
+	 * @param \WC_Product          $product The product.
+	 * @param array<string, mixed> $args    Optional button args (may not be passed by all callers).
 	 * @return string Modified HTML with sample badge appended.
 	 */
 	public function filter_loop_link( string $link, $product, $args = [] ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args required by woocommerce_loop_add_to_cart_link filter signature.
@@ -191,7 +191,7 @@ class ProductButton {
 		}
 
 		$terms = get_the_terms( $product->get_id(), 'product_tag' );
-		if ( ! is_array( $terms ) || is_wp_error( $terms ) ) {
+		if ( ! is_array( $terms ) ) {
 			return false;
 		}
 

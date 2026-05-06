@@ -327,7 +327,7 @@ class WooCommerceSource implements ProductSourceInterface {
 
 		$map = [];
 		foreach ( $terms as $term ) {
-			$map[ (int) $term->object_id ][] = $term->name;
+			$map[ (int) $term->object_id ][] = $term->name; // @phpstan-ignore property.notFound
 		}
 
 		// Build a term_id => name lookup for fallback resolution.

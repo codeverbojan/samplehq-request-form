@@ -113,7 +113,7 @@ class Migrator {
 	 * @return bool True if lock acquired, false if another process holds it.
 	 */
 	private function acquire_lock(): bool {
-		$acquired = add_option( self::LOCK_KEY, time(), '', 'no' );
+		$acquired = add_option( self::LOCK_KEY, time(), '', false );
 
 		if ( $acquired ) {
 			return true;

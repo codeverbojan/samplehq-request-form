@@ -25,6 +25,7 @@
 	"require-dev": {
 		"brain/monkey": "^2.6",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"php-stubs/woocommerce-stubs": "^10.7",
 		"php-stubs/wordpress-stubs": "^6.0",
 		"phpcompatibility/phpcompatibility-wp": "^2.1",
 		"phpstan/extension-installer": "^1.0",
@@ -55,6 +56,9 @@
 			"@lint",
 			"@analyze",
 			"@test"
-		]
+		],
+		"setup-hooks": "cp bin/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push",
+		"post-install-cmd": "@setup-hooks",
+		"post-update-cmd": "@setup-hooks"
 	}
 }

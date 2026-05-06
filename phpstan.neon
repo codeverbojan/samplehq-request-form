@@ -6,3 +6,5 @@ parameters:
 		- src/Elementor
 	bootstrapFiles:
 		- phpstan-constants.php
+	scanFiles:
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php

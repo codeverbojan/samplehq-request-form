@@ -376,10 +376,10 @@ class Plugin {
 	/**
 	 * Register the Elementor form widget.
 	 *
-	 * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager.
+	 * @param object $widgets_manager Elementor widgets manager (Elementor\Widgets_Manager).
 	 * @return void
 	 */
-	public static function register_elementor_widget( $widgets_manager ): void {
+	public static function register_elementor_widget( object $widgets_manager ): void {
 		$widgets_manager->register( new Elementor\FormWidget() );
 	}
 

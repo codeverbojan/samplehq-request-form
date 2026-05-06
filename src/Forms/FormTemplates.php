@@ -290,27 +290,6 @@ class FormTemplates {
 	}
 
 	/**
-	 * Textarea field config.
-	 *
-	 * @param string $key        Field key.
-	 * @param string $label      Field label.
-	 * @param bool   $required   Whether required.
-	 * @param int    $step_index Step index.
-	 * @return array<string, mixed>
-	 */
-	private static function textarea_field( string $key, string $label, bool $required, int $step_index ): array {
-		return [
-			'id'         => self::field_id(),
-			'type'       => 'textarea',
-			'key'        => $key,
-			'label'      => $label,
-			'required'   => $required,
-			'enabled'    => true,
-			'step_index' => $step_index,
-		];
-	}
-
-	/**
 	 * Sample picker field config.
 	 *
 	 * @param string $layout     Layout: 'grid' or 'list'.

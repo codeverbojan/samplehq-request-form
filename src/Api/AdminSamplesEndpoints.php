@@ -34,13 +34,6 @@ class AdminSamplesEndpoints extends AdminEndpointBase {
 	private SamplesTable $samples;
 
 	/**
-	 * Sample categories repository.
-	 *
-	 * @var SampleCategoriesTable
-	 */
-	private SampleCategoriesTable $categories;
-
-	/**
 	 * Sample-to-category mapping repository.
 	 *
 	 * @var SampleCategoryMapTable
@@ -58,18 +51,17 @@ class AdminSamplesEndpoints extends AdminEndpointBase {
 	 * Constructor.
 	 *
 	 * @param SamplesTable           $samples      Samples repo.
-	 * @param SampleCategoriesTable  $categories   Categories repo.
+	 * @param SampleCategoriesTable  $_categories  Categories repo (unused — kept for DI signature stability).
 	 * @param SampleCategoryMapTable $category_map Category map repo.
 	 * @param SampleImagesTable      $images       Images repo.
 	 */
-	public function __construct(
+	public function __construct( // @phpstan-ignore constructor.unusedParameter
 		SamplesTable $samples,
-		SampleCategoriesTable $categories,
+		SampleCategoriesTable $_categories, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed -- DI container passes all table deps; removing breaks instantiation.
 		SampleCategoryMapTable $category_map,
 		SampleImagesTable $images
 	) {
 		$this->samples      = $samples;
-		$this->categories   = $categories;
 		$this->category_map = $category_map;
 		$this->images       = $images;
 	}

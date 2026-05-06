@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Pre-push hook: runs PHPCS, PHPStan, and unit tests.
+# Prevents pushing code that would fail CI.
+#
+# Install: cp bin/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Or run: composer run setup-hooks
+#
+
+set -euo pipefail
+
+echo "🔍 Running pre-push checks..."
+echo ""
+
+# PHPCS
+echo "▸ PHPCS..."
+if ! composer lint -- -q 2>&1; then
+    echo ""
+    echo "❌ PHPCS failed. Fix lint errors before pushing."
+    exit 1
+fi
+echo "  ✓ PHPCS passed"
+
+# PHPStan
+echo "▸ PHPStan..."
+if ! php -d memory_limit=2G vendor/bin/phpstan analyze --no-progress --memory-limit=2G 2>&1; then
+    echo ""
+    echo "❌ PHPStan failed. Fix static analysis errors before pushing."
+    exit 1
+fi
+echo "  ✓ PHPStan passed"
+
+# Unit tests
+echo "▸ Unit tests..."
+if ! php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit 2>&1; then
+    echo ""
+    echo "❌ Unit tests failed. Fix failing tests before pushing."
+    exit 1
+fi
+echo "  ✓ Unit tests passed"
+
+echo ""
+echo "✅ All pre-push checks passed."

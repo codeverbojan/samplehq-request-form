@@ -78,7 +78,7 @@ class LibrarySource implements ProductSourceInterface {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param array $filters Optional filters passed to SamplesTable::list_all().
+	 * @param array<string, mixed> $filters Optional filters passed to SamplesTable::list_all().
 	 */
 	public function get_samples( array $filters = [] ): array {
 		return $this->samples->list_all( $filters );
