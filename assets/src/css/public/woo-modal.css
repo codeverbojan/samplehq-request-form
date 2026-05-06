@@ -1,0 +1,203 @@
+/**
+ * WooCommerce Product Page Modal Styles
+ *
+ * Scoped under .shqf-woo-modal to avoid conflicts with WooCommerce themes.
+ * The modal always renders in light mode regardless of system preference
+ * to match the white modal panel background.
+ */
+
+/* Prevent body scroll when modal is open. */
+html.shqf-modal-open {
+	overflow: hidden;
+}
+
+/* Modal overlay container. */
+.shqf-woo-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+}
+
+/* Semi-transparent backdrop. */
+.shqf-woo-modal__backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal content panel. */
+.shqf-woo-modal__content {
+	position: relative;
+	width: 100%;
+	max-width: 640px;
+	max-height: calc(100vh - 32px);
+	overflow-y: auto;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+	color-scheme: light;
+}
+
+/* Header with title and close button. */
+.shqf-woo-modal__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 24px 0;
+	gap: 12px;
+}
+
+.shqf-woo-modal__title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.3;
+	color: #1a1a1a;
+}
+
+.shqf-woo-modal__close {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	background: #fff;
+	color: #666;
+	cursor: pointer;
+	transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.shqf-woo-modal__close:hover {
+	background: #f5f5f5;
+	border-color: #ccc;
+	color: #1a1a1a;
+}
+
+.shqf-woo-modal__close:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+.shqf-woo-modal__close svg {
+	width: 20px;
+	height: 20px;
+}
+
+/* Form container inside modal. */
+.shqf-woo-modal__body {
+	padding: 20px 24px 24px;
+}
+
+/* Override form wrapper layout inside the modal (no shadow/border/padding). */
+.shqf-woo-modal__body .shqf-form-wrapper {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+	box-shadow: none;
+	border: none;
+	border-radius: 0;
+}
+
+/* Category pills in light mode. */
+.shqf-woo-modal__body .shqf-pill {
+	color: #344054;
+	background: #f2f4f7;
+	border-color: #e4e7ec;
+}
+
+.shqf-woo-modal__body .shqf-pill--active {
+	background: var(--shqf-primary, #0f766e);
+	border-color: var(--shqf-primary, #0f766e);
+	color: #fff;
+}
+
+/* Labels and legends in light mode. */
+.shqf-woo-modal__body label,
+.shqf-woo-modal__body legend {
+	color: #344054;
+}
+
+/* Picker status text. */
+.shqf-woo-modal__body .shqf-picker-status {
+	color: #667085;
+}
+
+/* Mobile: full viewport modal. */
+@media (max-width: 640px) {
+	.shqf-woo-modal {
+		padding: 0;
+	}
+
+	.shqf-woo-modal__content {
+		max-width: 100%;
+		max-height: 100vh;
+		border-radius: 0;
+	}
+}
+
+/* ==========================================================================
+   "Request a Sample" button -- Single Product Page.
+
+   Rendered OUTSIDE form.cart via woocommerce_after_add_to_cart_form.
+   No CSS grid hacks needed -- the button is in the normal document flow.
+   Styled as an outline/ghost button for secondary visual hierarchy:
+   Add to Cart = primary (theme-styled, filled), Sample = secondary (outline).
+   ========================================================================== */
+
+.shqf-woo-request-wrap {
+	margin: 12px 0;
+}
+
+.shqf-woo-request-btn {
+	display: inline-block;
+	padding: 0.6em 1.5em;
+	font-size: inherit;
+	font-weight: 500;
+	line-height: 1.5;
+	color: #333;
+	background: transparent;
+	border: 1.5px solid #888;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.15s, border-color 0.15s;
+}
+
+.shqf-woo-request-btn:hover {
+	background: rgba(0, 0, 0, 0.04);
+	border-color: #555;
+}
+
+.shqf-woo-request-btn:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+/* ==========================================================================
+   "Free sample available" -- Shop/Archive Loop Badge.
+
+   Appended to the Add to Cart link via woocommerce_loop_add_to_cart_link
+   filter. Small text link, centered, unobtrusive.
+   ========================================================================== */
+
+.shqf-woo-sample-badge {
+	display: block;
+	margin-top: 0.5em;
+	padding: 0;
+	font-size: 0.8em;
+	color: #0f766e;
+	text-decoration: none;
+	text-align: center;
+}
+
+.shqf-woo-sample-badge:hover {
+	text-decoration: underline;
+	color: #0d6358;
+}

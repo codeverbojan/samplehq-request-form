@@ -1,0 +1,221 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2, cs2pr
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: PHP syntax check
+        run: find src/ -name '*.php' -exec php -l {} \; 2>&1 | grep -i 'error' && exit 1 || true
+
+      - name: PHPCS
+        run: composer lint -- -q --report=checkstyle | cs2pr
+
+      - name: PHPStan
+        run: composer analyze -- --no-progress --error-format=github
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint:js
+
+      - name: Stylelint
+        run: npm run lint:css
+
+  test-unit:
+    name: Unit Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run unit tests
+        run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --testdox
+
+  test-integration:
+    name: Integration (WP ${{ matrix.wp }} / PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - wp: '6.4'
+            php: '8.1'
+          - wp: '6.7'
+            php: '8.2'
+          - wp: '6.9'
+            php: '8.2'
+          - wp: '6.9'
+            php: '8.4'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Create wp-env override
+        run: |
+          cat > .wp-env.override.json << 'WPENV'
+          {
+            "core": "WordPress/WordPress#${{ matrix.wp }}",
+            "phpVersion": "${{ matrix.php }}"
+          }
+          WPENV
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Activate plugin on test site
+        run: npx wp-env run tests-cli wp plugin activate samplehq-request-form --quiet
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+      - name: Stop wp-env
+        if: always()
+        run: npx wp-env stop
+
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Run E2E tests
+        run: npx playwright test --project=chromium
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7
+
+      - name: Stop wp-env
+        if: always()
+        run: npx wp-env stop
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          test -f assets/build/form-builder.js || (echo "Missing form-builder.js" && exit 1)
+          test -f assets/build/form-frontend.js || (echo "Missing form-frontend.js" && exit 1)
+          test -f assets/build/form-frontend.css || (echo "Missing form-frontend.css" && exit 1)
+          echo "Build output verified."
+
+      - name: Build distribution zip
+        run: |
+          mkdir -p build/samplehq-request-form
+          rsync -rc --exclude-from=.distignore . build/samplehq-request-form/
+          cd build && zip -r samplehq-request-form.zip samplehq-request-form/
+
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: samplehq-request-form
+          path: build/samplehq-request-form.zip
+          retention-days: 7

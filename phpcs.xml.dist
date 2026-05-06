@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ruleset name="SampleHQ Request Form">
+	<description>WordPress Coding Standards for SampleHQ Request Form plugin.</description>
+
+	<!-- Scan these files -->
+	<file>./src</file>
+	<file>./samplehq-request-form.php</file>
+	<file>./uninstall.php</file>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/assets/build/*</exclude-pattern>
+	<exclude-pattern>/tests/*</exclude-pattern>
+
+	<!-- Show progress and sniff codes in all reports -->
+	<arg value="ps"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+
+	<!-- WordPress Coding Standards -->
+	<rule ref="WordPress-Extra">
+		<!-- Allow short array syntax -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+		<!-- PSR-4 autoloading requires PascalCase filenames, not WP class-*.php -->
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+	<rule ref="WordPress-Docs"/>
+
+	<!-- Allow reserved keyword "class" as autoloader parameter name -->
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames.classFound">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Check for correct text domain -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="samplehq-request-form"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Minimum supported WP version for deprecated function checks -->
+	<config name="minimum_wp_version" value="6.0"/>
+
+	<!-- PHP compatibility -->
+	<config name="testVersion" value="8.0-"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

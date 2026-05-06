@@ -1,0 +1,44 @@
+# Development files excluded from the wordpress.org release zip.
+/.DS_Store
+/.editorconfig
+/.eslintrc.js
+/.gitignore
+/.distignore
+/.git
+/.stylelintrc.json
+/.prettierrc.js
+/.phpunit.cache
+/.wp-env.json
+/.wp-env.override.json
+/.wordpress-org
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/webpack.config.js
+/phpcs.xml.dist
+/playwright.config.ts
+/playwright.woo.config.ts
+/phpstan.neon
+/phpstan-baseline.neon
+/phpstan-constants.php
+/phpunit.xml.dist
+/phpunit-integration.xml.dist
+/node_modules
+/vendor
+/tests
+/test-results
+
+# GitHub, scripts, and contributing (development only).
+/.github
+/.claude
+/bin
+/CONTRIBUTING.md
+
+# Plans, specs, and dev-only files.
+/.plans
+/private
+/design-reference
+*.bak
+/E2E_TEST_PLAN.md
+/FORM_PARITY_PLAN.md

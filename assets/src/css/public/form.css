@@ -1,0 +1,1561 @@
+/**
+ * SampleHQ Form - Public form styles
+ *
+ * Matches the SampleHQ platform design system (Space Grotesk + Inter).
+ * Themeable via CSS custom properties set by FormRenderer inline styles.
+ *
+ * @package SampleHQForm
+ */
+
+/* ==========================================================================
+   Custom Properties
+   ========================================================================== */
+
+.shqf-form-wrapper {
+	--shqf-primary: #0f766e;
+	--shqf-button-bg: #0f766e;
+	--shqf-button-text: #fff;
+	--shqf-radius: 8px;
+	--shqf-text-color: #0d0d0d;
+	--shqf-muted-color: #7a7a7a;
+	--shqf-border-color: #e8e8e8;
+	--shqf-label-color: #374151;
+	--shqf-input-bg: #fff;
+	--shqf-surface-bg: #fafafa;
+	--shqf-error-color: #e42313;
+	--shqf-success-color: #22c55e;
+	--shqf-focus-ring: 0 0 0 3px rgba(15, 118, 110, 0.25);
+
+	font-family: Inter, system-ui, -apple-system, sans-serif;
+	color: var(--shqf-text-color);
+	max-width: 640px;
+	padding: 0 32px;
+	box-sizing: border-box;
+	line-height: 1.5;
+}
+
+/* Wizard layout uses wider container */
+.shqf-form-wrapper--wizard {
+	max-width: 800px;
+}
+
+.shqf-form-wrapper *,
+.shqf-form-wrapper *::before,
+.shqf-form-wrapper *::after {
+	box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Form Layout
+   ========================================================================== */
+
+.shqf-form {
+	margin: 0;
+	padding: 0;
+}
+
+.shqf-fields {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px 16px;
+}
+
+.shqf-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.shqf-field--full {
+	width: 100%;
+}
+
+.shqf-field--half {
+	width: calc(50% - 10px);
+}
+
+/* Label beside input (left-aligned) */
+.shqf-field--label-left {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto auto;
+	gap: 4px 12px;
+	align-items: center;
+}
+
+.shqf-field--label-left > .shqf-label {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.shqf-field--label-left > .shqf-error {
+	grid-column: 2;
+}
+
+/* Label hidden (placeholder-only mode) -- label gets .shqf-sr-only class */
+.shqf-field--label-hidden {
+	gap: 4px;
+}
+
+/* Also hide legends in fieldset-based fields when labels are hidden */
+.shqf-field--label-hidden .shqf-legend {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Label-left has no effect on fieldset-based fields (they stay stacked) */
+
+/* ==========================================================================
+   Row Group (Multi-Column Layout)
+   ========================================================================== */
+
+.shqf-field-row {
+	display: grid;
+	gap: 16px;
+	width: 100%;
+}
+
+.shqf-field-row__col {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	min-width: 0;
+}
+
+/* Fields inside row columns always fill the column width */
+.shqf-field-row__col > .shqf-field,
+.shqf-field-row__col > .shqf-field-row {
+	width: 100%;
+}
+
+/* ==========================================================================
+   Form Header (Title + Subtitle)
+   ========================================================================== */
+
+.shqf-header {
+	margin-bottom: 24px;
+}
+
+.shqf-title {
+	font-family: 'Space Grotesk', system-ui, sans-serif;
+	font-size: 24px;
+	font-weight: 600;
+	color: var(--shqf-text-color);
+	margin: 0 0 4px;
+	line-height: 1.3;
+	letter-spacing: -0.5px;
+}
+
+/* Wizard title is larger */
+.shqf-form-wrapper--wizard .shqf-title {
+	font-size: 28px;
+}
+
+.shqf-subtitle {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 15px;
+	font-weight: 400;
+	color: var(--shqf-muted-color);
+	margin: 0;
+	line-height: 1.5;
+}
+
+/* ==========================================================================
+   Stepper (Wizard mode)
+   ========================================================================== */
+
+.shqf-stepper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 16px 32px;
+	background: var(--shqf-surface-bg);
+	border-bottom: 1px solid var(--shqf-border-color);
+	margin-bottom: 32px;
+}
+
+.shqf-stepper-step {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	white-space: nowrap;
+}
+
+/* --- Stepper Dots --- */
+
+.shqf-step-dot {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'Space Grotesk', system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	flex-shrink: 0;
+}
+
+.shqf-step-dot--active {
+	background: var(--shqf-primary);
+	color: #fff;
+}
+
+.shqf-step-dot--pending {
+	border: 2px solid var(--shqf-border-color);
+	color: var(--shqf-muted-color);
+	background: none;
+}
+
+.shqf-step-dot--done {
+	background: var(--shqf-primary);
+	color: #fff;
+}
+
+.shqf-step-dot--done svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* --- Stepper Labels --- */
+
+.shqf-stepper .shqf-step-label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+}
+
+.shqf-stepper .shqf-step-label--active {
+	font-weight: 500;
+	color: var(--shqf-text-color);
+}
+
+.shqf-stepper .shqf-step-label--pending {
+	color: var(--shqf-muted-color);
+}
+
+.shqf-stepper .shqf-step-label--done {
+	font-weight: 500;
+	color: var(--shqf-primary);
+}
+
+/* --- Stepper Lines --- */
+
+.shqf-step-line {
+	width: 48px;
+	height: 1px;
+	background: var(--shqf-border-color);
+	flex-shrink: 0;
+}
+
+.shqf-step-line--done {
+	background: var(--shqf-primary);
+}
+
+/* ==========================================================================
+   Selection Bar (sample selection count)
+   ========================================================================== */
+
+.shqf-selection-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 32px;
+	background: var(--shqf-primary);
+	color: #fff;
+	margin-top: 16px;
+}
+
+.shqf-selection-bar__count {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.shqf-selection-bar__clear {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 400;
+	color: rgba(255, 255, 255, 0.7);
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+}
+
+.shqf-selection-bar__clear:hover {
+	color: #fff;
+}
+
+.shqf-selection-bar__clear:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Divider (between picker and contact fields)
+   ========================================================================== */
+
+.shqf-divider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 20px 0;
+}
+
+.shqf-divider__line {
+	flex: 1;
+	height: 1px;
+	background: var(--shqf-border-color);
+}
+
+.shqf-divider__label {
+	font-family: 'Space Grotesk', system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--shqf-muted-color);
+	white-space: nowrap;
+}
+
+/* ==========================================================================
+   Bottom Bar (navigation / submit)
+   ========================================================================== */
+
+.shqf-bottom-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 0;
+	margin-top: 24px;
+	border-top: 1px solid var(--shqf-border-color);
+}
+
+/* Grid/list: full-width centered submit */
+.shqf-form-wrapper--grid .shqf-bottom-bar,
+.shqf-form-wrapper--list .shqf-bottom-bar {
+	justify-content: center;
+}
+
+.shqf-form-wrapper--grid .shqf-bottom-bar .shqf-button--submit,
+.shqf-form-wrapper--list .shqf-bottom-bar .shqf-button--submit {
+	width: 100%;
+}
+
+/* ==========================================================================
+   Labels
+   ========================================================================== */
+
+.shqf-label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--shqf-label-color);
+	line-height: 1.4;
+}
+
+.shqf-legend {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--shqf-label-color);
+	padding: 0;
+	margin-bottom: 6px;
+}
+
+.shqf-required {
+	color: var(--shqf-error-color);
+	margin-left: 2px;
+}
+
+/* ==========================================================================
+   Inputs
+   ========================================================================== */
+
+/* Wrapper-scoped for theme specificity (beats theme input[type="text"] rules) */
+.shqf-form-wrapper .shqf-input {
+	height: 44px;
+	padding: 0 14px;
+	border: 1px solid var(--shqf-border-color);
+	border-radius: var(--shqf-radius);
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 15px;
+	font-weight: 400;
+	color: var(--shqf-text-color);
+	background: var(--shqf-input-bg);
+	transition: border-color 0.15s, box-shadow 0.15s;
+	width: 100%;
+}
+
+.shqf-form-wrapper .shqf-input::placeholder {
+	color: var(--shqf-muted-color);
+	font-size: 14px;
+}
+
+.shqf-form-wrapper .shqf-input:focus {
+	outline: none;
+	border-color: var(--shqf-primary);
+	box-shadow: var(--shqf-focus-ring);
+}
+
+.shqf-form-wrapper .shqf-input:focus-visible {
+	outline: 2px solid var(--shqf-primary);
+	outline-offset: 1px;
+}
+
+.shqf-form-wrapper .shqf-input[aria-invalid="true"] {
+	border-color: var(--shqf-error-color);
+}
+
+/* --- Textarea --- */
+
+.shqf-input--textarea {
+	height: auto;
+	min-height: 80px;
+	padding: 10px 14px;
+	resize: vertical;
+	line-height: 1.5;
+}
+
+/* --- Select --- */
+
+.shqf-input--select {
+	appearance: auto;
+	cursor: pointer;
+}
+
+/* --- File upload --- */
+
+.shqf-input--file {
+	height: auto;
+	padding: 10px 14px;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.shqf-input--file::file-selector-button {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 6px 14px;
+	border: 1px solid var(--shqf-border-color);
+	border-radius: 6px;
+	background: var(--shqf-surface-bg);
+	color: var(--shqf-text-color);
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+.shqf-input--file::file-selector-button:hover {
+	border-color: var(--shqf-muted-color);
+}
+
+.shqf-file-info {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 12px;
+	color: var(--shqf-muted-color);
+	margin: 4px 0 0;
+}
+
+/* ==========================================================================
+   Fieldset (radio, checkbox, name, address, sample picker)
+   ========================================================================== */
+
+.shqf-fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+/* ==========================================================================
+   Radio / Checkbox Items
+   ========================================================================== */
+
+.shqf-radio-item,
+.shqf-checkbox-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 0;
+}
+
+.shqf-radio-item input,
+.shqf-checkbox-item input {
+	margin: 0;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--shqf-primary);
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.shqf-radio-item label,
+.shqf-checkbox-item label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	color: var(--shqf-text-color);
+	cursor: pointer;
+}
+
+/* Choice layout: horizontal (inline) */
+.shqf-choices--horizontal {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+}
+
+/* Choice layout: multi-column grid */
+.shqf-choices--cols-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 16px;
+}
+
+.shqf-choices--cols-3 {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 0 16px;
+}
+
+/* ==========================================================================
+   Consent Field
+   ========================================================================== */
+
+.shqf-consent-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 4px 0;
+}
+
+.shqf-consent-item input[type="checkbox"] {
+	margin: 3px 0 0;
+	width: 18px;
+	height: 18px;
+	accent-color: var(--shqf-primary);
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.shqf-consent-label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	color: var(--shqf-text-color);
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.shqf-consent-label a {
+	color: var(--shqf-primary);
+	text-decoration: underline;
+}
+
+/* ==========================================================================
+   Composite Fields (Name, Address)
+   ========================================================================== */
+
+.shqf-name-fields {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.shqf-name-field {
+	flex: 1;
+	min-width: 0;
+}
+
+.shqf-name-field label {
+	display: block;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 6px;
+	color: var(--shqf-label-color);
+}
+
+.shqf-address-fields {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.shqf-address-field--full {
+	width: 100%;
+}
+
+.shqf-address-field--half {
+	flex: 1;
+	min-width: 120px;
+}
+
+.shqf-address-field label,
+.shqf-address-field--full label,
+.shqf-address-field--half label {
+	display: block;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 6px;
+	color: var(--shqf-label-color);
+}
+
+/* ==========================================================================
+   HTML Content Field
+   ========================================================================== */
+
+.shqf-html-content {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--shqf-text-color);
+	padding: 16px 20px;
+	background: var(--shqf-surface-bg);
+	border-left: 3px solid var(--shqf-primary);
+	border-radius: 0 var(--shqf-radius) var(--shqf-radius) 0;
+}
+
+.shqf-form-wrapper .shqf-html-content p {
+	margin: 0 0 8px;
+}
+
+.shqf-form-wrapper .shqf-html-content p:last-child {
+	margin-bottom: 0;
+}
+
+.shqf-html-content a {
+	color: var(--shqf-primary);
+	text-decoration: underline;
+}
+
+/* ==========================================================================
+   Sample Picker
+   ========================================================================== */
+
+/* Search bar */
+.shqf-picker-search-wrap {
+	position: relative;
+	margin-top: 12px;
+}
+
+.shqf-picker-search-icon {
+	position: absolute;
+	left: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	color: var(--shqf-muted-color);
+	pointer-events: none;
+}
+
+.shqf-picker-search {
+	width: 100%;
+	height: 44px;
+	padding: 0 14px 0 40px;
+	border: 1px solid var(--shqf-border-color);
+	border-radius: var(--shqf-radius);
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	color: var(--shqf-text-color);
+	background: var(--shqf-input-bg);
+}
+
+.shqf-picker-search:focus {
+	outline: none;
+	border-color: var(--shqf-primary);
+	box-shadow: var(--shqf-focus-ring);
+}
+
+.shqf-picker-search::placeholder {
+	color: var(--shqf-muted-color);
+}
+
+/* Category filter pills */
+.shqf-picker-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.shqf-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 14px;
+	border-radius: 20px;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	cursor: pointer;
+	border: 1px solid var(--shqf-border-color);
+	background: transparent;
+	color: var(--shqf-text-color);
+	transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.shqf-pill:hover {
+	border-color: var(--shqf-muted-color);
+}
+
+.shqf-pill:focus-visible {
+	outline: 2px solid var(--shqf-primary);
+	outline-offset: 2px;
+}
+
+.shqf-pill--active {
+	background: var(--shqf-primary);
+	border-color: var(--shqf-primary);
+	color: #fff;
+	font-weight: 500;
+}
+
+.shqf-picker-show-more {
+	display: block;
+	width: 100%;
+	padding: 12px;
+	margin-top: 12px;
+	background: none;
+	border: none;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--shqf-muted-color);
+	cursor: pointer;
+	text-align: center;
+}
+
+.shqf-picker-show-more:hover {
+	color: var(--shqf-text-color);
+}
+
+.shqf-picker-items {
+	display: grid;
+	gap: 16px;
+	margin-top: 12px;
+}
+
+/* --- Grid layout --- */
+
+.shqf-picker--grid .shqf-picker-items {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.shqf-picker--grid .shqf-picker-item {
+	border: 2px solid var(--shqf-border-color);
+	border-radius: var(--shqf-radius);
+	overflow: hidden;
+	cursor: pointer;
+	transition: border-color 0.15s;
+	position: relative;
+}
+
+.shqf-picker--grid .shqf-picker-item:hover {
+	border-color: var(--shqf-muted-color);
+}
+
+.shqf-picker--grid .shqf-picker-item.shqf-picker-item--selected {
+	border-color: var(--shqf-primary);
+}
+
+.shqf-picker-item-image {
+	width: 100%;
+	height: 160px;
+	object-fit: cover;
+	display: block;
+	background: var(--shqf-surface-bg);
+}
+
+.shqf-picker-item-placeholder {
+	width: 100%;
+	height: 160px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--shqf-surface-bg);
+}
+
+.shqf-picker-item-placeholder svg {
+	width: 40px;
+	height: 40px;
+	color: var(--shqf-border-color);
+}
+
+.shqf-picker-item-body {
+	padding: 12px;
+}
+
+.shqf-picker-item-label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--shqf-text-color);
+	margin: 0;
+}
+
+.shqf-picker-item-desc {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--shqf-muted-color);
+	line-height: 1.4;
+	margin: 4px 0 0;
+}
+
+/* Checkmark overlay for selected cards */
+.shqf-picker-item-check {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: var(--shqf-primary);
+	display: none;
+	align-items: center;
+	justify-content: center;
+}
+
+.shqf-picker-item--selected .shqf-picker-item-check {
+	display: flex;
+}
+
+.shqf-picker-item-check svg {
+	width: 14px;
+	height: 14px;
+	fill: none;
+	stroke: #fff;
+	stroke-width: 2.5;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* Quantity stepper (+/- buttons) */
+.shqf-picker-item-qty-controls {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 8px;
+	padding: 0 12px 12px;
+}
+
+.shqf-picker-item--selected .shqf-picker-item-qty-controls {
+	display: flex;
+}
+
+.shqf-picker-item-qty-btn {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--shqf-border-color);
+	border-radius: 6px;
+	background: none;
+	font-size: 16px;
+	cursor: pointer;
+	color: var(--shqf-text-color);
+	padding: 0;
+}
+
+.shqf-picker-item-qty-btn:hover {
+	border-color: var(--shqf-muted-color);
+}
+
+.shqf-picker-item-qty-btn:focus-visible {
+	outline: 2px solid var(--shqf-primary);
+	outline-offset: 2px;
+}
+
+.shqf-picker-item-qty-value {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	min-width: 20px;
+	text-align: center;
+}
+
+/* Legacy quantity input (fallback) */
+.shqf-picker-item-qty {
+	width: 56px;
+	padding: 6px 8px;
+	border: 1px solid var(--shqf-border-color);
+	border-radius: 6px;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	text-align: center;
+	margin: 8px auto 12px;
+	display: block;
+}
+
+.shqf-picker-status {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 13px;
+	color: var(--shqf-muted-color);
+	min-height: 20px;
+}
+
+/* --- List layout --- */
+
+.shqf-picker--list .shqf-picker-items {
+	grid-template-columns: 1fr;
+	gap: 0;
+}
+
+.shqf-picker--list .shqf-picker-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border-radius: 0;
+	cursor: pointer;
+	transition: background-color 0.15s;
+}
+
+.shqf-picker--list .shqf-picker-item:hover {
+	background: var(--shqf-surface-bg);
+}
+
+.shqf-picker--list .shqf-picker-item.shqf-picker-item--selected {
+	background: var(--shqf-surface-bg);
+}
+
+.shqf-picker-item-checkbox {
+	width: 20px;
+	height: 20px;
+	border: 1.5px solid var(--shqf-border-color);
+	border-radius: 4px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.15s, border-color 0.15s;
+}
+
+.shqf-picker-item--selected .shqf-picker-item-checkbox {
+	background: var(--shqf-primary);
+	border-color: var(--shqf-primary);
+}
+
+.shqf-picker-item-checkbox svg {
+	width: 14px;
+	height: 14px;
+	fill: none;
+	stroke: #fff;
+	stroke-width: 2.5;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	opacity: 0;
+}
+
+.shqf-picker-item--selected .shqf-picker-item-checkbox svg {
+	opacity: 1;
+}
+
+.shqf-picker-item-thumb {
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	object-fit: cover;
+	background: var(--shqf-surface-bg);
+	flex-shrink: 0;
+}
+
+.shqf-picker-item-thumb--placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.shqf-picker-item-thumb--placeholder svg {
+	width: 20px;
+	height: 20px;
+	color: var(--shqf-border-color);
+}
+
+.shqf-picker-item-info {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1;
+	min-width: 0;
+}
+
+.shqf-picker--list .shqf-picker-item-label {
+	font-size: 14px;
+}
+
+.shqf-picker--list .shqf-picker-item-desc {
+	font-size: 12px;
+	color: var(--shqf-muted-color);
+}
+
+.shqf-picker--list .shqf-picker-item-qty-controls {
+	padding: 0;
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+/* --- Focus states for picker items (keyboard accessibility) --- */
+
+.shqf-picker-item:focus-visible {
+	box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.25);
+	outline: none;
+}
+
+/* ==========================================================================
+   Error Messages
+   ========================================================================== */
+
+.shqf-error {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--shqf-error-color);
+	min-height: 0;
+	line-height: 1.4;
+}
+
+.shqf-help-text {
+	font-size: 13px;
+	color: var(--shqf-muted-color);
+	line-height: 1.4;
+	margin-top: -2px;
+}
+
+/* ==========================================================================
+   Progress Bar (Multi-step)
+   ========================================================================== */
+
+.shqf-progress {
+	height: 4px;
+	background: var(--shqf-border-color);
+	border-radius: 2px;
+	overflow: hidden;
+	margin-bottom: 24px;
+}
+
+.shqf-progress__bar {
+	height: 100%;
+	background: var(--shqf-primary);
+	border-radius: 2px;
+	transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   Step Labels (Multi-step navigation)
+   ========================================================================== */
+
+.shqf-steps-nav {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	padding: 16px 0;
+	margin-bottom: 24px;
+	background: var(--shqf-surface-bg);
+	border-bottom: 1px solid var(--shqf-border-color);
+	border-radius: var(--shqf-radius) var(--shqf-radius) 0 0;
+}
+
+.shqf-step-label {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--shqf-muted-color);
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 6px 12px;
+	border-radius: 6px;
+	transition: color 0.15s, background-color 0.15s;
+}
+
+.shqf-step-label:hover {
+	color: var(--shqf-text-color);
+}
+
+.shqf-step-label:focus-visible {
+	outline: 2px solid var(--shqf-primary);
+	outline-offset: 2px;
+}
+
+.shqf-step-label--active {
+	color: var(--shqf-primary);
+	font-weight: 600;
+	background: rgba(15, 118, 110, 0.08);
+}
+
+/* ==========================================================================
+   Step Containers (Multi-step)
+   ========================================================================== */
+
+.shqf-step {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	width: 100%;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+/* Wrapper-scoped for theme specificity (beats theme button rules) */
+.shqf-form-wrapper .shqf-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-family: 'Space Grotesk', system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	border-radius: var(--shqf-radius);
+	cursor: pointer;
+	transition: opacity 0.15s, border-color 0.15s, background-color 0.15s;
+	line-height: 1;
+}
+
+.shqf-btn-icon {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+}
+
+.shqf-form-wrapper .shqf-button:focus-visible {
+	outline: 2px solid var(--shqf-primary);
+	outline-offset: 2px;
+}
+
+/* --- Submit button --- */
+
+.shqf-button--submit {
+	background-color: var(--shqf-button-bg);
+	color: var(--shqf-button-text);
+	border: none;
+	padding: 14px 32px;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.shqf-button--submit:hover {
+	opacity: 0.9;
+}
+
+.shqf-button--submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* --- Previous button --- */
+
+.shqf-button--prev {
+	background: none;
+	border: 1px solid var(--shqf-border-color);
+	color: var(--shqf-muted-color);
+	padding: 12px 24px;
+}
+
+.shqf-button--prev:hover {
+	border-color: var(--shqf-muted-color);
+	color: var(--shqf-text-color);
+}
+
+/* --- Next button --- */
+
+.shqf-button--next {
+	background-color: var(--shqf-button-bg);
+	color: var(--shqf-button-text);
+	border: none;
+	padding: 12px 24px;
+	margin-left: auto;
+}
+
+.shqf-button--next:hover {
+	opacity: 0.9;
+}
+
+/* ==========================================================================
+   Submit Wrapper (single-step)
+   ========================================================================== */
+
+.shqf-submit {
+	margin-top: 24px;
+}
+
+/* ==========================================================================
+   Step Navigation (Multi-step bottom bar)
+   ========================================================================== */
+
+.shqf-step-nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 0;
+	margin-top: 24px;
+	border-top: 1px solid var(--shqf-border-color);
+}
+
+/* ==========================================================================
+   Messages (Success / Error)
+   ========================================================================== */
+
+.shqf-form-messages {
+	margin-bottom: 0;
+}
+
+.shqf-message {
+	padding: 16px 20px;
+	border-radius: var(--shqf-radius);
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	margin-bottom: 20px;
+}
+
+.shqf-message--success {
+	background-color: rgba(34, 197, 94, 0.08);
+	color: #065f46;
+	border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.shqf-message--error {
+	background-color: rgba(228, 35, 19, 0.06);
+	color: #991b1b;
+	border: 1px solid rgba(228, 35, 19, 0.2);
+}
+
+/* --- Success screen (full page replacement after submit) --- */
+
+.shqf-success {
+	text-align: center;
+	padding: 48px 24px;
+}
+
+.shqf-success-icon {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background: rgba(34, 197, 94, 0.08);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 20px;
+}
+
+.shqf-success-icon svg {
+	width: 32px;
+	height: 32px;
+	stroke: var(--shqf-success-color);
+	fill: none;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.shqf-success-title {
+	font-family: 'Space Grotesk', system-ui, sans-serif;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--shqf-text-color);
+	margin: 0 0 8px;
+}
+
+.shqf-success-message {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 15px;
+	font-weight: 400;
+	color: var(--shqf-muted-color);
+	margin: 0;
+}
+
+/* ==========================================================================
+   Turnstile CAPTCHA
+   ========================================================================== */
+
+.shqf-turnstile {
+	margin: 20px 0;
+}
+
+/* ==========================================================================
+   Screen Reader Only (visually hidden, announced by AT)
+   ========================================================================== */
+
+.shqf-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ==========================================================================
+   Honeypot (visually hidden, not display:none for screen reader compat)
+   ========================================================================== */
+
+.shqf-hp {
+	position: absolute;
+	left: -9999px;
+	height: 0;
+	overflow: hidden;
+}
+
+/* ==========================================================================
+   Shortcode Error (admin only)
+   ========================================================================== */
+
+.shqf-shortcode-error {
+	padding: 16px 20px;
+	background: #fef3c7;
+	border: 1px solid #fbbf24;
+	border-radius: var(--shqf-radius);
+	color: #92400e;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+}
+
+/* Block editor error */
+.shqf-block-error {
+	padding: 16px 20px;
+	background: #fef3c7;
+	border: 1px solid #fbbf24;
+	border-radius: var(--shqf-radius);
+	color: #92400e;
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 14px;
+}
+
+/* ==========================================================================
+   Loading Spinner (for submit button)
+   ========================================================================== */
+
+.shqf-spinner {
+	width: 18px;
+	height: 18px;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-top-color: var(--shqf-button-text);
+	border-radius: 50%;
+	animation: shqf-spin 0.6s linear infinite;
+}
+
+@keyframes shqf-spin {
+
+	to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 640px) {
+
+	.shqf-field--half {
+		width: 100%;
+	}
+
+	.shqf-field--label-left {
+		grid-template-columns: 1fr;
+	}
+
+	.shqf-field--label-left > .shqf-label {
+		text-align: left;
+	}
+
+	.shqf-field--label-left > .shqf-error {
+		grid-column: 1;
+	}
+
+	.shqf-field-row {
+		grid-template-columns: 1fr !important;
+	}
+
+	.shqf-name-fields {
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.shqf-address-fields {
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.shqf-address-field--half {
+		min-width: 100%;
+	}
+
+	.shqf-picker--grid .shqf-picker-items {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.shqf-title {
+		font-size: 20px;
+	}
+
+	.shqf-form-wrapper--wizard .shqf-title {
+		font-size: 22px;
+	}
+
+	.shqf-form-wrapper {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.shqf-steps-nav {
+		gap: 8px;
+		padding: 12px 16px;
+	}
+
+	.shqf-step-label {
+		font-size: 13px;
+		padding: 4px 8px;
+	}
+
+	.shqf-stepper {
+		padding: 12px 16px;
+		gap: 8px;
+	}
+
+	.shqf-step-dot {
+		width: 28px;
+		height: 28px;
+		font-size: 12px;
+	}
+
+	.shqf-step-line {
+		width: 24px;
+	}
+
+	.shqf-stepper .shqf-step-label {
+		font-size: 12px;
+	}
+
+	.shqf-selection-bar {
+		padding: 10px 20px;
+	}
+
+	.shqf-bottom-bar {
+		padding: 12px 0;
+	}
+
+	.shqf-picker-item-qty-btn {
+		width: 44px;
+		height: 44px;
+	}
+}
+
+@media (max-width: 420px) {
+
+	.shqf-picker--grid .shqf-picker-items {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.shqf-picker-item-image {
+		height: 120px;
+	}
+}
+
+/* ==========================================================================
+   Dark Theme
+   --------------------------------------------------------------------------
+   Dark mode is opt-in via the .shqf-dark class on .shqf-form-wrapper.
+   Themes that use dark backgrounds can add this class to their shortcode
+   container. We do NOT use @media (prefers-color-scheme: dark) because
+   the form should match the website's theme, not the user's OS preference.
+   A dark-OS user on a light-themed site should see a light form.
+   ========================================================================== */
+
+.shqf-form-wrapper.shqf-dark {
+	--shqf-text-color: #f0f0f0;
+	--shqf-muted-color: #a0a0a0;
+	--shqf-border-color: #3a3a3a;
+	--shqf-label-color: #d4d4d8;
+	--shqf-input-bg: #1e1e1e;
+	--shqf-surface-bg: #262626;
+	--shqf-error-color: #f87171;
+	--shqf-success-color: #4ade80;
+	--shqf-focus-ring: 0 0 0 3px rgba(20, 184, 166, 0.35);
+}
+
+.shqf-dark .shqf-form {
+	background: #181818;
+}
+
+.shqf-dark .shqf-picker--grid .shqf-picker-item {
+	border-color: var(--shqf-border-color);
+	background: var(--shqf-input-bg);
+}
+
+.shqf-dark .shqf-picker--grid .shqf-picker-item:hover {
+	border-color: var(--shqf-muted-color);
+}
+
+.shqf-dark .shqf-picker-item-checkbox {
+	border-color: var(--shqf-border-color);
+}
+
+.shqf-dark .shqf-stepper {
+	background: var(--shqf-surface-bg);
+	border-bottom-color: var(--shqf-border-color);
+}
+
+.shqf-dark .shqf-step-divider {
+	background: var(--shqf-border-color);
+}
+
+.shqf-dark .shqf-picker-item-placeholder {
+	background: var(--shqf-surface-bg);
+}
+
+.shqf-dark .shqf-message--success {
+	background-color: rgba(74, 222, 128, 0.1);
+	color: #86efac;
+	border-color: rgba(74, 222, 128, 0.25);
+}
+
+.shqf-dark .shqf-message--error {
+	background-color: rgba(248, 113, 113, 0.1);
+	color: #fca5a5;
+	border-color: rgba(248, 113, 113, 0.25);
+}
+
+.shqf-dark .shqf-success-icon {
+	background: rgba(74, 222, 128, 0.1);
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+	.shqf-input,
+	.shqf-button,
+	.shqf-button--submit,
+	.shqf-button--prev,
+	.shqf-button--next,
+	.shqf-progress__bar,
+	.shqf-picker--grid .shqf-picker-item,
+	.shqf-picker--list .shqf-picker-item,
+	.shqf-picker-item-checkbox,
+	.shqf-step-label {
+		transition-duration: 0.01ms;
+	}
+
+	.shqf-spinner {
+		animation: none;
+	}
+}

@@ -1,0 +1,85 @@
+{
+  "cookies": [
+    {
+      "name": "wordpress_sec_8010bf9059365fa88b8ce1b296aa4974",
+      "value": "bojan%7C1778152387%7CmqomMyKHcUOtk8BPk446y4l9IjJUnjp5IGqJo6tPsLK%7C2ac7ddd6f444a3621a2d417d3217bbd5350c6f3516a751e97e47343e5752cc5b",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/wp-content/plugins",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_sec_8010bf9059365fa88b8ce1b296aa4974",
+      "value": "bojan%7C1778152387%7CmqomMyKHcUOtk8BPk446y4l9IjJUnjp5IGqJo6tPsLK%7C2ac7ddd6f444a3621a2d417d3217bbd5350c6f3516a751e97e47343e5752cc5b",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/wp-admin",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_test_cookie",
+      "value": "WP%20Cookie%20check",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_logged_in_8010bf9059365fa88b8ce1b296aa4974",
+      "value": "bojan%7C1778152387%7CmqomMyKHcUOtk8BPk446y4l9IjJUnjp5IGqJo6tPsLK%7Cd81a6713be59730e983d8d49c068a3ee7fc76f72c6c87d21978f4aeff5f21dec",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "tk_ai",
+      "value": "woo%3AkWCs%2Fm%2F2SY41n%2F%2BGiKgSr2P8",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wp-settings-1",
+      "value": "libraryContent%3Dbrowse%26plugin_check_category_preferences%3Dgeneral__plugin_repo__security__performance__accessibility",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": 1809515587.493756,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wp-settings-time-1",
+      "value": "1777979587",
+      "domain": "samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": 1809515587.493888,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "tk_qs",
+      "value": "",
+      "domain": ".samplehq-wp-plugin.test",
+      "path": "/",
+      "expires": 1777981387,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

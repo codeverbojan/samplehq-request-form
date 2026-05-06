@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "samplehq-form/form",
+	"version": "1.0.0",
+	"title": "SampleHQ Form",
+	"category": "samplehq-forms",
+	"icon": "clipboard",
+	"description": "Embed a sample request form.",
+	"keywords": [ "form", "sample", "request" ],
+	"textdomain": "samplehq-request-form",
+	"attributes": {
+		"formId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "shqf-form-frontend",
+	"editorStyle": "shqf-form-frontend"
+}
