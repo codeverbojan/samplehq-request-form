@@ -180,7 +180,7 @@ jobs:
 
       - name: Upload test results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: test-results/
@@ -222,7 +222,7 @@ jobs:
           cd build && zip -r samplehq-request-form.zip samplehq-request-form/
 
       - name: Upload zip artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: samplehq-request-form
           path: build/samplehq-request-form.zip
