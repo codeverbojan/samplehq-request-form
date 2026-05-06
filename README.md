@@ -43,7 +43,7 @@ If you're currently using a generic contact form for sample requests and wishing
 Manage your products in a dedicated admin screen. Each sample has a name, SKU, description (rich text), categories, multiple images, and custom key-value fields (weight, dimensions, material, etc.). Bulk import via CSV.
 
 ### Visual Form Builder
-Drag-and-drop builder with 15+ field types. Multi-column rows, conditional logic (show/hide fields based on values), multi-step wizard layout, and per-form email notification settings.
+Drag-and-drop builder with 17 field types. Multi-column rows, conditional logic (show/hide fields based on values), multi-step wizard layout, and per-form email notification settings.
 
 **Field types:** Text, Email, Phone, Paragraph, Number, Date, URL, Dropdown, Radio, Checkbox, Name (first + last), Address (composite), File Upload, Hidden, HTML Content, Consent/GDPR, Page Break, and the unique **Sample Picker**.
 
@@ -97,15 +97,11 @@ All forms meet WCAG 2.2 Level AA. Proper `<label>` associations, `aria-required`
 
 ## Installation
 
-### From WordPress.org
-1. Go to **Plugins > Add New** in your WordPress admin
-2. Search for "SampleHQ Request Form"
-3. Click **Install Now**, then **Activate**
-
-### Manual Upload
-1. Download the latest release zip from the [Releases page](https://github.com/codeverbojan/samplehq-request-form/releases)
-2. Go to **Plugins > Add New > Upload Plugin**
+1. Download the plugin zip from the repository
+2. Go to **Plugins > Add New > Upload Plugin** in your WordPress admin
 3. Upload the zip and activate
+
+The plugin will be available on WordPress.org after the initial review process.
 
 ### Requirements
 - WordPress 6.0+
@@ -267,7 +263,7 @@ npm run start             # Development mode with file watching
 
 ## Testing
 
-The plugin has 647 unit tests, 29 integration tests, and 19 E2E browser tests across 18,000+ lines of PHP source and 14,000+ lines of test code.
+The plugin has 683 unit tests, 29 integration tests, and 27 E2E spec files across 18,000+ lines of PHP source and 18,000+ lines of test code.
 
 ```bash
 # Unit tests (no WordPress needed, fast)
@@ -311,24 +307,24 @@ src/                       73 PHP source files, 18,000+ lines
   Elementor/               Elementor widget (conditional registration)
   Email/                   Mailer service (admin notification + confirmation)
   Export/                  CSV export, CSV import, JSON form import/export
-  Fields/                  15+ field types including Sample Picker
+  Fields/                  17 field types including Sample Picker
   Forms/                   Form rendering, server-side validation, submission processing
   Helpers/                 Asset loading, sanitization
   Privacy/                 GDPR data export and erasure
   Spam/                    Honeypot, rate limiting, Turnstile integration
-tests/                     59 test files, 14,000+ lines
-  Unit/                    647 PHPUnit tests (mocked WordPress, fast)
+tests/                     86 test files, 18,000+ lines
+  Unit/                    683 PHPUnit tests (mocked WordPress, fast)
   Integration/             29 PHPUnit tests (real WordPress via wp-env)
-  e2e/                     19 Playwright browser tests
+  e2e/                     27 Playwright spec files (admin, frontend, WooCommerce, responsive)
 ```
 
 ---
 
 ## Roadmap
 
-### Completed (v1.0.0)
+### v1.0.0 (current)
 - Sample library with categories, images, custom fields, CSV import
-- Visual form builder with 15+ field types
+- Visual form builder with 17 field types
 - Sample picker (card grid, checklist, list view)
 - Conditional logic, multi-step wizard forms
 - File upload with protected storage
@@ -341,14 +337,12 @@ tests/                     59 test files, 14,000+ lines
 - WCAG 2.2 Level AA accessibility
 - Form import/export (JSON), form duplication
 
-### In Progress (v1.0.0 release prep)
-- Final Plugin Check compliance pass
-- Clean install verification from built zip
-- readme.txt changelog
-
-### Planned (post-launch)
+### Post-launch (v1.x)
 - **SampleHQ platform connection** -- one-click sync of submissions to the SampleHQ platform for approval workflows, CRM integration, shipping labels, and revenue attribution
-- **Form builder migration** -- import existing sample request data from Gravity Forms, Contact Form 7, WPForms, and other form builders
+- One-time data migration wizard (samples, categories, and submission history to the platform)
+
+### v2
+- **Form builder migration** -- import existing sample request data from Gravity Forms, Contact Form 7, WPForms, Ninja Forms, Formidable Forms, and Fluent Forms into SampleHQ Request Form, with automatic sample library creation from imported submission data
 
 ---
 
