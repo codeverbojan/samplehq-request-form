@@ -34,6 +34,9 @@
 /.claude
 /bin
 /CONTRIBUTING.md
+/CODE_OF_CONDUCT.md
+/SECURITY.md
+/README.md
 
 # Plans, specs, and dev-only files.
 /.plans

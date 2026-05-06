@@ -83,6 +83,16 @@ no time limits, submission quotas, or locked features.
 Yes. All forms are built following WCAG 2.2 Level AA guidelines, including proper
 labels, keyboard navigation, screen reader support, and focus management.
 
+== Screenshots ==
+
+1. **Sample Library** -- Manage your product samples with categories, images, SKUs, and descriptions.
+2. **Visual Form Builder** -- Drag-and-drop builder with 15+ field types including the unique sample picker.
+3. **Submissions Dashboard** -- View, search, filter, star, and export form submissions.
+4. **Frontend Form** -- Multi-step wizard form with sample picker, category filters, and search.
+5. **Settings** -- Configure privacy, spam protection, email notifications, and WooCommerce integration.
+6. **Sample Editor** -- Rich editor for sample details with custom fields, categories, and images.
+7. **Product Grid** -- Frontend sample picker with product cards, images, and category filtering.
+
 == Changelog ==
 
 = 1.0.0 =

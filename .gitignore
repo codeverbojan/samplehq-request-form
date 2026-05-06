@@ -41,6 +41,9 @@ Thumbs.db
 # Private scripts (dev-only)
 /private/
 
+# Design reference images (dev-only)
+/design-reference/
+
 # Backup files
 *.backup
 *.bak
