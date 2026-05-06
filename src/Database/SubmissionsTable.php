@@ -359,7 +359,9 @@ class SubmissionsTable {
 	/**
 	 * Find submissions by email for Privacy API.
 	 *
-	 * @param string $email Email address.
+	 * @param string $email  Email address.
+	 * @param int    $limit  Maximum number of results (0 = no limit).
+	 * @param int    $offset Number of rows to skip.
 	 * @return array<int, array<string, mixed>> Matching submissions.
 	 */
 	public function find_by_email( string $email, int $limit = 0, int $offset = 0 ): array {
@@ -391,11 +393,6 @@ class SubmissionsTable {
 	}
 
 	/**
-	 * Get distinct year-month values for date filtering.
-	 *
-	 * @return array<int, array{year: int, month: int}> Sorted descending.
-	 */
-	/**
 	 * Nullify IP address and user agent on submissions older than the retention period.
 	 *
 	 * @param int $days Retention period in days.
@@ -415,6 +412,11 @@ class SubmissionsTable {
 		return false !== $result ? (int) $result : 0;
 	}
 
+	/**
+	 * Get distinct year-month values for date filtering.
+	 *
+	 * @return array<int, array{year: int, month: int}> Sorted descending.
+	 */
 	public function get_distinct_months(): array {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $this->wpdb->get_results(

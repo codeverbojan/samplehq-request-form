@@ -41,7 +41,7 @@ class CsvExporter {
 	/**
 	 * Constructor.
 	 *
-	 * @param SubmissionsTable   $submissions Submissions repository.
+	 * @param SubmissionsTable    $submissions Submissions repository.
 	 * @param SubmissionMetaTable $meta        Submission meta repository.
 	 */
 	public function __construct( SubmissionsTable $submissions, SubmissionMetaTable $meta ) {

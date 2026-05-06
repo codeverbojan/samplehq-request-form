@@ -217,6 +217,7 @@ class Migrator {
 		// Clean up all plugin transients (shqf_token_*, shqf_woo_samples_*).
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$this->wpdb->query(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->options is a core table name, not user input.
 			"DELETE FROM {$this->wpdb->options} WHERE option_name LIKE '_transient_shqf_%' OR option_name LIKE '_transient_timeout_shqf_%'"
 		);
 

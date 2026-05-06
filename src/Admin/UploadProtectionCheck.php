@@ -82,7 +82,7 @@ class UploadProtectionCheck {
 			$status_code = (int) wp_remote_retrieve_response_code( $response );
 
 			// 403/404 = directory is protected. 200 = exposed.
-			$is_protected = $status_code !== 200;
+			$is_protected = 200 !== $status_code;
 
 			set_transient(
 				self::TRANSIENT_KEY,

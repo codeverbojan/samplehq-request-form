@@ -312,11 +312,11 @@ class SettingsPage {
 	 * @return void
 	 */
 	private function render_settings_woocommerce_tab(): void {
-		$enabled         = get_option( 'shqf_woo_enabled', '' );
-		$button_text     = get_option( 'shqf_woo_button_text', __( 'Request a Sample', 'samplehq-request-form' ) );
-		$product_filter  = get_option( 'shqf_woo_product_filter', 'all' );
-		$sample_tag      = get_option( 'shqf_woo_sample_tag', 'sample-available' );
-		$max_quantity    = (int) get_option( 'shqf_woo_max_quantity', 3 );
+		$enabled        = get_option( 'shqf_woo_enabled', '' );
+		$button_text    = get_option( 'shqf_woo_button_text', __( 'Request a Sample', 'samplehq-request-form' ) );
+		$product_filter = get_option( 'shqf_woo_product_filter', 'all' );
+		$sample_tag     = get_option( 'shqf_woo_sample_tag', 'sample-available' );
+		$max_quantity   = (int) get_option( 'shqf_woo_max_quantity', 3 );
 
 		echo '<form method="post" action="">';
 		wp_nonce_field( 'shqf_save_settings', 'shqf_settings_nonce' );
@@ -344,7 +344,12 @@ class SettingsPage {
 		echo '<td><select id="shqf-woo-form" name="shqf_woo_form_id">';
 		echo '<option value="0">' . esc_html__( 'Default (first published form)', 'samplehq-request-form' ) . '</option>';
 		global $wpdb;
-		$forms = ( new \SampleHQForm\Database\FormsTable( $wpdb ) )->list_all( [ 'status' => 'published', 'limit' => 50 ] );
+		$forms = ( new \SampleHQForm\Database\FormsTable( $wpdb ) )->list_all(
+			[
+				'status' => 'published',
+				'limit'  => 50,
+			]
+		);
 		foreach ( $forms as $f ) {
 			echo '<option value="' . esc_attr( (string) $f['id'] ) . '"' . selected( $form_id, (int) $f['id'], false ) . '>';
 			echo esc_html( $f['title'] ) . '</option>';
@@ -421,13 +426,19 @@ class SettingsPage {
 
 		// Product categories (for category filter mode).
 		$selected_cats = (array) get_option( 'shqf_woo_sample_categories', [] );
-		$wc_categories = get_terms( [ 'taxonomy' => 'product_cat', 'hide_empty' => false, 'orderby' => 'name' ] );
+		$wc_categories = get_terms(
+			[
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'orderby'    => 'name',
+			]
+		);
 		if ( ! is_wp_error( $wc_categories ) && ! empty( $wc_categories ) ) {
 			echo '<tr><th><label for="shqf-woo-cats">' . esc_html__( 'Sample Categories', 'samplehq-request-form' ) . '</label></th>';
 			echo '<td><select id="shqf-woo-cats" name="shqf_woo_sample_categories[]" multiple style="min-width:300px;min-height:120px;">';
 			foreach ( $wc_categories as $wc_cat ) {
 				$sel = in_array( (int) $wc_cat->term_id, array_map( 'intval', $selected_cats ), true ) ? ' selected' : '';
-				echo '<option value="' . esc_attr( (string) $wc_cat->term_id ) . '"' . $sel . '>';
+				echo '<option value="' . esc_attr( (string) $wc_cat->term_id ) . '"' . esc_attr( $sel ) . '>';
 				echo esc_html( $wc_cat->name ) . '</option>';
 			}
 			echo '</select>';

@@ -557,8 +557,8 @@ class SubmissionsPage {
 	 *
 	 * @param \SampleHQForm\Database\SamplesTable      $samples   Samples repo.
 	 * @param \SampleHQForm\Database\SampleImagesTable $images    Images repo.
-	 * @param int                                       $sample_id Sample ID.
-	 * @param int                                       $qty       Quantity.
+	 * @param int                                      $sample_id Sample ID.
+	 * @param int                                      $qty       Quantity.
 	 * @return void
 	 */
 	private function render_library_sample_row( \SampleHQForm\Database\SamplesTable $samples, \SampleHQForm\Database\SampleImagesTable $images, int $sample_id, int $qty ): void {
@@ -668,30 +668,32 @@ class SubmissionsPage {
 			return (string) $value;
 		}
 
-		// Name field: { "first_name": "...", "last_name": "..." }
+		// Name field: { "first_name": "...", "last_name": "..." }.
 		if ( isset( $decoded['first_name'] ) || isset( $decoded['last_name'] ) ) {
 			return trim( ( $decoded['first_name'] ?? '' ) . ' ' . ( $decoded['last_name'] ?? '' ) );
 		}
 
-		// Address field: { "street": "...", "city": "...", ... }
+		// Address field: { "street": "...", "city": "...", ... }.
 		if ( isset( $decoded['street'] ) || isset( $decoded['city'] ) ) {
-			$parts = array_filter( [
-				$decoded['street'] ?? '',
-				$decoded['street2'] ?? '',
-				$decoded['city'] ?? '',
-				$decoded['state'] ?? '',
-				$decoded['zip'] ?? '',
-				$decoded['country'] ?? '',
-			] );
+			$parts = array_filter(
+				[
+					$decoded['street'] ?? '',
+					$decoded['street2'] ?? '',
+					$decoded['city'] ?? '',
+					$decoded['state'] ?? '',
+					$decoded['zip'] ?? '',
+					$decoded['country'] ?? '',
+				]
+			);
 			return implode( ', ', $parts );
 		}
 
-		// Sample picker: [ { "id": 33, "quantity": 1, "name": "...", ... }, ... ]
+		// Sample picker: [ { "id": 33, "quantity": 1, "name": "...", ... }, ... ].
 		if ( isset( $decoded[0]['id'] ) ) {
 			$items = [];
 			foreach ( $decoded as $item ) {
-				$name = $item['name'] ?? ( 'Sample #' . ( $item['id'] ?? '?' ) );
-				$qty  = (int) ( $item['quantity'] ?? 1 );
+				$name    = $item['name'] ?? ( 'Sample #' . ( $item['id'] ?? '?' ) );
+				$qty     = (int) ( $item['quantity'] ?? 1 );
 				$items[] = $qty > 1 ? "{$name} (x{$qty})" : $name;
 			}
 			return implode( ', ', $items );

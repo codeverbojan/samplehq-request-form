@@ -37,61 +37,85 @@ class Plugin {
 	private static ?self $instance = null;
 
 	/**
+	 * Field type registry.
+	 *
 	 * @var Fields\FieldRegistry
 	 */
 	private Fields\FieldRegistry $field_registry;
 
 	/**
+	 * Samples repository.
+	 *
 	 * @var Database\SamplesTable
 	 */
 	private Database\SamplesTable $samples;
 
 	/**
+	 * Sample images repository.
+	 *
 	 * @var Database\SampleImagesTable
 	 */
 	private Database\SampleImagesTable $images;
 
 	/**
+	 * Sample-to-category mapping repository.
+	 *
 	 * @var Database\SampleCategoryMapTable
 	 */
 	private Database\SampleCategoryMapTable $category_map;
 
 	/**
+	 * Sample categories repository.
+	 *
 	 * @var Database\SampleCategoriesTable
 	 */
 	private Database\SampleCategoriesTable $categories;
 
 	/**
+	 * Forms repository.
+	 *
 	 * @var Database\FormsTable
 	 */
 	private Database\FormsTable $forms;
 
 	/**
+	 * Anti-spam form token handler.
+	 *
 	 * @var Spam\FormToken
 	 */
 	private Spam\FormToken $form_token;
 
 	/**
+	 * Front-end form renderer.
+	 *
 	 * @var Forms\FormRenderer
 	 */
 	private Forms\FormRenderer $renderer;
 
 	/**
+	 * Rate limits repository.
+	 *
 	 * @var Database\RateLimitsTable
 	 */
 	private Database\RateLimitsTable $rate_limits;
 
 	/**
+	 * Submissions repository.
+	 *
 	 * @var Database\SubmissionsTable
 	 */
 	private Database\SubmissionsTable $submissions;
 
 	/**
+	 * WordPress database abstraction.
+	 *
 	 * @var \wpdb
 	 */
 	private \wpdb $wpdb;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param \wpdb $wpdb WordPress database abstraction.
 	 */
 	private function __construct( \wpdb $wpdb ) {
@@ -135,21 +159,21 @@ class Plugin {
 		$this->maybe_upgrade();
 
 		// --- Database repositories ---
-		$forms_table           = new Database\FormsTable( $this->wpdb );
-		$samples_table         = new Database\SamplesTable( $this->wpdb );
-		$categories            = new Database\SampleCategoriesTable( $this->wpdb );
-		$category_map          = new Database\SampleCategoryMapTable( $this->wpdb );
-		$images_table          = new Database\SampleImagesTable( $this->wpdb );
-		$submissions           = new Database\SubmissionsTable( $this->wpdb );
-		$submission_meta       = new Database\SubmissionMetaTable( $this->wpdb );
-		$rate_limits           = new Database\RateLimitsTable( $this->wpdb );
-		$this->forms           = $forms_table;
-		$this->samples         = $samples_table;
-		$this->categories      = $categories;
-		$this->category_map    = $category_map;
-		$this->images          = $images_table;
-		$this->submissions     = $submissions;
-		$this->rate_limits     = $rate_limits;
+		$forms_table        = new Database\FormsTable( $this->wpdb );
+		$samples_table      = new Database\SamplesTable( $this->wpdb );
+		$categories         = new Database\SampleCategoriesTable( $this->wpdb );
+		$category_map       = new Database\SampleCategoryMapTable( $this->wpdb );
+		$images_table       = new Database\SampleImagesTable( $this->wpdb );
+		$submissions        = new Database\SubmissionsTable( $this->wpdb );
+		$submission_meta    = new Database\SubmissionMetaTable( $this->wpdb );
+		$rate_limits        = new Database\RateLimitsTable( $this->wpdb );
+		$this->forms        = $forms_table;
+		$this->samples      = $samples_table;
+		$this->categories   = $categories;
+		$this->category_map = $category_map;
+		$this->images       = $images_table;
+		$this->submissions  = $submissions;
+		$this->rate_limits  = $rate_limits;
 
 		// --- Field type registry ---
 		$field_reg = new Fields\FieldRegistry();
@@ -175,19 +199,19 @@ class Plugin {
 		$field_reg->register( new Fields\SamplePickerField( $samples_table, $images_table, $category_map, $categories ) );
 
 		// --- Form rendering + validation ---
-		$renderer              = new Forms\FormRenderer( $field_reg );
-		$validator             = new Forms\FormValidator( $field_reg );
-		$form_token            = new Spam\FormToken();
-		$this->field_registry  = $field_reg;
-		$this->renderer        = $renderer;
-		$this->form_token      = $form_token;
+		$renderer             = new Forms\FormRenderer( $field_reg );
+		$validator            = new Forms\FormValidator( $field_reg );
+		$form_token           = new Spam\FormToken();
+		$this->field_registry = $field_reg;
+		$this->renderer       = $renderer;
+		$this->form_token     = $form_token;
 
 		// Defer WC wiring to plugins_loaded so WooCommerce class is available.
 		// Our plugin may load before WooCommerce in the active_plugins array.
 		add_action( 'plugins_loaded', [ $this, 'wire_woocommerce' ] );
-		$honeypot   = new Spam\HoneypotValidator();
-		$mailer     = new Email\Mailer( $submission_meta );
-		$turnstile  = new Spam\TurnstileVerifier();
+		$honeypot  = new Spam\HoneypotValidator();
+		$mailer    = new Email\Mailer( $submission_meta );
+		$turnstile = new Spam\TurnstileVerifier();
 
 		// --- Form processor (submission pipeline) ---
 		$processor = new Forms\FormProcessor(
@@ -323,13 +347,15 @@ class Plugin {
 
 		$woo_source = new Fields\ProductSource\WooCommerceSource();
 
-		$this->field_registry->register( new Fields\SamplePickerField(
-			$this->samples,
-			$this->images,
-			$this->category_map,
-			$this->categories,
-			$woo_source
-		) );
+		$this->field_registry->register(
+			new Fields\SamplePickerField(
+				$this->samples,
+				$this->images,
+				$this->category_map,
+				$this->categories,
+				$woo_source
+			)
+		);
 
 		$cache_clear = [ Fields\ProductSource\WooCommerceSource::class, 'clear_cache' ];
 		add_action( 'woocommerce_new_product', $cache_clear );
@@ -382,16 +408,18 @@ class Plugin {
 		}
 
 		$cutoff      = time() - DAY_IN_SECONDS;
-		$pending_ids = get_posts( [
-			'post_type'      => 'attachment',
-			'post_status'    => 'inherit',
-			'meta_key'       => '_shqf_pending',
-			'meta_value'     => (string) $cutoff,
-			'meta_compare'   => '<',
-			'meta_type'      => 'NUMERIC',
-			'fields'         => 'ids',
-			'posts_per_page' => 50,
-		] );
+		$pending_ids = get_posts(
+			[
+				'post_type'      => 'attachment',
+				'post_status'    => 'inherit',
+				'meta_key'       => '_shqf_pending',
+				'meta_value'     => (string) $cutoff,
+				'meta_compare'   => '<',
+				'meta_type'      => 'NUMERIC',
+				'fields'         => 'ids',
+				'posts_per_page' => 50,
+			]
+		);
 
 		foreach ( $pending_ids as $attach_id ) {
 			wp_delete_attachment( $attach_id, true );

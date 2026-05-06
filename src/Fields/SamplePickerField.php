@@ -119,7 +119,7 @@ class SamplePickerField extends AbstractField {
 		$source  = $config['source'] ?? 'library';
 		$use_woo = 'woocommerce' === $source && null !== $this->woo_source;
 
-		$samples = $use_woo
+		$samples    = $use_woo
 			? $this->woo_source->get_samples( [ 'status' => 'active' ] )
 			: $this->get_filtered_samples( $config );
 		$selections = $this->normalize_selections( $value );
@@ -130,7 +130,7 @@ class SamplePickerField extends AbstractField {
 		if ( $use_woo ) {
 			// Category names are pre-loaded in the mapped product data (batch query).
 			foreach ( $samples as $s ) {
-				$names = $s['category_names'] ?? [];
+				$names                         = $s['category_names'] ?? [];
 				$sample_cats[ (int) $s['id'] ] = $names;
 				foreach ( $names as $name ) {
 					$all_cat_names[ $name ] = true;
@@ -147,7 +147,7 @@ class SamplePickerField extends AbstractField {
 				$names   = [];
 				foreach ( $cat_ids as $cid ) {
 					if ( isset( $cats_by_id[ $cid ] ) ) {
-						$names[]                       = $cats_by_id[ $cid ];
+						$names[]                              = $cats_by_id[ $cid ];
 						$all_cat_names[ $cats_by_id[ $cid ] ] = true;
 					}
 				}
@@ -165,7 +165,7 @@ class SamplePickerField extends AbstractField {
 		$initial_visible = count( $samples ) > 12 ? ' data-initial-visible="12"' : '';
 		$html            = '<fieldset class="shqf-fieldset shqf-picker ' . esc_attr( $layout_class ) . '"' . $attrs;
 		$html           .= ' aria-describedby="' . esc_attr( $this->get_error_id( $field, $context ) ) . '"' . $initial_visible . '>';
-		$html .= '<legend class="shqf-legend">' . esc_html( $field['label'] ?? '' );
+		$html           .= '<legend class="shqf-legend">' . esc_html( $field['label'] ?? '' );
 
 		if ( ! empty( $field['required'] ) ) {
 			$html .= ' <span class="shqf-required" aria-hidden="true">*</span>';
@@ -261,9 +261,9 @@ class SamplePickerField extends AbstractField {
 		$aria_checked   = $is_selected ? 'true' : 'false';
 		$describedby    = $show_desc && ! empty( $sample['description'] ) ? ' aria-describedby="' . esc_attr( $desc_id ) . '"' : '';
 
-		$html  = '<div class="shqf-picker-item' . $selected_class . '" data-sample-id="' . esc_attr( (string) $sample_id ) . '"' . $cats_attr;
+		$html      = '<div class="shqf-picker-item' . $selected_class . '" data-sample-id="' . esc_attr( (string) $sample_id ) . '"' . $cats_attr;
 		$aria_name = ! empty( $sample['name'] ) ? $sample['name'] : 'Sample ' . $sample_id;
-		$html .= ' role="checkbox" aria-checked="' . $aria_checked . '" aria-label="' . esc_attr( $aria_name ) . '"' . $describedby . '>';
+		$html     .= ' role="checkbox" aria-checked="' . $aria_checked . '" aria-label="' . esc_attr( $aria_name ) . '"' . $describedby . '>';
 
 		// Hidden checkbox for form submission (not exposed to assistive tech).
 		$checked = $is_selected ? ' checked' : '';

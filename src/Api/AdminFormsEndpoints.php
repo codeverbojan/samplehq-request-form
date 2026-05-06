@@ -24,11 +24,15 @@ use WP_REST_Server;
 class AdminFormsEndpoints extends AdminEndpointBase {
 
 	/**
+	 * Forms repository.
+	 *
 	 * @var FormsTable
 	 */
 	private FormsTable $forms;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param FormsTable $forms Forms repo.
 	 */
 	public function __construct( FormsTable $forms ) {

@@ -119,9 +119,9 @@ class WooCommerceSource implements ProductSourceInterface {
 		}
 
 		// Batch-load category names and prime image caches for all products.
-		$cat_map       = $this->batch_load_category_names( $all_products );
-		$image_id_map  = $this->batch_prime_image_caches( $all_products );
-		$max_qty       = (int) get_option( 'shqf_woo_max_quantity', 3 );
+		$cat_map      = $this->batch_load_category_names( $all_products );
+		$image_id_map = $this->batch_prime_image_caches( $all_products );
+		$max_qty      = (int) get_option( 'shqf_woo_max_quantity', 3 );
 
 		$samples = [];
 		foreach ( $all_products as $product ) {
@@ -155,13 +155,13 @@ class WooCommerceSource implements ProductSourceInterface {
 		$max_qty = (int) get_option( 'shqf_woo_max_quantity', 3 );
 
 		return [
-			'id'           => $product->get_id(),
-			'name'         => $product->get_name(),
-			'sku'          => $product->get_sku(),
-			'description'  => $product->get_short_description() ?: $product->get_description(),
-			'max_quantity' => $max_qty,
-			'status'       => 'active',
-			'sort_order'   => 0,
+			'id'            => $product->get_id(),
+			'name'          => $product->get_name(),
+			'sku'           => $product->get_sku(),
+			'description'   => $product->get_short_description() ? $product->get_short_description() : $product->get_description(),
+			'max_quantity'  => $max_qty,
+			'status'        => 'active',
+			'sort_order'    => 0,
 			'custom_fields' => null,
 		];
 	}
@@ -172,11 +172,13 @@ class WooCommerceSource implements ProductSourceInterface {
 	 * @return array<int, array{id: int, name: string, slug: string}> Category list.
 	 */
 	public function get_categories(): array {
-		$terms = get_terms( [
-			'taxonomy'   => 'product_cat',
-			'hide_empty' => true,
-			'orderby'    => 'name',
-		] );
+		$terms = get_terms(
+			[
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => true,
+				'orderby'    => 'name',
+			]
+		);
 
 		if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
 			return [];
@@ -279,7 +281,7 @@ class WooCommerceSource implements ProductSourceInterface {
 			'id'             => $product_id,
 			'name'           => $product->get_name(),
 			'sku'            => $product->get_sku(),
-			'description'    => $product->get_short_description() ?: $product->get_description(),
+			'description'    => $product->get_short_description() ? $product->get_short_description() : $product->get_description(),
 			'max_quantity'   => $max_qty,
 			'status'         => 'active',
 			'sort_order'     => 0,
@@ -358,7 +360,7 @@ class WooCommerceSource implements ProductSourceInterface {
 					// Term wasn't in the batch result -- fetch individually (rare).
 					$term = get_term( $cat_id, 'product_cat' );
 					if ( $term instanceof \WP_Term ) {
-						$names[]                    = $term->name;
+						$names[]               = $term->name;
 						$term_names[ $cat_id ] = $term->name;
 					}
 				}
@@ -394,8 +396,8 @@ class WooCommerceSource implements ProductSourceInterface {
 		$id_to_image = [];
 		$image_ids   = [];
 		foreach ( $products as $product ) {
-			$pid      = $product->get_id();
-			$image_id = (int) $product->get_image_id();
+			$pid                 = $product->get_id();
+			$image_id            = (int) $product->get_image_id();
 			$id_to_image[ $pid ] = $image_id;
 			if ( $image_id > 0 ) {
 				$image_ids[] = $image_id;
@@ -432,12 +434,14 @@ class WooCommerceSource implements ProductSourceInterface {
 			return [];
 		}
 
-		$terms = get_terms( [
-			'taxonomy'   => 'product_cat',
-			'include'    => $ids,
-			'hide_empty' => false,
-			'fields'     => 'id=>slug',
-		] );
+		$terms = get_terms(
+			[
+				'taxonomy'   => 'product_cat',
+				'include'    => $ids,
+				'hide_empty' => false,
+				'fields'     => 'id=>slug',
+			]
+		);
 
 		if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
 			return [];

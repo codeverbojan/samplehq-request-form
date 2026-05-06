@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_call:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Lint
@@ -71,8 +75,11 @@ jobs:
       - name: Run unit tests
         run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --testdox
 
+  # Heavy jobs: only run on PRs (not on every push to main).
+  # The release workflow calls ci.yml via workflow_call, so these still gate releases.
   test-integration:
     name: Integration (WP ${{ matrix.wp }} / PHP ${{ matrix.php }})
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -135,6 +142,7 @@ jobs:
 
   test-e2e:
     name: E2E Tests
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

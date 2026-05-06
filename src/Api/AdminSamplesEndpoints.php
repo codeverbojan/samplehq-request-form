@@ -27,26 +27,36 @@ use WP_REST_Server;
 class AdminSamplesEndpoints extends AdminEndpointBase {
 
 	/**
+	 * Samples repository.
+	 *
 	 * @var SamplesTable
 	 */
 	private SamplesTable $samples;
 
 	/**
+	 * Sample categories repository.
+	 *
 	 * @var SampleCategoriesTable
 	 */
 	private SampleCategoriesTable $categories;
 
 	/**
+	 * Sample-to-category mapping repository.
+	 *
 	 * @var SampleCategoryMapTable
 	 */
 	private SampleCategoryMapTable $category_map;
 
 	/**
+	 * Sample images repository.
+	 *
 	 * @var SampleImagesTable
 	 */
 	private SampleImagesTable $images;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param SamplesTable           $samples      Samples repo.
 	 * @param SampleCategoriesTable  $categories   Categories repo.
 	 * @param SampleCategoryMapTable $category_map Category map repo.

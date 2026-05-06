@@ -134,19 +134,14 @@ class SampleCategoryMapTable {
 	}
 
 	/**
-	 * Get all sample IDs for a category.
-	 *
-	 * @param int $category_id Category ID.
-	 * @return int[] Array of sample IDs.
-	 */
-	/**
 	 * Get sample counts grouped by category ID in a single query.
 	 *
 	 * @return array<int, int> Map of category_id => sample count.
 	 */
 	public function count_by_category(): array {
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $this->wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constructor.
 			"SELECT category_id, COUNT(*) AS cnt FROM {$this->table} GROUP BY category_id",
 			ARRAY_A
 		);
@@ -159,6 +154,12 @@ class SampleCategoryMapTable {
 		return $counts;
 	}
 
+	/**
+	 * Get all sample IDs for a category.
+	 *
+	 * @param int $category_id Category ID.
+	 * @return int[] Array of sample IDs.
+	 */
 	public function get_samples_for_category( int $category_id ): array {
 		$sql = $this->wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -179,10 +180,12 @@ class SampleCategoryMapTable {
 	 * @return array<int, int[]> Map of sample_id => category_id[].
 	 */
 	public function get_categories_for_samples( array $sample_ids ): array {
-		$sample_ids = array_values( array_filter(
-			array_map( 'intval', $sample_ids ),
-			static fn( int $id ) => $id > 0
-		) );
+		$sample_ids = array_values(
+			array_filter(
+				array_map( 'intval', $sample_ids ),
+				static fn( int $id ) => $id > 0
+			)
+		);
 
 		if ( empty( $sample_ids ) ) {
 			return [];
@@ -190,8 +193,8 @@ class SampleCategoryMapTable {
 
 		$placeholders = implode( ',', array_fill( 0, count( $sample_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constructor, placeholders from array_fill.
 			"SELECT sample_id, category_id FROM {$this->table} WHERE sample_id IN ({$placeholders})",
 			$sample_ids
 		);

@@ -217,11 +217,13 @@ class Mailer {
 			return;
 		}
 
-		$log = wp_json_encode( [
-			'to'      => $recipient,
-			'status'  => $success ? 'sent' : 'failed',
-			'sent_at' => current_time( 'mysql', true ),
-		] );
+		$log = wp_json_encode(
+			[
+				'to'      => $recipient,
+				'status'  => $success ? 'sent' : 'failed',
+				'sent_at' => current_time( 'mysql', true ),
+			]
+		);
 
 		$this->meta_table->add( $submission_id, '_email_' . $type, (string) $log );
 	}

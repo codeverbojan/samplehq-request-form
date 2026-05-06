@@ -24,11 +24,15 @@ use WP_REST_Server;
 class AdminCategoriesEndpoints extends AdminEndpointBase {
 
 	/**
+	 * Sample categories repository.
+	 *
 	 * @var SampleCategoriesTable
 	 */
 	private SampleCategoriesTable $categories;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param SampleCategoriesTable $categories Categories repo.
 	 */
 	public function __construct( SampleCategoriesTable $categories ) {

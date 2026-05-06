@@ -227,7 +227,7 @@ class CategoryListTable extends \WP_List_Table {
 	private function sort_hierarchically( array $cats ): array {
 		$by_parent = [];
 		foreach ( $cats as $cat ) {
-			$pid = (int) ( $cat['parent_id'] ?? 0 );
+			$pid                 = (int) ( $cat['parent_id'] ?? 0 );
 			$by_parent[ $pid ][] = $cat;
 		}
 
@@ -241,7 +241,7 @@ class CategoryListTable extends \WP_List_Table {
 	 * Recursively walk the category tree.
 	 *
 	 * @param array<int, array<int, array<string, mixed>>> $by_parent Categories grouped by parent_id.
-	 * @param int                                           $parent_id Current parent.
+	 * @param int                                          $parent_id Current parent.
 	 * @param array<int, array<string, mixed>>             &$result   Output array.
 	 * @return void
 	 */

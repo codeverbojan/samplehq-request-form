@@ -446,7 +446,7 @@ class FormsTable {
 
 		foreach ( $json_fields as $field ) {
 			if ( isset( $row[ $field ] ) && is_string( $row[ $field ] ) ) {
-				$decoded = json_decode( $row[ $field ], true );
+				$decoded       = json_decode( $row[ $field ], true );
 				$row[ $field ] = ( JSON_ERROR_NONE === json_last_error() && is_array( $decoded ) )
 					? $decoded
 					: [];

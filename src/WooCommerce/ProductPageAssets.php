@@ -148,8 +148,8 @@ class ProductPageAssets {
 		echo '<div class="shqf-woo-modal__backdrop"></div>';
 		echo '<div class="shqf-woo-modal__content">';
 		echo '<div class="shqf-woo-modal__header">';
-		echo '<h2 id="shqf-woo-modal-title" class="shqf-woo-modal__title">' . $title . '</h2>';
-		echo '<button type="button" class="shqf-woo-modal__close" aria-label="' . $close_label . '">';
+		echo '<h2 id="shqf-woo-modal-title" class="shqf-woo-modal__title">' . esc_html( $title ) . '</h2>';
+		echo '<button type="button" class="shqf-woo-modal__close" aria-label="' . esc_attr( $close_label ) . '">';
 		echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
 		echo '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
 		echo '</svg></button></div>';
@@ -187,7 +187,12 @@ class ProductPageAssets {
 		}
 
 		// Fallback: use the first published form (limit 1 to avoid loading all forms).
-		$forms = $this->forms->list_all( [ 'status' => 'published', 'limit' => 1 ] );
+		$forms = $this->forms->list_all(
+			[
+				'status' => 'published',
+				'limit'  => 1,
+			]
+		);
 		if ( ! empty( $forms ) ) {
 			return (int) $forms[0]['id'];
 		}

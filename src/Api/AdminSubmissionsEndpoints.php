@@ -25,16 +25,22 @@ use WP_REST_Server;
 class AdminSubmissionsEndpoints extends AdminEndpointBase {
 
 	/**
+	 * Submissions repository.
+	 *
 	 * @var SubmissionsTable
 	 */
 	private SubmissionsTable $submissions;
 
 	/**
+	 * Submission metadata repository.
+	 *
 	 * @var SubmissionMetaTable
 	 */
 	private SubmissionMetaTable $submission_meta;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param SubmissionsTable    $submissions     Submissions repo.
 	 * @param SubmissionMetaTable $submission_meta Submission meta repo.
 	 */
@@ -59,16 +65,18 @@ class AdminSubmissionsEndpoints extends AdminEndpointBase {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'list_submissions' ],
 				'permission_callback' => $perm,
-				'args'                => self::list_args_schema( [
-					'form_id'    => [
-						'type'              => 'integer',
-						'sanitize_callback' => 'absint',
-					],
-					'is_starred' => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				] ),
+				'args'                => self::list_args_schema(
+					[
+						'form_id'    => [
+							'type'              => 'integer',
+							'sanitize_callback' => 'absint',
+						],
+						'is_starred' => [
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						],
+					]
+				),
 			]
 		);
 

@@ -28,21 +28,29 @@ use SampleHQForm\Database\SampleCategoryMapTable;
 class LibrarySource implements ProductSourceInterface {
 
 	/**
+	 * Samples repository.
+	 *
 	 * @var SamplesTable
 	 */
 	private SamplesTable $samples;
 
 	/**
+	 * Sample images repository.
+	 *
 	 * @var SampleImagesTable
 	 */
 	private SampleImagesTable $images;
 
 	/**
+	 * Categories repository.
+	 *
 	 * @var SampleCategoriesTable
 	 */
 	private SampleCategoriesTable $categories;
 
 	/**
+	 * Category mapping repository.
+	 *
 	 * @var SampleCategoryMapTable
 	 */
 	private SampleCategoryMapTable $category_map;
@@ -69,6 +77,8 @@ class LibrarySource implements ProductSourceInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array $filters Optional filters passed to SamplesTable::list_all().
 	 */
 	public function get_samples( array $filters = [] ): array {
 		return $this->samples->list_all( $filters );
@@ -76,6 +86,8 @@ class LibrarySource implements ProductSourceInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $id Sample ID.
 	 */
 	public function get_sample( int $id ): ?array {
 		return $this->samples->get( $id );
@@ -85,7 +97,7 @@ class LibrarySource implements ProductSourceInterface {
 	 * {@inheritDoc}
 	 */
 	public function get_categories(): array {
-		$all = $this->categories->list_all();
+		$all    = $this->categories->list_all();
 		$result = [];
 		foreach ( $all as $cat ) {
 			$result[] = [
@@ -99,6 +111,9 @@ class LibrarySource implements ProductSourceInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int    $sample_id Sample ID.
+	 * @param string $size      WordPress image size.
 	 */
 	public function get_image_url( int $sample_id, string $size = 'medium' ): ?string {
 		$image_id = $this->images->get_featured( $sample_id );
@@ -113,6 +128,8 @@ class LibrarySource implements ProductSourceInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $sample_id Sample ID.
 	 */
 	public function get_sample_category_names( int $sample_id ): array {
 		$cat_ids    = $this->category_map->get_categories_for_sample( $sample_id );
