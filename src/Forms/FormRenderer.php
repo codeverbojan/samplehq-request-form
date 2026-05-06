@@ -538,7 +538,7 @@ class FormRenderer {
 	private static function sanitize_custom_css( string $css ): string {
 		$css = wp_strip_all_tags( $css );
 
-		// Strip legacy browser CSS XSS vectors.
+		// Admin-authored CSS (requires manage_options) — blocklist is defense-in-depth, not exhaustive.
 		$css = preg_replace( '/expression\s*\(/i', '/* blocked */(', $css );
 		$css = preg_replace( '/url\s*\(\s*["\']?\s*javascript\s*:/i', 'url(/* blocked */', $css );
 		$css = preg_replace( '/url\s*\(\s*["\']?\s*data\s*:/i', 'url(/* blocked */', $css );

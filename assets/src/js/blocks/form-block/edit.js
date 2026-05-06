@@ -90,6 +90,17 @@ export default function Edit( { attributes, setAttributes } ) {
 				<ServerSideRender
 					block="samplehq-form/form"
 					attributes={ attributes }
+					LoadingResponsePlaceholder={ () => (
+						<div className="shqf-form-wrapper">
+							<div
+								className="shqf-skeleton shqf-skeleton-text"
+								style={ { width: '40%', height: '24px' } }
+							/>
+							<div className="shqf-skeleton shqf-skeleton-field" />
+							<div className="shqf-skeleton shqf-skeleton-field" />
+							<div className="shqf-skeleton shqf-skeleton-button" />
+						</div>
+					) }
 				/>
 			) : (
 				<Placeholder

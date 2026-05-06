@@ -46,6 +46,16 @@ module.exports = {
 						'assets/build/blocks/form-block/block.json'
 					),
 				},
+				{
+					from: path.resolve(
+						__dirname,
+						'assets/src/css/admin/admin.css'
+					),
+					to: path.resolve(
+						__dirname,
+						'assets/build/css/admin/admin.css'
+					),
+				},
 			],
 		} ),
 	],

@@ -50,6 +50,109 @@ import '../../css/public/form.css';
 		}
 	}
 
+	const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+	/**
+	 * Save form field values to localStorage as a draft.
+	 *
+	 * @param {HTMLFormElement} form The form element.
+	 */
+	function saveDraft( form ) {
+		const formId = form.dataset.formId;
+		if ( ! formId ) {
+			return;
+		}
+
+		const draft = {};
+		form.querySelectorAll( 'input, textarea, select' ).forEach( ( el ) => {
+			if (
+				! el.name ||
+				el.type === 'hidden' ||
+				el.type === 'file' ||
+				el.name === 'shqf_token' ||
+				el.name === 'shqf_hp'
+			) {
+				return;
+			}
+			if ( el.type === 'checkbox' || el.type === 'radio' ) {
+				if ( el.checked ) {
+					draft[ el.name ] = draft[ el.name ] || [];
+					draft[ el.name ].push( el.value );
+				}
+			} else {
+				draft[ el.name ] = el.value;
+			}
+		} );
+
+		try {
+			window.localStorage.setItem(
+				'shqf_draft_' + formId,
+				JSON.stringify( { ts: Date.now(), data: draft } )
+			);
+		} catch {
+			// Storage full or unavailable — fail silently.
+		}
+	}
+
+	function restoreDraft( form ) {
+		const formId = form.dataset.formId;
+		if ( ! formId ) {
+			return;
+		}
+
+		let envelope;
+		try {
+			const raw = window.localStorage.getItem( 'shqf_draft_' + formId );
+			if ( ! raw ) {
+				return;
+			}
+			envelope = JSON.parse( raw );
+		} catch {
+			return;
+		}
+
+		if ( ! envelope || typeof envelope !== 'object' ) {
+			return;
+		}
+
+		// Support both old (flat) and new (envelope with ts) formats.
+		const draft = envelope.data || envelope;
+		if ( typeof draft !== 'object' ) {
+			return;
+		}
+
+		// Expire stale drafts.
+		if ( envelope.ts && Date.now() - envelope.ts > DRAFT_MAX_AGE_MS ) {
+			clearDraft( formId );
+			return;
+		}
+
+		form.querySelectorAll( 'input, textarea, select' ).forEach( ( el ) => {
+			if ( ! el.name || ! ( el.name in draft ) ) {
+				return;
+			}
+			if ( el.type === 'checkbox' || el.type === 'radio' ) {
+				const vals = draft[ el.name ];
+				el.checked = Array.isArray( vals ) && vals.includes( el.value );
+				// Update picker item visual state.
+				const pickerItem = el.closest( '.shqf-picker-item' );
+				if ( pickerItem ) {
+					updatePickerItemState( pickerItem, el.checked );
+				}
+			} else {
+				el.value = draft[ el.name ];
+			}
+		} );
+	}
+
+	function clearDraft( formId ) {
+		try {
+			window.localStorage.removeItem( 'shqf_draft_' + formId );
+		} catch {
+			// Fail silently.
+		}
+	}
+
 	/**
 	 * Initialize all forms on the page.
 	 */
@@ -69,6 +172,9 @@ import '../../css/public/form.css';
 			return;
 		}
 		form.dataset.shqfInit = '1';
+
+		// Restore any saved draft before attaching handlers.
+		restoreDraft( form );
 
 		// Attach submit handler.
 		form.addEventListener( 'submit', ( e ) => {
@@ -98,6 +204,16 @@ import '../../css/public/form.css';
 				form.removeEventListener( 'input', onFirstInput );
 			}
 		} );
+
+		// Auto-save draft on input/change (debounced).
+		let draftTimer;
+		const debounceSaveDraft = () => {
+			clearTimeout( draftTimer );
+			draftTimer = setTimeout( () => saveDraft( form ), 1000 );
+		};
+		form.addEventListener( 'input', debounceSaveDraft );
+		form.addEventListener( 'change', debounceSaveDraft );
+		form.shqfCancelDraft = () => clearTimeout( draftTimer );
 	}
 
 	/**
@@ -108,7 +224,7 @@ import '../../css/public/form.css';
 	 */
 	async function handleSubmit( form, formId ) {
 		const submitBtn = form.querySelector( '.shqf-button--submit' );
-		const messagesEl = getMessagesElement( form ); // eslint-disable-line @wordpress/no-unused-vars-before-return
+		const messagesEl = getMessagesElement( form );
 
 		// Disable submit button during request.
 		if ( submitBtn ) {
@@ -170,6 +286,11 @@ import '../../css/public/form.css';
 			}
 
 			if ( result.success ) {
+				if ( form.shqfCancelDraft ) {
+					form.shqfCancelDraft();
+				}
+				clearDraft( formId );
+
 				// Analytics: successful submission event.
 				fireAnalyticsEvent( form, 'shqf_form_submit', {} );
 
@@ -1114,7 +1235,7 @@ import '../../css/public/form.css';
 						customMsg || 'Value does not match the required format.'
 					);
 				}
-			} catch ( e ) {
+			} catch {
 				// Invalid regex -- skip client-side check, server will catch it.
 			}
 		}
@@ -1193,6 +1314,15 @@ import '../../css/public/form.css';
 
 			// Search and category pill filtering.
 			setupPickerFiltering( picker );
+
+			// Enable scrollable container for large item counts.
+			const itemsContainer = picker.querySelector( '.shqf-picker-items' );
+			if ( itemsContainer && itemsContainer.children.length > 50 ) {
+				itemsContainer.classList.add( 'shqf-picker-items--scrollable' );
+				itemsContainer.setAttribute( 'tabindex', '0' );
+				itemsContainer.setAttribute( 'role', 'group' );
+				itemsContainer.setAttribute( 'aria-label', 'Sample list' );
+			}
 		} );
 	}
 

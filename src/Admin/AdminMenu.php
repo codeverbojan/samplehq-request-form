@@ -124,7 +124,7 @@ class AdminMenu {
 
 		wp_enqueue_style(
 			'shqf-admin',
-			SHQF_URL . 'assets/src/css/admin/admin.css',
+			SHQF_URL . 'assets/build/css/admin/admin.css',
 			[],
 			SHQF_VERSION
 		);

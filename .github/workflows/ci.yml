@@ -75,6 +75,27 @@ jobs:
       - name: Run unit tests
         run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --testdox
 
+  coverage:
+    name: Code Coverage
+    needs: test-unit
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: pcov
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run unit tests with coverage
+        run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --coverage-text
+
   # Heavy jobs: only run on PRs (not on every push to main).
   # The release workflow calls ci.yml via workflow_call, so these still gate releases.
   test-integration:

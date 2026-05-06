@@ -17,7 +17,7 @@
 	--shqf-button-text: #fff;
 	--shqf-radius: 8px;
 	--shqf-text-color: #0d0d0d;
-	--shqf-muted-color: #7a7a7a;
+	--shqf-muted-color: #767676;
 	--shqf-border-color: #e8e8e8;
 	--shqf-label-color: #374151;
 	--shqf-input-bg: #fff;
@@ -598,9 +598,7 @@
 	min-width: 120px;
 }
 
-.shqf-address-field label,
-.shqf-address-field--full label,
-.shqf-address-field--half label {
+.shqf-address-field label {
 	display: block;
 	font-family: Inter, system-ui, sans-serif;
 	font-size: 14px;
@@ -742,6 +740,20 @@
 	display: grid;
 	gap: 16px;
 	margin-top: 12px;
+}
+
+.shqf-picker-items--scrollable {
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+.shqf-picker-items--scrollable > .shqf-picker-item {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 280px;
+}
+
+.shqf-picker--list .shqf-picker-items--scrollable > .shqf-picker-item {
+	contain-intrinsic-size: auto 52px;
 }
 
 /* --- Grid layout --- */
@@ -1050,6 +1062,7 @@
 	background: var(--shqf-primary);
 	border-radius: 2px;
 	transition: width 0.3s ease;
+	will-change: width;
 }
 
 /* ==========================================================================
@@ -1349,11 +1362,50 @@
 	border-top-color: var(--shqf-button-text);
 	border-radius: 50%;
 	animation: shqf-spin 0.6s linear infinite;
+	will-change: transform;
 }
 
 @keyframes shqf-spin {
 
 	to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Skeleton Loading
+   ========================================================================== */
+
+.shqf-skeleton {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: shqf-shimmer 1.5s ease-in-out infinite;
+	border-radius: var(--shqf-radius, 8px);
+}
+
+.shqf-skeleton-text {
+	height: 1em;
+	margin-bottom: 0.5em;
+	border-radius: 4px;
+}
+
+.shqf-skeleton-text:last-child {
+	width: 60%;
+}
+
+.shqf-skeleton-field {
+	height: 44px;
+	margin-bottom: 16px;
+}
+
+.shqf-skeleton-button {
+	height: 48px;
+	width: 160px;
+}
+
+@keyframes shqf-shimmer {
+
+	0% { background-position: 200% 0; }
+
+	100% { background-position: -200% 0; }
 }
 
 /* ==========================================================================
@@ -1536,14 +1588,19 @@
 	background: rgba(74, 222, 128, 0.1);
 }
 
+.shqf-dark .shqf-skeleton {
+	background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+	background-size: 200% 100%;
+}
+
 /* ==========================================================================
    Reduced Motion
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
 
-	.shqf-input,
-	.shqf-button,
+	.shqf-form-wrapper .shqf-input,
+	.shqf-form-wrapper .shqf-button,
 	.shqf-button--submit,
 	.shqf-button--prev,
 	.shqf-button--next,
@@ -1551,11 +1608,26 @@
 	.shqf-picker--grid .shqf-picker-item,
 	.shqf-picker--list .shqf-picker-item,
 	.shqf-picker-item-checkbox,
+	.shqf-pill,
 	.shqf-step-label {
 		transition-duration: 0.01ms;
 	}
 
 	.shqf-spinner {
 		animation: none;
+		will-change: auto;
+	}
+
+	.shqf-progress__bar {
+		will-change: auto;
+	}
+
+	.shqf-skeleton {
+		animation: none;
+		background: #f0f0f0;
+	}
+
+	.shqf-dark .shqf-skeleton {
+		background: #2a2a2a;
 	}
 }

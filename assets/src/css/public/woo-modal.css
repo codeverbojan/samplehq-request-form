@@ -202,3 +202,11 @@ html.shqf-modal-open {
 	text-decoration: underline;
 	color: #0d6358;
 }
+
+@media (prefers-reduced-motion: reduce) {
+
+	.shqf-woo-modal__close,
+	.shqf-woo-request-btn {
+		transition-duration: 0.01ms;
+	}
+}
