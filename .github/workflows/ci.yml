@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
   workflow_call:
+    inputs:
+      full:
+        description: 'Run all CI jobs including integration, E2E, and plugin check'
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -78,7 +83,7 @@ jobs:
   coverage:
     name: Code Coverage
     needs: test-unit
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    if: github.event_name == 'pull_request' || inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -96,11 +101,11 @@ jobs:
       - name: Run unit tests with coverage
         run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --coverage-text
 
-  # Heavy jobs: only run on PRs (not on every push to main).
-  # The release workflow calls ci.yml via workflow_call, so these still gate releases.
+  # Heavy jobs: skip on direct pushes to main (lint + unit are enough there).
+  # Run on PRs and when the release workflow requests full CI via inputs.full.
   test-integration:
     name: Integration (WP ${{ matrix.wp }} / PHP ${{ matrix.php }})
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    if: github.event_name == 'pull_request' || inputs.full
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -163,7 +168,7 @@ jobs:
 
   test-e2e:
     name: E2E Tests
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    if: github.event_name == 'pull_request' || inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -213,7 +218,7 @@ jobs:
 
   plugin-check:
     name: Plugin Check
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    if: github.event_name == 'pull_request' || inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
