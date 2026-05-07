@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const COND_URL = fixtures.pageUrls.conditional;
+let COND_URL: string;
 
 test.describe( 'Conditional logic', () => {
+	test.beforeAll( () => {
+		COND_URL = loadFixtures().pageUrls.conditional;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( COND_URL );

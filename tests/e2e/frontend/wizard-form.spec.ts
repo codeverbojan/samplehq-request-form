@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const WIZARD_URL = fixtures.pageUrls.wizard;
+let WIZARD_URL: string;
 
 test.describe( 'Wizard form template', () => {
+	test.beforeAll( () => {
+		WIZARD_URL = loadFixtures().pageUrls.wizard;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( WIZARD_URL );

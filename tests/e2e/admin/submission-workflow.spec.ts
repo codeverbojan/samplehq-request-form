@@ -1,10 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
 const SUBS_URL = '/wp-admin/admin.php?page=shqf-submissions';
 
 function wpEval( php: string ): string {
@@ -32,7 +29,7 @@ function lastLine( s: string ): string {
 
 /** Create a test submission via DB and return its ID. */
 function createSubmission( email: string ): string {
-	const formId = fixtures.formIds.grid;
+	const formId = loadFixtures().formIds.grid;
 	return lastLine(
 		wpEval( `
 		global $wpdb;

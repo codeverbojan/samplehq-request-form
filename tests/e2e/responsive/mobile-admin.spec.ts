@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const BLANK_FORM_ID = fixtures.formIds.blank;
+let BLANK_FORM_ID: string;
 
 test.describe( 'Mobile admin responsive', () => {
+	test.beforeAll( () => {
+		BLANK_FORM_ID = loadFixtures().formIds.blank;
+	} );
+
 	test( 'dashboard cards stack in single column', async ( { page } ) => {
 		await page.goto( '/wp-admin/admin.php?page=shqf-dashboard' );
 		await expect( page.locator( '.shqf-dashboard-card' ).first() ).toBeVisible();

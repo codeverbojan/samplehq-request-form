@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const CHECKLIST_URL = fixtures.pageUrls.checklist;
+let CHECKLIST_URL: string;
 
 test.describe( 'Checklist form template', () => {
+	test.beforeAll( () => {
+		CHECKLIST_URL = loadFixtures().pageUrls.checklist;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( CHECKLIST_URL );

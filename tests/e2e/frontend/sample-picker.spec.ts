@@ -1,14 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-// The all-fields form has a grid picker with max_selections=3,
-// allow_quantity=true, show_images=true, show_descriptions=true.
-const ALL_FIELDS_URL = fixtures.pageUrls.allFields;
+let ALL_FIELDS_URL: string;
 
 test.describe( 'Sample picker', () => {
+	test.beforeAll( () => {
+		ALL_FIELDS_URL = loadFixtures().pageUrls.allFields;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( ALL_FIELDS_URL );

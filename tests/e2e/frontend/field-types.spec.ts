@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const ALL_FIELDS_URL = fixtures.pageUrls.allFields;
+let ALL_FIELDS_URL: string;
 
 test.describe( 'All field types', () => {
+	test.beforeAll( () => {
+		ALL_FIELDS_URL = loadFixtures().pageUrls.allFields;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( ALL_FIELDS_URL );

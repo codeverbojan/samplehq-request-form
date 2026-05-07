@@ -241,9 +241,15 @@ jobs:
       - name: Build assets
         run: npm run build
 
+      - name: Build distribution copy
+        run: |
+          mkdir -p build/samplehq-request-form
+          rsync -rc --exclude-from=.distignore . build/samplehq-request-form/
+
       - name: Run plugin check
         uses: wordpress/plugin-check-action@v1
         with:
+          build-dir: build/samplehq-request-form
           ignore-warnings: true
 
   build:

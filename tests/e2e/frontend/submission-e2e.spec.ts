@@ -1,12 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const WIZARD_URL = fixtures.pageUrls.wizard;
-const GRID_URL = fixtures.pageUrls.grid;
+let WIZARD_URL: string;
+let GRID_URL: string;
+
+test.beforeAll( () => {
+	const f = loadFixtures();
+	WIZARD_URL = f.pageUrls.wizard;
+	GRID_URL = f.pageUrls.grid;
+} );
 
 function wpEval( php: string ): string {
 	const escaped = php.replace( /'/g, "'\\''" );
@@ -110,7 +113,7 @@ test.describe( 'Submission end-to-end', () => {
 	} );
 
 	test( 'submission count increments on form', async ( { page } ) => {
-		const gridFormId = fixtures.formIds.grid;
+		const gridFormId = loadFixtures().formIds.grid;
 
 		// Get count before via DB query.
 		const beforeRaw = wpEval( `

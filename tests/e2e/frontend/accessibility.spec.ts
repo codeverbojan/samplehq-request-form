@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const GRID_URL = fixtures.pageUrls.grid;
+let GRID_URL: string;
 
 test.describe( 'Accessibility', () => {
+	test.beforeAll( () => {
+		GRID_URL = loadFixtures().pageUrls.grid;
+	} );
+
 	test.beforeEach( async ( { page } ) => {
 		await page.context().clearCookies();
 		await page.goto( GRID_URL );

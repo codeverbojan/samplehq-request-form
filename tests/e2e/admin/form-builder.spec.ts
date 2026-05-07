@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
-import * as fs from 'fs';
+import { loadFixtures } from '../load-fixtures';
 
-const fixtures = JSON.parse(
-	fs.readFileSync( 'tests/e2e/.fixtures.json', 'utf-8' )
-);
-const BLANK_FORM_ID = fixtures.formIds.blank;
-const BUILDER_URL = `/wp-admin/admin.php?page=shqf-forms&action=edit&id=${ BLANK_FORM_ID }`;
+let BUILDER_URL: string;
+
+test.beforeAll( () => {
+	const f = loadFixtures();
+	BUILDER_URL = `/wp-admin/admin.php?page=shqf-forms&action=edit&id=${ f.formIds.blank }`;
+} );
 
 function wpEval( php: string ): string {
 	const escaped = php.replace( /'/g, "'\\''" );
