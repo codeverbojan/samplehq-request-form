@@ -29,6 +29,31 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate changelog exists for this version
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not determine version from tag"
+            exit 1
+          fi
+          if ! grep -q "^= ${VERSION} =$" readme.txt; then
+            echo "::error::readme.txt is missing changelog entry for version ${VERSION}."
+            echo "::error::Run 'bash bin/release.sh ${VERSION}' to generate it before tagging."
+            exit 1
+          fi
+          echo "Changelog entry for ${VERSION} found in readme.txt"
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -56,17 +81,6 @@ jobs:
           mkdir -p build/samplehq-request-form
           rsync -rc --exclude-from=.distignore . build/samplehq-request-form/
           cd build && zip -r samplehq-request-form.zip samplehq-request-form/
-
-      - name: Extract version from tag
-        id: version
-        run: |
-          if [ -n "${{ inputs.tag }}" ]; then
-            TAG="${{ inputs.tag }}"
-          else
-            TAG="${GITHUB_REF#refs/tags/}"
-          fi
-          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
