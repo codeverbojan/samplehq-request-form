@@ -83,7 +83,7 @@ jobs:
   coverage:
     name: Code Coverage
     needs: test-unit
-    if: github.event_name == 'pull_request' || inputs.full
+    if: inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -101,11 +101,11 @@ jobs:
       - name: Run unit tests with coverage
         run: php -d memory_limit=512M vendor/bin/phpunit --testsuite Unit --coverage-text
 
-  # Heavy jobs: skip on direct pushes to main (lint + unit are enough there).
-  # Run on PRs and when the release workflow requests full CI via inputs.full.
+  # Heavy jobs: only run when the release workflow requests full CI via inputs.full.
+  # Run locally before pushing; saves free GitHub Actions minutes.
   test-integration:
     name: Integration (WP ${{ matrix.wp }} / PHP ${{ matrix.php }})
-    if: github.event_name == 'pull_request' || inputs.full
+    if: inputs.full
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -168,8 +168,9 @@ jobs:
 
   test-e2e:
     name: E2E Tests
-    if: github.event_name == 'pull_request' || inputs.full
+    if: inputs.full
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
 
@@ -218,7 +219,7 @@ jobs:
 
   plugin-check:
     name: Plugin Check
-    if: github.event_name == 'pull_request' || inputs.full
+    if: inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
