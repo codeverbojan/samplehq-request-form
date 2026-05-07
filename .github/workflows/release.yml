@@ -75,11 +75,13 @@ jobs:
           generate_release_notes: true
 
       - name: Warn if SVN credentials missing
-        if: ${{ secrets.SVN_USERNAME == '' }}
+        if: env.SVN_USERNAME == ''
         run: echo "::warning::SVN_USERNAME secret not set — skipping WordPress.org deploy"
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
 
       - name: Deploy to WordPress.org
-        if: ${{ secrets.SVN_USERNAME != '' }}
+        if: env.SVN_USERNAME != ''
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
