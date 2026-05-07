@@ -4,7 +4,7 @@ Tags: sample request, form builder, product samples, sample management, request 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,13 @@ labels, keyboard navigation, screen reader support, and focus management.
 
 == Changelog ==
 
+= 1.0.1 =
+* Enforced release procedure with CI changelog validation
+* Automated changelog generation from conventional commits
+* Fix: Move file doc comment before ABSPATH guard in phpstan-constants.php
+* Fix: Ensure full CI runs in release workflow
+
+
 = 1.0.0 =
 * Sample library with categories, images, SKUs, and descriptions
 * Visual drag-and-drop form builder with 15+ field types
@@ -176,6 +183,9 @@ labels, keyboard navigation, screen reader support, and focus management.
 * WCAG 2.2 Level AA accessibility
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+2 new feature(s), 2 fix(es).
 
 = 1.0.0 =
 Initial release.

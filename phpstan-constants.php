@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SHQF_VERSION', '1.0.0' );
+define( 'SHQF_VERSION', '1.0.1' );
 define( 'SHQF_FILE', __DIR__ . '/samplehq-request-form.php' );
 define( 'SHQF_DIR', __DIR__ . '/' );
 define( 'SHQF_URL', 'https://example.com/wp-content/plugins/samplehq-request-form/' );

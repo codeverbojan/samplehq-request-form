@@ -79,7 +79,7 @@ class PluginTest extends TestCase {
 		$this->assertTrue( defined( 'SHQF_FILE' ) );
 		$this->assertTrue( defined( 'SHQF_DIR' ) );
 		$this->assertTrue( defined( 'SHQF_URL' ) );
-		$this->assertSame( '1.0.0', SHQF_VERSION );
+		$this->assertSame( '1.0.1', SHQF_VERSION );
 	}
 
 	/**
