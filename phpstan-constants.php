@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * PHPStan bootstrap file for plugin constants.
  *
@@ -11,6 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package SampleHQForm
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 define( 'SHQF_VERSION', '1.0.0' );
 define( 'SHQF_FILE', __DIR__ . '/samplehq-request-form.php' );
