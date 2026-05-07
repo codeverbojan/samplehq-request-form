@@ -90,9 +90,18 @@ echo "    $BOOTSTRAP_FILE  — SHQF_VERSION define"
 echo "    $BLOCK_JSON      — version"
 echo "    $PLUGIN_TEST     — version assertion"
 echo ""
-echo "  Manual steps:"
-echo "    1. Update CHANGELOG.md — move [Unreleased] to [${VERSION}] with today's date"
-echo "    2. Update readme.txt == Changelog == section"
-echo "    3. Run: npm install --package-lock-only (sync package-lock.json)"
-echo "    4. Commit: git commit -am 'release: v${VERSION}'"
-echo "    5. Tag: git tag -a v${VERSION} -m 'Release ${VERSION}'"
+
+# Generate and apply changelog.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -x "${SCRIPT_DIR}/generate-changelog.sh" ]; then
+	echo "Generating changelog..."
+	bash "${SCRIPT_DIR}/generate-changelog.sh" --version "${VERSION}" --apply
+	echo ""
+fi
+
+echo "  Next steps:"
+echo "    1. Review the changelog in readme.txt"
+echo "    2. Run: npm install --package-lock-only (sync package-lock.json)"
+echo "    3. Commit: git commit -am 'release: v${VERSION}'"
+echo "    4. Tag: git tag -a v${VERSION} -m 'Release ${VERSION}'"
+echo "    5. Push: git push origin main && git push origin v${VERSION}"
