@@ -11,7 +11,6 @@ export default defineConfig( {
 
 	use: {
 		baseURL: 'http://localhost:8888',
-		storageState: 'tests/e2e/.auth/admin.json',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
 	},
@@ -20,12 +19,14 @@ export default defineConfig( {
 		{
 			name: 'setup',
 			testMatch: /global-setup\.ts/,
-			use: { storageState: undefined },
 		},
 		{
 			name: 'chromium',
 			testIgnore: /responsive\//,
-			use: { ...devices[ 'Desktop Chrome' ] },
+			use: {
+				...devices[ 'Desktop Chrome' ],
+				storageState: 'tests/e2e/.auth/admin.json',
+			},
 			dependencies: [ 'setup' ],
 		},
 		{
@@ -33,6 +34,7 @@ export default defineConfig( {
 			testMatch: /responsive\/|frontend\//,
 			use: {
 				...devices[ 'Pixel 7' ],
+				storageState: 'tests/e2e/.auth/admin.json',
 			},
 			dependencies: [ 'setup' ],
 		},

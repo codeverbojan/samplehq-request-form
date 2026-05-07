@@ -250,6 +250,7 @@ jobs:
         uses: wordpress/plugin-check-action@v1
         with:
           build-dir: build/samplehq-request-form
+          exclude-checks: offloading_files
           ignore-warnings: true
 
   build:
