@@ -26,12 +26,28 @@ module.exports = [
 					peerDependencies: true,
 					devDependencies: [
 						'**/*.config.js',
+						'**/*.test.js',
 						'**/test/**',
 						'**/tests/**',
 					],
 					packageDir: '.',
 				},
 			],
+		},
+	},
+	{
+		files: [ '**/*.test.js' ],
+		languageOptions: {
+			globals: {
+				describe: 'readonly',
+				it: 'readonly',
+				expect: 'readonly',
+				jest: 'readonly',
+				beforeEach: 'readonly',
+				afterEach: 'readonly',
+				beforeAll: 'readonly',
+				afterAll: 'readonly',
+			},
 		},
 	},
 ];

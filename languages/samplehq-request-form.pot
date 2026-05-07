@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-06T12:18:39+00:00\n"
+"POT-Creation-Date: 2026-05-07T16:37:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: samplehq-request-form\n"
@@ -85,7 +85,7 @@ msgstr ""
 #: src/Api/AdminFormsEndpoints.php:136
 #: src/Api/AdminFormsEndpoints.php:181
 #: src/Api/AdminFormsEndpoints.php:210
-#: src/Blocks/FormBlock.php:146
+#: src/Blocks/FormBlock.php:148
 #: src/Forms/FormProcessor.php:147
 #: src/Shortcode.php:103
 msgid "Form not found."
@@ -119,7 +119,7 @@ msgstr ""
 #: src/Admin/AdminMenu.php:456
 #: src/Admin/AdminMenu.php:457
 #: src/Admin/DashboardPage.php:46
-#: src/Blocks/FormBlock.php:116
+#: src/Blocks/FormBlock.php:118
 msgid "SampleHQ Forms"
 msgstr ""
 
@@ -132,6 +132,7 @@ msgstr ""
 #: src/Admin/AdminMenu.php:477
 #: src/Admin/SamplesPage.php:82
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:72
 msgid "Sample Library"
 msgstr ""
 
@@ -154,6 +155,7 @@ msgstr ""
 #: src/Admin/FormListTable.php:61
 #: src/Admin/SubmissionsPage.php:52
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:403
 msgid "Submissions"
 msgstr ""
 
@@ -183,7 +185,7 @@ msgstr ""
 
 #: src/Admin/CategoriesPage.php:113
 #: src/Admin/CategoryListTable.php:81
-#: src/Admin/DashboardPage.php:258
+#: src/Admin/DashboardPage.php:264
 #: src/Admin/SampleEditPage.php:161
 #: src/Admin/SampleEditPage.php:370
 #: src/Admin/SampleEditPage.php:425
@@ -192,6 +194,7 @@ msgstr ""
 #: src/Admin/SubmissionsPage.php:453
 #: src/Privacy/PrivacyHandler.php:129
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:54
 msgid "Name"
 msgstr ""
 
@@ -202,6 +205,7 @@ msgstr ""
 #: src/Admin/CategoriesPage.php:119
 #: src/Admin/CategoryListTable.php:83
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:382
 msgid "Slug"
 msgstr ""
 
@@ -225,6 +229,7 @@ msgstr ""
 #: src/Admin/CategoryListTable.php:82
 #: src/Admin/SampleEditPage.php:130
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:251
 msgid "Description"
 msgstr ""
 
@@ -281,7 +286,7 @@ msgid "Delete"
 msgstr ""
 
 #: src/Admin/CategoryListTable.php:138
-#: src/Admin/DashboardPage.php:385
+#: src/Admin/DashboardPage.php:391
 #: src/Admin/FormListTable.php:226
 #: src/Admin/SampleListTable.php:292
 msgid "Edit"
@@ -325,7 +330,7 @@ msgid "Quick Actions"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:126
-#: src/Admin/DashboardPage.php:428
+#: src/Admin/DashboardPage.php:434
 #: src/Admin/SampleEditPage.php:85
 #: src/Admin/SampleEditPage.php:191
 #: src/Admin/SampleListTable.php:503
@@ -338,7 +343,7 @@ msgid "Add a new product sample to your library."
 msgstr ""
 
 #: src/Admin/DashboardPage.php:132
-#: src/Admin/DashboardPage.php:445
+#: src/Admin/DashboardPage.php:451
 #: src/Admin/FormListTable.php:330
 msgid "Create Form"
 msgstr ""
@@ -356,51 +361,53 @@ msgstr ""
 msgid "Bulk import samples from a CSV file."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:220
+#: src/Admin/DashboardPage.php:226
 msgid "Recent Submissions"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:228
+#: src/Admin/DashboardPage.php:234
 #: src/Admin/SubmissionListTable.php:493
 msgid "Filter by form"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:235
+#: src/Admin/DashboardPage.php:241
 #: src/Admin/SubmissionListTable.php:496
 msgid "All Forms"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:246
+#: src/Admin/DashboardPage.php:252
 #: src/Admin/SubmissionListTable.php:538
 msgid "No submissions yet. Once visitors submit your forms, they will appear here."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:257
+#: src/Admin/DashboardPage.php:263
 #: src/Admin/SettingsPage.php:45
 #: src/Admin/SubmissionListTable.php:92
 #: src/Admin/SubmissionsPage.php:456
 #: src/Forms/FormTemplates.php:267
 #: src/Privacy/PrivacyHandler.php:125
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:34
 msgid "Email"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:259
+#: src/Admin/DashboardPage.php:265
 #: src/Admin/SettingsPage.php:343
 #: src/Admin/SubmissionListTable.php:94
 #: src/Admin/SubmissionsPage.php:470
 msgid "Form"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:260
+#: src/Admin/DashboardPage.php:266
 #: src/Admin/SampleListTable.php:114
 #: src/Admin/SubmissionListTable.php:97
 #: src/Privacy/PrivacyHandler.php:145
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:84
 msgid "Date"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:261
+#: src/Admin/DashboardPage.php:267
 #: src/Admin/FormListTable.php:60
 #: src/Admin/SampleEditPage.php:205
 #: src/Admin/SampleListTable.php:113
@@ -408,65 +415,65 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:271
+#: src/Admin/DashboardPage.php:277
 #: src/Admin/SubmissionsPage.php:464
 msgid "Unknown"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:294
+#: src/Admin/DashboardPage.php:300
 msgid "View all submissions"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:361
+#: src/Admin/DashboardPage.php:367
 msgid "Recent Forms"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:367
+#: src/Admin/DashboardPage.php:373
 msgid "No forms yet. Create your first form to get started."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:408
+#: src/Admin/DashboardPage.php:414
 msgid "Getting Started"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:424
+#: src/Admin/DashboardPage.php:430
 msgid "Add samples to your library"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:425
+#: src/Admin/DashboardPage.php:431
 msgid "Create your product samples with images, descriptions, and categories."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:441
+#: src/Admin/DashboardPage.php:447
 msgid "Create a form"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:442
+#: src/Admin/DashboardPage.php:448
 msgid "Choose a template or build from scratch using the visual form builder."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:458
+#: src/Admin/DashboardPage.php:464
 msgid "Publish and embed on your site"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:459
+#: src/Admin/DashboardPage.php:465
 msgid "Set a form to Published, then add it to any page with the Gutenberg block or shortcode."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:499
+#: src/Admin/DashboardPage.php:505
 msgid "SampleHQ Platform"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:500
+#: src/Admin/DashboardPage.php:506
 msgid "Connect this plugin to your SampleHQ workspace to sync submissions, manage shipping, and integrate with your CRM."
 msgstr ""
 
-#: src/Admin/DashboardPage.php:502
+#: src/Admin/DashboardPage.php:508
 msgid "Connection Settings"
 msgstr ""
 
-#: src/Admin/DashboardPage.php:504
-#: src/Admin/DashboardPage.php:506
+#: src/Admin/DashboardPage.php:510
+#: src/Admin/DashboardPage.php:512
 msgid "Dismiss"
 msgstr ""
 
@@ -476,6 +483,7 @@ msgstr ""
 
 #: src/Admin/FormListTable.php:59
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:393
 msgid "Shortcode"
 msgstr ""
 
@@ -507,6 +515,7 @@ msgstr ""
 
 #: src/Admin/FormListTable.php:84
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:678
 msgid "Publish"
 msgstr ""
 
@@ -530,6 +539,7 @@ msgstr ""
 
 #: src/Admin/FormListTable.php:229
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:665
 msgid "Preview"
 msgstr ""
 
@@ -607,11 +617,15 @@ msgstr ""
 
 #: src/Admin/FormsPage.php:332
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:213
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:277
 msgid "Card Grid"
 msgstr ""
 
 #: src/Admin/FormsPage.php:333
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:214
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:281
 msgid "Checklist"
 msgstr ""
 
@@ -736,6 +750,8 @@ msgstr ""
 #: src/Admin/SampleEditPage.php:426
 #: src/Admin/SubmissionsPage.php:355
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:169
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:468
 msgid "Value"
 msgstr ""
 
@@ -749,6 +765,7 @@ msgstr ""
 
 #: src/Admin/SampleEditPage.php:185
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:689
 msgid "Save"
 msgstr ""
 
@@ -772,7 +789,7 @@ msgid "SKU"
 msgstr ""
 
 #: src/Admin/SampleEditPage.php:228
-#: src/Admin/SettingsPage.php:449
+#: src/Admin/SettingsPage.php:448
 msgid "Max Quantity"
 msgstr ""
 
@@ -914,6 +931,8 @@ msgstr ""
 
 #: src/Admin/SettingsPage.php:43
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:190
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:45
 msgid "General"
 msgstr ""
 
@@ -1012,6 +1031,7 @@ msgstr ""
 
 #: src/Admin/SettingsPage.php:278
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:285
 msgid "From Name"
 msgstr ""
 
@@ -1138,69 +1158,70 @@ msgstr ""
 msgid "Product tag slug that marks a product as sample-eligible (used when filter is \"tagged\")."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:445
+#: src/Admin/SettingsPage.php:444
 msgid "Product categories to include (used when filter is \"category\"). Hold Ctrl/Cmd to select multiple."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:452
+#: src/Admin/SettingsPage.php:451
 msgid "Maximum quantity per sample in the picker."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:470
+#: src/Admin/SettingsPage.php:469
 msgid "WooCommerce integration enabled. The \"Request a Sample\" button will now appear on eligible product pages."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:512
+#: src/Admin/SettingsPage.php:511
 msgid "Connected"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:516
+#: src/Admin/SettingsPage.php:515
 msgid "Connection Details"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:520
+#: src/Admin/SettingsPage.php:519
 msgid "Workspace"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:524
+#: src/Admin/SettingsPage.php:523
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:89
 msgid "URL"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:530
+#: src/Admin/SettingsPage.php:529
 msgid "Connected by"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:536
+#: src/Admin/SettingsPage.php:535
 msgid "Connected on"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:547
+#: src/Admin/SettingsPage.php:546
 msgid "Disconnect from SampleHQ? Submission sync will stop."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:548
+#: src/Admin/SettingsPage.php:547
 msgid "Disconnect"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:562
+#: src/Admin/SettingsPage.php:561
 msgid "Not connected"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:566
-#: src/Admin/SettingsPage.php:576
+#: src/Admin/SettingsPage.php:565
+#: src/Admin/SettingsPage.php:575
 msgid "Connect to SampleHQ"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:569
+#: src/Admin/SettingsPage.php:568
 msgid "Connect this plugin to your SampleHQ workspace to sync submissions to the cloud platform. If you do not have an account yet, one will be created during the connection process."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:571
+#: src/Admin/SettingsPage.php:570
 msgid "When connected, new submissions are saved locally and then pushed to your workspace where you can manage them alongside CRM integrations, shipping, and team workflows."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:580
+#: src/Admin/SettingsPage.php:579
 msgid "Connection will be available in a future update. The plugin works fully without connecting."
 msgstr ""
 
@@ -1383,9 +1404,9 @@ msgstr ""
 msgid "Deleted Product"
 msgstr ""
 
-#: src/Api/AdminSamplesEndpoints.php:183
-#: src/Api/AdminSamplesEndpoints.php:233
-#: src/Api/AdminSamplesEndpoints.php:267
+#: src/Api/AdminSamplesEndpoints.php:175
+#: src/Api/AdminSamplesEndpoints.php:225
+#: src/Api/AdminSamplesEndpoints.php:259
 msgid "Sample not found."
 msgstr ""
 
@@ -1398,23 +1419,27 @@ msgstr ""
 msgid "File type not allowed."
 msgstr ""
 
-#: src/Blocks/FormBlock.php:135
+#: src/Blocks/FormBlock.php:137
 msgid "Please select a form in the block settings."
 msgstr ""
 
 #: src/Elementor/FormWidget.php:39
 #: assets/build/blocks/form-block/index.js:1
+#: assets/src/js/blocks/form-block/edit.js:108
 msgid "SampleHQ Form"
 msgstr ""
 
 #: src/Elementor/FormWidget.php:78
 #: assets/build/blocks/form-block/index.js:1
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:41
+#: assets/src/js/blocks/form-block/edit.js:67
 msgid "Form Settings"
 msgstr ""
 
 #: src/Elementor/FormWidget.php:86
 #: assets/build/blocks/form-block/index.js:1
+#: assets/src/js/blocks/form-block/edit.js:73
 msgid "Select Form"
 msgstr ""
 
@@ -1493,11 +1518,13 @@ msgstr ""
 
 #: src/Fields/AddressField.php:42
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:117
 msgid "Street Address"
 msgstr ""
 
 #: src/Fields/AddressField.php:48
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:126
 msgid "City"
 msgstr ""
 
@@ -1527,6 +1554,7 @@ msgstr ""
 
 #: src/Fields/ConsentField.php:79
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:119
 msgid "Consent"
 msgstr ""
 
@@ -1551,6 +1579,7 @@ msgstr ""
 #: src/Forms/FormTemplates.php:120
 #: src/Forms/FormTemplates.php:157
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:91
 msgid "First Name"
 msgstr ""
 
@@ -1559,6 +1588,7 @@ msgstr ""
 #: src/Forms/FormTemplates.php:121
 #: src/Forms/FormTemplates.php:158
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:100
 msgid "Last Name"
 msgstr ""
 
@@ -1673,13 +1703,15 @@ msgid "An error occurred while saving your submission. Please reload the page an
 msgstr ""
 
 #: src/Forms/FormProcessor.php:275
-#: src/Forms/FormTemplates.php:367
+#: src/Forms/FormTemplates.php:346
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:31
 msgid "Thank you! Your sample request has been submitted."
 msgstr ""
 
 #: src/Forms/FormRenderer.php:70
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:28
 msgid "Submit Request"
 msgstr ""
 
@@ -1809,28 +1841,29 @@ msgstr ""
 
 #: src/Forms/FormTemplates.php:285
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:39
 msgid "Phone"
 msgstr ""
 
-#: src/Forms/FormTemplates.php:325
+#: src/Forms/FormTemplates.php:304
 msgid "Select Samples"
 msgstr ""
 
-#: src/Forms/FormTemplates.php:369
+#: src/Forms/FormTemplates.php:348
 msgid "Request Samples"
 msgstr ""
 
-#: src/Plugin.php:445
-#: src/Plugin.php:471
+#: src/Plugin.php:434
+#: src/Plugin.php:460
 msgid "SampleHQ Form:"
 msgstr ""
 
 #. translators: %s: error reason
-#: src/Plugin.php:449
+#: src/Plugin.php:438
 msgid "Turnstile CAPTCHA verification is currently failing (%s). Form submissions with CAPTCHA enabled will be blocked until the issue resolves."
 msgstr ""
 
-#: src/Plugin.php:472
+#: src/Plugin.php:461
 msgid "The upload directory (wp-content/uploads/shqf/) is publicly accessible. Uploaded files are not protected. If you are using Nginx, add this to your server block:"
 msgstr ""
 
@@ -1899,790 +1932,995 @@ msgid "Thank you for your interest."
 msgstr ""
 
 #: assets/build/blocks/form-block/index.js:1
+#: assets/src/js/blocks/form-block/edit.js:54
 msgid "Select a form"
 msgstr ""
 
 #: assets/build/blocks/form-block/index.js:1
+#: assets/src/js/blocks/form-block/edit.js:109
 msgid "Select a form from the block settings panel."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:25
 msgid "Standard"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:29
 msgid "Text"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:44
 msgid "Paragraph"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:49
 msgid "Number"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:60
 msgid "Choice"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:64
 msgid "Dropdown"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:69
 msgid "Radio"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:74
 msgid "Checkbox"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:80
 msgid "Advanced"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:94
 msgid "File Upload"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:99
 msgid "Address"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:104
 msgid "Hidden"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:412
+#: assets/src/js/admin/form-builder/constants.js:110
 msgid "Content"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:114
 msgid "HTML"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:124
 msgid "Sample Picker"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:334
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:59
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:273
+#: assets/src/js/admin/form-builder/constants.js:130
 msgid "Layout"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:134
 msgid "Row / Columns"
 msgstr ""
 
 #: assets/build/form-builder.js:1
-msgid "Option 1"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Option 2"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Option 3"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "I agree to the privacy policy."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Enter your content here."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Enter text…"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Select an option…"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "State"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "ZIP"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Drag & drop or click to upload"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "HTML content"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Hidden field"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Drop fields here"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Add Fields"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Search fields…"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Product Source"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Load products from"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "WooCommerce Products"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Products are loaded from your WooCommerce catalog."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Samples are loaded from the plugin sample library."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Sample Source"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Show Samples"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "All active samples"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "From specific categories"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Specific samples only"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Select categories:"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Loading…"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "No categories found. Create categories in the Samples section."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Select samples:"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "No samples found. Add samples in the Sample Library."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Display"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Max Selections"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "0 = unlimited"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Allow Quantity"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Max Quantity Per Sample"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Show Images"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Show Descriptions"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Subtitle"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Displayed below the form title."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Default"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Wizard (Multi-step)"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Grid"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "List"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Submit Button Text"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "After Submission"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "On Success"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Show success message"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Redirect to URL"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Success Message"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Redirect URL"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Full URL including https://"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Field Display"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Label Position"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Above input"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Beside input (left)"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Hidden (placeholder only)"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Placeholder"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Show label + placeholder"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Label only (no placeholder)"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Placeholder as label"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Controls whether placeholders appear inside inputs."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Tracking"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Analytics Events"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Fire events for GTM, GA4, and custom scripts on form view, start, step change, and submission."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Email Notifications"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Admin Notification Email"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Override the global admin email for this form. Leave blank to use global setting."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Override the sender name for this form. Leave blank to use global setting."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Send Confirmation Email"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Send a receipt email to the person who submitted the form."
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Appearance"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Primary Color"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Button Color"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Border Radius (px)"
-msgstr ""
-
-#: assets/build/form-builder.js:1
-msgid "Info"
-msgstr ""
-
-#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:144
 msgid "equals"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:147
 msgid "does not equal"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:149
 msgid "contains"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:152
 msgid "does not contain"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:154
 msgid "is empty"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/constants.js:157
 msgid "is not empty"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/field-factory.js:42
+msgid "Option 1"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/field-factory.js:46
+msgid "Option 2"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/field-factory.js:50
+msgid "Option 3"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/field-factory.js:57
+msgid "I agree to the privacy policy."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/field-factory.js:67
+msgid "Enter your content here."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPalette.js:44
+msgid "Add Fields"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPalette.js:48
+msgid "Search fields…"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:49
+msgid "Subtitle"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:53
+msgid "Displayed below the form title."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:63
+msgid "Default"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:67
+msgid "Wizard (Multi-step)"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:74
+msgid "Grid"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:78
+msgid "List"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:85
+msgid "Submit Button Text"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:100
+msgid "After Submission"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:104
+msgid "On Success"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:108
+msgid "Show success message"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:115
+msgid "Redirect to URL"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:128
+msgid "Success Message"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:144
+msgid "Redirect URL"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:156
+msgid "Full URL including https://"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:165
+msgid "Field Display"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:169
+msgid "Label Position"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:176
+msgid "Above input"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:183
+msgid "Beside input (left)"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:190
+msgid "Hidden (placeholder only)"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:225
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:202
+msgid "Placeholder"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:206
+msgid "Show label + placeholder"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:213
+msgid "Label only (no placeholder)"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:220
+msgid "Placeholder as label"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:230
+msgid "Controls whether placeholders appear inside inputs."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:238
+msgid "Tracking"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:242
+msgid "Analytics Events"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:253
+msgid "Fire events for GTM, GA4, and custom scripts on form view, start, step change, and submission."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:261
+msgid "Email Notifications"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:268
+msgid "Admin Notification Email"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:279
+msgid "Override the global admin email for this form. Leave blank to use global setting."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:290
+msgid "Override the sender name for this form. Leave blank to use global setting."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:296
+msgid "Send Confirmation Email"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:304
+msgid "Send a receipt email to the person who submitted the form."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:312
+msgid "Appearance"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:317
+msgid "Primary Color"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:334
+msgid "Button Color"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:358
+msgid "Border Radius (px)"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:375
+msgid "Info"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:61
+msgid "Product Source"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:65
+msgid "Load products from"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:79
+msgid "WooCommerce Products"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:94
+msgid "Products are loaded from your WooCommerce catalog."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:98
+msgid "Samples are loaded from the plugin sample library."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:109
+msgid "Sample Source"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:113
+msgid "Show Samples"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:117
+msgid "All active samples"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:124
+msgid "From specific categories"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:131
+msgid "Specific samples only"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:144
+msgid "Select categories:"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:151
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:211
+msgid "Loading…"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:159
+msgid "No categories found. Create categories in the Samples section."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:204
+msgid "Select samples:"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:219
+msgid "No samples found. Add samples in the Sample Library."
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:269
+msgid "Display"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:288
+msgid "Max Selections"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:296
+msgid "0 = unlimited"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:299
+msgid "Allow Quantity"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:307
+msgid "Max Quantity Per Sample"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:321
+msgid "Show Images"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:326
+msgid "Show Descriptions"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:71
 msgid "Conditional Logic"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:106
 msgid "Show this field when"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:115
 msgid "all"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:119
 msgid "any"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:129
 msgid "of these rules match:"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:142
 msgid "-- Select field --"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:180
 msgid "Remove rule"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:196
 msgid "+ Add Rule"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:204
 msgid "Remove All"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:77
 msgid "Show or hide this field based on other field values."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:88
 msgid "+ Add Condition"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:95
 msgid "Add other fields to the form first."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:61
 msgid "2 Equal"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:65
 msgid "3 Equal"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:73
 msgid "1/3 + 2/3"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:77
 msgid "2/3 + 1/3"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:106
 msgid "Row Settings"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:111
 msgid "Column Layout"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:185
 msgid "Untitled"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:194
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:281
 msgid "Label"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:208
 msgid "Field Key"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:218
 msgid "Unique identifier used in submissions."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:239
 msgid "Required"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:259
 msgid "Help text shown below the field."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:270
 msgid "Options"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:304
 msgid "Remove option"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:319
 msgid "+ Add Option"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:327
 msgid "Choice Display"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:338
 msgid "Vertical (stacked)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:345
 msgid "Horizontal (inline)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:365
 msgid "Columns"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:374
 msgid "1 column"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:381
 msgid "2 columns"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:388
 msgid "3 columns"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:416
 msgid "HTML Content"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:424
 msgid "Safe HTML allowed (p, a, strong, em, ul, ol, li)."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:436
 msgid "Consent Text"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:440
 msgid "Agreement Text"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:448
 msgid "HTML links allowed (e.g., link to privacy policy)."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:472
 msgid "Value Source"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:479
 msgid "Static value"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:486
 msgid "URL parameter"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:493
 msgid "Current page URL"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:506
 msgid "Default Value"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:518
 msgid "Parameter Name"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:526
 msgid "e.g., \"utm_source\" reads from ?utm_source=value"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:538
 msgid "File Settings"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:542
 msgid "Allowed Types"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:551
 msgid "Images (JPG, PNG, GIF, WebP)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:558
 msgid "Documents (PDF, DOC, XLS)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:565
 msgid "All common types"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:583
 msgid "Max File Size (MB)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:607
 msgid "Date Range"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:611
 msgid "Earliest Date"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:628
 msgid "Latest Date"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:650
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:725
 msgid "Validation"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:654
 msgid "Min Characters"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:676
 msgid "Max Characters"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:699
 msgid "Pattern (Regex)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:713
 msgid "e.g., [A-Z]{2}\\d{4} for codes like AB1234"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:729
 msgid "Minimum Value"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:749
 msgid "Maximum Value"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:774
 msgid "Error Messages"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:781
 msgid "Required Error"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:795
 msgid "Override the default \"X is required.\" message."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:801
 msgid "Format Error"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldSettings.js:815
 msgid "Custom message for format/pattern validation failures."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:30
+msgid "Enter text…"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:44
+msgid "Select an option…"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:135
+msgid "State"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:144
+msgid "ZIP"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:156
+msgid "Drag & drop or click to upload"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:172
+msgid "HTML content"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:195
+msgid "Hidden field"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ColumnDropZone.js:42
+#: assets/src/js/admin/form-builder/components/FieldPreview.js:276
+msgid "Drop fields here"
+msgstr ""
+
+#: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableField.js:65
 msgid "Drag to reorder"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableField.js:88
 msgid "Duplicate field"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableField.js:104
 msgid "Confirm delete"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableField.js:109
 msgid "Delete?"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableField.js:119
 msgid "Remove field"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/ColumnDropZone.js:41
 msgid "Drop here"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableRowGroup.js:64
 msgid "Drag to reorder row"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableRowGroup.js:73
 msgid "Row"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableRowGroup.js:75
 msgid "columns"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableRowGroup.js:84
 msgid "Duplicate row"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/SortableRowGroup.js:98
 msgid "Remove row"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormCanvas.js:23
 msgid "Click or drag a field from the left to add it."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:158
 msgid "(Copy)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:285
 msgid "Form saved."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:290
 msgid "Failed to save form."
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:579
 msgid "Back to forms"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:588
 msgid "You have unsaved changes. Leave anyway?"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:606
 msgid "Form title"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:630
 msgid "Undo"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:631
 msgid "Undo (Ctrl+Z)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:639
 msgid "Redo"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:640
 msgid "Redo (Ctrl+Shift+Z)"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:677
 msgid "Switch to Draft"
 msgstr ""
 
 #: assets/build/form-builder.js:1
+#: assets/src/js/admin/form-builder/components/FormBuilder.js:688
 msgid "Saving…"
 msgstr ""
 
 #: assets/build/blocks/form-block/block.json
+#: assets/src/js/blocks/form-block/block.json
 msgctxt "block title"
 msgid "SampleHQ Form"
 msgstr ""
 
 #: assets/build/blocks/form-block/block.json
+#: assets/src/js/blocks/form-block/block.json
 msgctxt "block description"
 msgid "Embed a sample request form."
 msgstr ""
 
 #: assets/build/blocks/form-block/block.json
+#: assets/src/js/blocks/form-block/block.json
 msgctxt "block keyword"
 msgid "form"
 msgstr ""
 
 #: assets/build/blocks/form-block/block.json
+#: assets/src/js/blocks/form-block/block.json
 msgctxt "block keyword"
 msgid "sample"
 msgstr ""
 
 #: assets/build/blocks/form-block/block.json
+#: assets/src/js/blocks/form-block/block.json
 msgctxt "block keyword"
 msgid "request"
 msgstr ""

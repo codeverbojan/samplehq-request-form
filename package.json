@@ -23,12 +23,23 @@
 		"test:integration": "wp-env run tests-cli -- /var/www/html/wp-content/plugins/samplehq-request-form/vendor/bin/phpunit -c /var/www/html/wp-content/plugins/samplehq-request-form/phpunit-integration.xml.dist",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
-		"test:e2e:headed": "playwright test --headed"
+		"test:e2e:headed": "playwright test --headed",
+		"plugin-check": "wp-env run cli -- wp plugin check samplehq-request-form",
+		"prepare": "husky"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.2",
 		"@wordpress/env": "11.5.0",
-		"@wordpress/scripts": "32.1.0"
+		"@wordpress/scripts": "32.1.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.0.2"
+	},
+	"lint-staged": {
+		"*.php": "vendor/bin/phpcs --no-colors",
+		"assets/src/**/*.js": "wp-scripts lint-js",
+		"assets/src/**/*.{css,scss}": "wp-scripts lint-style"
 	},
 	"dependencies": {
 		"@dnd-kit/core": "^6.3.1",

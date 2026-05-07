@@ -72,41 +72,6 @@ class PluginTest extends TestCase {
 	}
 
 	/**
-	 * boot() should register textdomain loading on 'init'.
-	 */
-	public function test_boot_registers_textdomain_on_init(): void {
-		Monkey\Functions\stubs( [
-			'register_activation_hook'   => null,
-			'register_deactivation_hook' => null,
-		] );
-
-		Plugin::boot();
-
-		$this->assertTrue(
-			has_action( 'init' ),
-			'Expected at least one callback registered on init (including load_textdomain).'
-		);
-	}
-
-	/**
-	 * load_textdomain() should call load_plugin_textdomain with correct args.
-	 */
-	public function test_load_textdomain_calls_wp_function(): void {
-		Monkey\Functions\stubs( [
-			'register_activation_hook'   => null,
-			'register_deactivation_hook' => null,
-			'plugin_basename'            => static fn( $f ) => 'samplehq-request-form/' . basename( $f ),
-		] );
-
-		Monkey\Functions\expect( 'load_plugin_textdomain' )
-			->once()
-			->with( 'samplehq-request-form', false, 'samplehq-request-form/languages' );
-
-		$plugin = Plugin::boot();
-		$plugin->load_textdomain();
-	}
-
-	/**
 	 * Plugin constants should be defined.
 	 */
 	public function test_constants_are_defined(): void {

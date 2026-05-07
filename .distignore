@@ -1,13 +1,18 @@
 # Development files excluded from the wordpress.org release zip.
-/.DS_Store
+.DS_Store
+.env
+.env.*
+*.bak
+*.zip
 /.editorconfig
-/.eslintrc.js
+/eslint.config.js
 /.gitignore
 /.distignore
 /.git
 /.stylelintrc.json
 /.prettierrc.js
 /.phpunit.cache
+/.phpunit.result.cache
 /.wp-env.json
 /.wp-env.override.json
 /.wordpress-org
@@ -24,6 +29,7 @@
 /phpstan-constants.php
 /phpunit.xml.dist
 /phpunit-integration.xml.dist
+/jest.config.js
 /assets/src
 /node_modules
 /vendor
@@ -32,17 +38,17 @@
 
 # GitHub, scripts, and contributing (development only).
 /.github
+/.husky
 /.claude
 /bin
 /CONTRIBUTING.md
 /CODE_OF_CONDUCT.md
 /SECURITY.md
 /README.md
+/CHANGELOG.md
 
 # Plans, specs, and dev-only files.
 /.plans
 /private
 /design-reference
-*.bak
-/E2E_TEST_PLAN.md
-/FORM_PARITY_PLAN.md
+/build

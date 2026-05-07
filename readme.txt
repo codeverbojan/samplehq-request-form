@@ -155,11 +155,25 @@ labels, keyboard navigation, screen reader support, and focus management.
 5. **Settings** -- Configure spam protection (Cloudflare Turnstile, honeypot, rate limiting), email notifications, and WooCommerce integration.
 6. **Sample Editor** -- Rich editor for sample details with custom fields, categories, and images.
 7. **Product Grid** -- Frontend sample picker with product cards, images, and category filtering.
+8. **Email Settings** -- Configure admin notifications, sender name, and submitter confirmation emails.
 
 == Changelog ==
 
 = 1.0.0 =
-* Initial release
+* Sample library with categories, images, SKUs, and descriptions
+* Visual drag-and-drop form builder with 15+ field types
+* Sample picker field with product grid, category filters, and search
+* Multi-step wizard form layout with step indicator and validation
+* Submissions dashboard with search, filter, star, and CSV export
+* Gutenberg block, Elementor widget, and shortcode embedding
+* Spam protection: honeypot, Cloudflare Turnstile, rate limiting
+* Email notifications with customizable templates
+* File upload field with server-side MIME validation
+* WooCommerce integration: product page button, modal form
+* Privacy controls: consent field, IP retention, WP Privacy API
+* Conditional field visibility with rule builder
+* Undo/redo in form builder
+* WCAG 2.2 Level AA accessibility
 
 == Upgrade Notice ==
 

@@ -1,0 +1,23 @@
+name: WordPress.org Asset Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.wordpress-org/**'
+      - 'readme.txt'
+
+jobs:
+  update:
+    name: Deploy assets to wp.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Deploy assets
+        if: ${{ secrets.SVN_USERNAME != '' }}
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: samplehq-request-form

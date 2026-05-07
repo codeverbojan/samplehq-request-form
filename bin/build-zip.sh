@@ -12,6 +12,12 @@ PLUGIN_SLUG="samplehq-request-form"
 BUILD_DIR="build"
 DIST_DIR="${BUILD_DIR}/${PLUGIN_SLUG}"
 
+cleanup() {
+	echo "Restoring dev dependencies..."
+	composer install --no-progress --prefer-dist --quiet 2>/dev/null
+}
+trap cleanup EXIT
+
 echo "Building ${PLUGIN_SLUG} distribution zip..."
 
 # Clean previous build.
@@ -25,6 +31,14 @@ composer install --no-dev --no-progress --prefer-dist --optimize-autoloader --qu
 npm ci --silent
 npm run build
 
+# Generate .pot file for translations.
+if command -v wp &> /dev/null; then
+	wp i18n make-pot . languages/${PLUGIN_SLUG}.pot --slug="${PLUGIN_SLUG}" --quiet
+	echo "  .pot file generated."
+else
+	echo "  wp-cli not found — skipping .pot generation (using existing .pot file)."
+fi
+
 # Copy plugin files, excluding dev-only items.
 rsync -rc --exclude-from=.distignore . "${DIST_DIR}/"
 
@@ -32,9 +46,6 @@ rsync -rc --exclude-from=.distignore . "${DIST_DIR}/"
 cd "${BUILD_DIR}"
 zip -rq "${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}/"
 cd ..
-
-# Restore dev dependencies.
-composer install --no-progress --prefer-dist --quiet
 
 ZIP_SIZE=$(du -h "${BUILD_DIR}/${PLUGIN_SLUG}.zip" | cut -f1)
 echo "Done: ${BUILD_DIR}/${PLUGIN_SLUG}.zip (${ZIP_SIZE})"

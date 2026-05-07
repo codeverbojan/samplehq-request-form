@@ -150,8 +150,6 @@ class Plugin {
 		register_activation_hook( SHQF_FILE, [ $this, 'activate' ] );
 		register_deactivation_hook( SHQF_FILE, [ $this, 'deactivate' ] );
 
-		add_action( 'init', [ $this, 'load_textdomain' ] );
-
 		// WooCommerce HPOS + Blocks compatibility declarations.
 		add_action( 'before_woocommerce_init', [ WooCommerce\WooDetector::class, 'declare_compatibility' ] );
 
@@ -310,15 +308,6 @@ class Plugin {
 
 		// Schedule upload protection check (non-blocking, runs async via cron).
 		wp_schedule_single_event( time() + 10, 'shqf_check_upload_protection' );
-	}
-
-	/**
-	 * Load plugin text domain for translations.
-	 *
-	 * @return void
-	 */
-	public function load_textdomain(): void {
-		load_plugin_textdomain( 'samplehq-request-form', false, dirname( plugin_basename( SHQF_FILE ) ) . '/languages' );
 	}
 
 	/**

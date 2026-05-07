@@ -58,8 +58,6 @@
 			"@analyze",
 			"@test"
 		],
-		"setup-hooks": "cp bin/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push",
-		"post-install-cmd": "@setup-hooks",
-		"post-update-cmd": "@setup-hooks"
+		"setup-hooks": "echo 'Run npm install to set up Husky hooks.'"
 	}
 }

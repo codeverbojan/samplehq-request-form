@@ -14,11 +14,18 @@ jobs:
     uses: ./.github/workflows/ci.yml
 
   release:
-    name: Create Release
+    name: Build & Deploy
     needs: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: wp-cli
+          coverage: none
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -31,6 +38,9 @@ jobs:
 
       - name: Build assets
         run: npm run build
+
+      - name: Generate .pot file
+        run: wp i18n make-pot . languages/samplehq-request-form.pot --slug=samplehq-request-form
 
       - name: Build distribution zip
         run: |
@@ -48,3 +58,17 @@ jobs:
           name: v${{ steps.version.outputs.version }}
           files: build/samplehq-request-form.zip
           generate_release_notes: true
+
+      - name: Warn if SVN credentials missing
+        if: ${{ secrets.SVN_USERNAME == '' }}
+        run: echo "::warning::SVN_USERNAME secret not set — skipping WordPress.org deploy"
+
+      - name: Deploy to WordPress.org
+        if: ${{ secrets.SVN_USERNAME != '' }}
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: samplehq-request-form
+          BUILD_DIR: build/samplehq-request-form
+          ASSETS_DIR: .wordpress-org

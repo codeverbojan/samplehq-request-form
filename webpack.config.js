@@ -13,7 +13,7 @@ module.exports = {
 	entry: {
 		'form-builder': path.resolve(
 			__dirname,
-			'assets/src/js/admin/form-builder.js'
+			'assets/src/js/admin/form-builder/index.js'
 		),
 		'form-frontend': path.resolve(
 			__dirname,

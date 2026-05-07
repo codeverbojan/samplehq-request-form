@@ -81,7 +81,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -210,6 +210,36 @@ jobs:
       - name: Stop wp-env
         if: always()
         run: npx wp-env stop
+
+  plugin-check:
+    name: Plugin Check
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_call'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          ignore-warnings: true
 
   build:
     name: Build
