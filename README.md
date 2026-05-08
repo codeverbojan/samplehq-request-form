@@ -5,11 +5,9 @@
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-A WordPress plugin purpose-built for collecting structured product sample requests.
+A WordPress plugin for collecting product sample requests. Sample library, form builder with a sample picker field, and submissions dashboard -- all local to your WordPress site.
 
-Generic contact forms are not built for sample workflows. SampleHQ Request Form gives you a dedicated sample library, a visual form builder, a unique sample picker field, and a submissions dashboard -- all local to your WordPress site.
-
-Use it when you need a lightweight WordPress intake system. Use the full [SampleHQ platform](https://samplehq.io) when you need fulfillment tracking, CRM attribution, analytics, team workflows, and revenue visibility.
+The [SampleHQ platform](https://samplehq.io) adds fulfillment tracking, CRM, team workflows, and analytics. The plugin works fully without it.
 
 ---
 
@@ -32,62 +30,46 @@ Do not use this on production sites with real customer data until a tagged relea
 
 ---
 
-## What This Plugin Does
+## How It Works
 
-1. You build a **sample library** -- your products with images, SKUs, categories, and descriptions.
-2. You create a **request form** with a drag-and-drop builder. The form includes a sample picker that pulls directly from your library.
-3. Visitors browse your samples, select what they want (with quantities), fill in their details, and submit.
-4. You see every request in a **submissions dashboard** with filters, search, star/unread tracking, and CSV export.
-
-No external accounts. No API keys. No quotas. Install and go.
+1. Add products to the **sample library** (name, SKU, images, categories, description).
+2. Build a **request form** with the drag-and-drop builder. Add a sample picker field -- it pulls from your library.
+3. Visitors browse samples, select what they want with quantities, fill in their details, and submit.
+4. Manage requests in the **submissions dashboard** -- filter, search, star, export CSV.
 
 ---
 
 ## Who Is This For
 
-- **Packaging and labeling manufacturers** -- corrugated, poly bags, mailers, shrink wrap
-- **Material suppliers** -- textiles, metals, wood, composites, plastics
-- **Flooring companies** -- hardwood, tile, vinyl, carpet samples
-- **Building material suppliers** -- countertops, stone, concrete, insulation
-- **WooCommerce stores** -- use your existing product catalog as the sample source
-- **Any B2B company** that sends physical product samples as part of their sales process
-
-If you're currently using a generic contact form for sample requests and wishing it understood products, this is for you.
+- Packaging and labeling manufacturers
+- Material suppliers (textiles, metals, wood, composites)
+- Flooring companies (hardwood, tile, vinyl, carpet)
+- Building material suppliers (countertops, stone, insulation)
+- WooCommerce stores that offer product samples
+- Any B2B company that ships physical samples as part of their sales process
 
 ---
 
 ## Why Not a Normal Form Plugin?
 
-Generic form plugins collect text. Sample requests are product-based.
+Contact Form 7, WPForms, and Gravity Forms are built around text fields. Sample requests are product-based -- you need images, SKUs, categories, quantities, and structured selections that tie back to a catalog.
 
-A real sample request workflow needs product images, SKUs, categories, quantities, structured selections, request history, exportable submissions, and optional WooCommerce product sourcing.
-
-SampleHQ Request Form is built around that workflow from the start.
-
----
-
-## Demo Flow
-
-1. Create sample records with images, SKUs, categories, and descriptions.
-2. Build a request form using the Sample Picker field.
-3. Embed the form on a product, landing, or catalog page.
-4. Visitors select samples and submit their details.
-5. Manage, filter, star, export, or follow up on requests from WordPress.
+This plugin has the catalog built in.
 
 ---
 
 ## Key Features
 
 ### Sample Library
-Manage your products in a dedicated admin screen. Each sample has a name, SKU, description (rich text), categories, multiple images, and custom key-value fields (weight, dimensions, material, etc.). Bulk import via CSV.
+Each sample has a name, SKU, rich text description, categories, multiple images, and custom key-value fields (weight, dimensions, material, etc.). Bulk import via CSV.
 
 ### Visual Form Builder
 Drag-and-drop builder with 17 field types. Multi-column rows, conditional logic (show/hide fields based on values), multi-step wizard layout, and per-form email notification settings.
 
-**Field types:** Text, Email, Phone, Paragraph, Number, Date, URL, Dropdown, Radio, Checkbox, Name (first + last), Address (composite), File Upload, Hidden, HTML Content, Consent/GDPR, Page Break, and the unique **Sample Picker**.
+**Field types:** Text, Email, Phone, Paragraph, Number, Date, URL, Dropdown, Radio, Checkbox, Name (first + last), Address (composite), File Upload, Hidden, HTML Content, Consent/GDPR, and **Sample Picker**.
 
 ### Sample Picker Field
-The field that makes this plugin different from every generic form builder. It reads directly from your sample library (or WooCommerce products) and renders as:
+Reads directly from your sample library (or WooCommerce products when enabled) and renders as:
 - **Card grid** -- product cards with images, descriptions, and category tabs
 - **Checklist** -- compact list with checkboxes and descriptions
 - **List view** -- searchable list with category filtering
@@ -95,18 +77,18 @@ The field that makes this plugin different from every generic form builder. It r
 Visitors select samples, optionally set quantities, and their choices are stored as structured data -- not free text in a textarea.
 
 ### Submissions Dashboard
-Every submission is stored locally. Filter by form, date range, or status. Search by email or name. Star important requests. Mark read/unread. Bulk actions for spam, trash, restore, delete. Export filtered results to CSV (UTF-8, Excel-compatible, formula injection prevention).
+Filter by form, date range, or status. Search by email or name. Star, mark read/unread, bulk actions. Export filtered results to CSV (UTF-8, Excel-compatible, formula injection prevention).
 
-### Embed Anywhere
-- **Gutenberg block** -- search "SampleHQ Form" in the block inserter, pick a form, live preview in the editor
-- **Elementor widget** -- appears automatically when Elementor is active, form selector in the widget panel
-- **Shortcode** -- `[samplehq_form id="123"]` works with any page builder (Divi, Beaver Builder, Classic Editor, etc.)
+### Embedding
+- **Gutenberg block** -- search "SampleHQ Form" in the block inserter, pick a form, server-side preview in the editor
+- **Elementor widget** -- appears when Elementor is active
+- **Shortcode** -- `[samplehq_form id="123"]` works in any page builder
 
 ### WooCommerce Integration
 When WooCommerce is active, a new settings tab appears. Enable it and the sample picker uses your WooCommerce products instead of the built-in library. A "Request a Sample" button is added to product pages. Filter which product categories are available for sampling.
 
 ### Spam Protection
-Three layers always active with zero configuration: honeypot field, IP-based rate limiting (10 per form per hour), and CSRF token validation. Optionally add Cloudflare Turnstile (free invisible CAPTCHA) for an additional layer.
+Active by default: honeypot field, IP-based rate limiting (10 per form per hour, filterable), CSRF token validation. Optional Cloudflare Turnstile (free) for an additional layer.
 
 ### Privacy and GDPR
 - Consent checkbox field type for GDPR compliance
@@ -115,7 +97,7 @@ Three layers always active with zero configuration: honeypot field, IP-based rat
 - Full WordPress Privacy API integration: personal data export and erasure by email
 
 ### Accessibility
-Built with WCAG 2.2 Level AA accessibility practices in mind, including proper labels, keyboard navigation, visible focus states, screen reader announcements, and reduced-motion support.
+Proper label associations, keyboard navigation, visible focus states, ARIA announcements, `prefers-reduced-motion` support. Targets WCAG 2.2 Level AA.
 
 ---
 
@@ -213,18 +195,6 @@ The shortcode works in posts, pages, widgets, and any page builder that supports
 
 ---
 
-## Gutenberg Block
-
-Search for **"SampleHQ Form"** in the block inserter (or browse the "SampleHQ Forms" block category). Select a published form from the dropdown in the block inspector. The block renders a live server-side preview in the editor.
-
----
-
-## Elementor Widget
-
-When Elementor is active, a **SampleHQ Form** widget appears in the Elementor panel. Drag it onto your page, select a form from the dropdown, and publish. The widget uses the same rendering as the shortcode and block.
-
----
-
 ## WooCommerce Integration
 
 When WooCommerce 8.0+ is active:
@@ -233,20 +203,18 @@ When WooCommerce 8.0+ is active:
 2. Enable "Use WooCommerce products as sample source"
 3. Optionally filter by product categories (only show specific categories in the sample picker)
 4. A **"Request a Sample"** button is added to WooCommerce single product pages
-5. The sample picker field in your forms now shows WooCommerce products with their images, prices, and descriptions
+5. The sample picker field in your forms now shows WooCommerce products with their images and descriptions
 
-The built-in sample library still works alongside WooCommerce -- you choose which source each form's sample picker uses.
+Each form's sample picker can use either the built-in library or WooCommerce products.
 
 ---
 
 ## Email Notifications
 
-Two emails are sent on each submission (both configurable):
+1. **Admin notification** -- all submitted data + link to the submission. Reply-To set to the submitter's email.
+2. **Submitter confirmation** (optional) -- confirms the request was received with a summary.
 
-1. **Admin notification** -- sent to the site admin (or custom recipients). Includes all submitted data with a link to the submission in wp-admin. Supports Reply-To so you can respond directly to the requester.
-2. **Submitter confirmation** -- optional auto-reply sent to the person who filled out the form. Confirms their request was received and lists what they submitted.
-
-Configure global defaults under **Settings > Email**. Override per-form in the form builder's Email Notifications panel.
+Global defaults under **Settings > Email**. Per-form overrides in the form builder.
 
 ### Email Hooks for Developers
 
@@ -279,9 +247,7 @@ add_filter( 'shqf_confirmation_email_content', function( $body, $submission, $me
 | Personal data export | Tools > Export Personal Data | Automatic |
 | Personal data erasure | Tools > Erase Personal Data | Automatic |
 
-When a privacy request comes in through WordPress, the plugin automatically finds all submissions matching the email address and includes them in the export or deletes them (including all meta, rate limit records, and uploaded files).
-
-Disable IP collection entirely if you don't need it -- the plugin stores NULL instead.
+Privacy requests find all submissions by email and include them in the export or delete them (including meta, rate limits, and uploads). Disable IP collection to store NULL instead.
 
 ---
 
@@ -333,7 +299,7 @@ npm run start             # Development mode with file watching
 
 ## Testing
 
-The plugin has 683 unit tests, 29 integration tests, and 27 E2E spec files across 18,000+ lines of PHP source and 18,000+ lines of test code.
+The plugin has 729 unit tests, 29 integration tests, and 27 Playwright spec files.
 
 ```bash
 # Unit tests (no WordPress needed, fast)
@@ -355,76 +321,70 @@ npm run lint:css           # Stylelint (@wordpress/stylelint-config)
 composer check             # PHP lint + PHPStan + unit tests
 ```
 
-### Code Quality Standards
-- **PHP:** WordPress Coding Standards (WPCS) via PHPCS, PHPStan level 6
-- **JavaScript:** `@wordpress/eslint-plugin`
-- **CSS:** `@wordpress/stylelint-config`
-- **PHP 8.0+ strict types:** every file starts with `declare(strict_types=1)`
-- **PSR-4 autoloading:** `SampleHQForm\` namespace maps to `src/`
+### Code Quality
+- PHPCS (WordPress Coding Standards) + PHPStan level 6
+- ESLint (`@wordpress/eslint-plugin`) + Stylelint (`@wordpress/stylelint-config`)
+- `declare(strict_types=1)` in every PHP file
+- PSR-4 autoloading: `SampleHQForm\` → `src/`
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full pull request process.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the pull request process.
 
 ---
 
 ## Project Structure
 
 ```
-src/                       73 PHP source files, 18,000+ lines
+src/                       75 PHP files
   Admin/                   Admin pages, list tables, settings, dashboard
   Api/                     REST API (public submission + admin CRUD endpoints)
   Blocks/                  Gutenberg block (block.json, server-side render)
+  Connection/              Platform connection (state token, HMAC signing, encryption)
   Database/                8 custom tables, versioned migrations
   Elementor/               Elementor widget (conditional registration)
-  Email/                   Mailer service (admin notification + confirmation)
-  Export/                  CSV export, CSV import, JSON form import/export
+  Email/                   Mailer (admin notification + submitter confirmation)
+  Export/                  CSV export/import, JSON form export/import
   Fields/                  17 field types including Sample Picker
-  Forms/                   Form rendering, server-side validation, submission processing
-  Helpers/                 Asset loading, sanitization
-  Privacy/                 GDPR data export and erasure
-  Spam/                    Honeypot, rate limiting, Turnstile integration
-tests/                     86 test files, 18,000+ lines
-  Unit/                    683 PHPUnit tests (mocked WordPress, fast)
+  Forms/                   Rendering, validation, submission processing
+  Helpers/                 Asset loading
+  Privacy/                 WordPress Privacy API (export + erasure)
+  Spam/                    Honeypot, rate limiting, Turnstile
+  WooCommerce/             Product button, modal form, product source
+tests/
+  Unit/                    729 PHPUnit tests (mocked WordPress, fast)
   Integration/             29 PHPUnit tests (real WordPress via wp-env)
-  e2e/                     27 Playwright spec files (admin, frontend, WooCommerce, responsive)
+  e2e/                     27 Playwright spec files
 ```
 
 ---
 
 ## Roadmap
 
-### Target v1.0.0 Scope
-- Sample library with categories, images, custom fields, CSV import
-- Visual form builder with 17 field types
-- Sample picker (card grid, checklist, list view)
-- Conditional logic, multi-step wizard forms
-- File upload with protected storage
-- Gutenberg block, Elementor widget, shortcode
-- WooCommerce product integration
-- Submissions dashboard with search, filters, bulk actions, CSV export
-- Email notifications (admin + submitter confirmation)
-- Spam protection (honeypot, rate limiting, Turnstile)
-- Privacy API integration (export + erasure)
-- Accessibility (WCAG 2.2 AA practices)
-- Form import/export (JSON), form duplication
+### v1.0 (shipped)
+Sample library, form builder (17 field types), sample picker, conditional logic, multi-step wizard, file uploads, Gutenberg block, Elementor widget, shortcode, WooCommerce integration, submissions dashboard, email notifications, spam protection, Privacy API, CSV export/import, JSON form export/import, form duplication.
 
-### Post-launch (v1.x)
-- **SampleHQ platform connection** -- sync submissions to the SampleHQ platform for approval workflows, CRM integration, shipping labels, and revenue attribution
-- Data migration wizard (samples, categories, and submission history to the platform)
+### v1.x (in progress)
+- SampleHQ platform connection -- sync submissions to the cloud platform
+- Data migration wizard (samples, categories, submission history)
 
-### v2
-- **Form builder migration** -- import existing sample request data from Gravity Forms, Contact Form 7, WPForms, Ninja Forms, Formidable Forms, and Fluent Forms into SampleHQ Request Form, with automatic sample library creation from imported submission data
+### v2 (planned)
+- Import from Gravity Forms, WPForms, Contact Form 7, Ninja Forms
 
 ---
 
 ## SampleHQ Request Form vs. SampleHQ
 
-**SampleHQ Request Form** is the lightweight WordPress intake plugin. Use it when you only need to collect structured sample requests on a WordPress site.
+| | Request Form (this plugin) | SampleHQ (platform) |
+|---|---|---|
+| Sample library | Yes | Yes |
+| Form builder | Yes | Yes |
+| Submissions | Local WordPress DB | Cloud with team workflows |
+| CRM integration | No | Salesforce, HubSpot |
+| Shipping labels | No | Shippo |
+| Analytics | No | Yes |
+| Requires account | No | Yes |
+| Price | Free | Paid |
 
-**SampleHQ** is the full sample management platform. Use it when you need sample fulfillment tracking, team workflows, approval pipelines, CRM attribution (Salesforce/HubSpot), shipping labels (Shippo), analytics, revenue visibility, and multi-user dashboards.
-
-**The upgrade path:** Install this plugin, build your sample library, collect requests. When you outgrow WordPress-only management, SampleHQ will provide a migration path for samples, categories, and submission history.
-
-The plugin works fully standalone. No SampleHQ account is ever required. No features degrade over time. No submission quotas.
+The plugin works standalone. Connecting to SampleHQ is optional and never restricts plugin functionality.
 
 ---
 

@@ -1,15 +1,25 @@
 # Development files excluded from the wordpress.org release zip.
+# Patterns without a leading / match anywhere in the tree.
 .DS_Store
+Thumbs.db
 .env
 .env.*
 *.bak
 *.zip
+*.log
+
+# Config and tooling (root only).
 /.editorconfig
+/.eslintrc
+/.eslintrc.js
+/.eslintrc.json
 /eslint.config.js
+/eslint.config.mjs
 /.gitignore
 /.distignore
 /.git
 /.stylelintrc.json
+/.prettierrc
 /.prettierrc.js
 /.phpunit.cache
 /.phpunit.result.cache
@@ -22,14 +32,19 @@
 /package-lock.json
 /webpack.config.js
 /phpcs.xml.dist
+/phpcs.xml
 /playwright.config.ts
 /playwright.woo.config.ts
 /phpstan.neon
 /phpstan-baseline.neon
 /phpstan-constants.php
 /phpunit.xml.dist
+/phpunit.xml
 /phpunit-integration.xml.dist
 /jest.config.js
+/jest.config.ts
+
+# Source JS/CSS, dependencies, and test output.
 /assets/src
 /node_modules
 /vendor

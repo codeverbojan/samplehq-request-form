@@ -12,47 +12,49 @@ A complete sample request management system with a sample library, visual form b
 
 == Description ==
 
-SampleHQ Request Form is a free WordPress plugin purpose-built for collecting product
+SampleHQ Request Form is a free, standalone WordPress plugin for collecting product
 sample requests. It includes a local sample library, a drag-and-drop form builder,
-and a full submissions dashboard -- all without requiring any external account.
+and a submissions dashboard. No external account is required.
 
-**Key Features:**
+**Features:**
 
-* **Sample Library** -- Manage your product samples with categories, images, and descriptions
-* **Visual Form Builder** -- Drag-and-drop builder with 15+ field types
-* **Sample Picker Field** -- Unique field that lets visitors select products with quantities
-* **Submissions Dashboard** -- View, search, filter, star, and export submissions
+* **Sample Library** -- Manage product samples with categories, images, SKUs, and descriptions
+* **Visual Form Builder** -- Drag-and-drop builder with 17 field types and multi-column layouts
+* **Sample Picker Field** -- Lets visitors browse and select products with quantities
+* **Submissions Dashboard** -- View, search, filter, star, and export submissions as CSV
+* **Multi-Step Wizard** -- Split forms into steps with a progress indicator and per-step validation
+* **Conditional Logic** -- Show or hide fields based on other field values
 * **Gutenberg Block** -- Native block editor integration
 * **Elementor Widget** -- Works with Elementor page builder
-* **Shortcode** -- Works with any page builder via `[samplehq_form]`
-* **Accessible** -- Built following WCAG 2.2 Level AA guidelines
-* **Spam Protection** -- Honeypot, Cloudflare Turnstile, rate limiting
-* **Privacy Controls** -- Consent fields, IP retention settings, WP Privacy API integration
+* **Shortcode** -- Embed with `[samplehq_form id="123"]` in any page builder
+* **WooCommerce Integration** -- Use WooCommerce products in the sample picker; adds a "Request a Sample" button to product pages
+* **Spam Protection** -- Honeypot field, rate limiting, CSRF tokens, and optional Cloudflare Turnstile
+* **File Uploads** -- Server-side MIME validation, protected upload directory
+* **Email Notifications** -- Admin and submitter emails with theme-overridable templates
+* **Privacy Controls** -- Consent field, configurable IP retention, WordPress Privacy API (export and erasure)
+* **Accessibility** -- Built following WCAG 2.2 Level AA practices
 
-**Optional: Connect to SampleHQ**
+**Third-Party Services**
 
-This plugin can optionally connect to [SampleHQ](https://samplehq.io), a cloud platform
-for sample request management. Connecting syncs your submissions to the platform, where
-you can manage them alongside CRM integrations, shipping, and team workflows. The plugin
-works fully without connecting -- all features listed above are free and unlimited.
+This plugin connects to external services only when you explicitly enable them.
+No data is sent to any third party by default.
 
-**Third-Party Service: SampleHQ**
-
-This plugin can optionally connect to [SampleHQ](https://samplehq.io), a sample
-management platform. When connected, form submissions and sample data are sent to
-your SampleHQ workspace for processing. No data is sent unless you explicitly
-configure the connection.
+*SampleHQ (optional):* This plugin can optionally connect to
+[SampleHQ](https://samplehq.io), a sample management platform. When connected,
+form submissions and sample catalog data are sent to your SampleHQ workspace.
+No data is sent unless you click "Connect to SampleHQ" in the plugin settings
+and complete the connection flow. The plugin is fully functional without
+connecting. All features listed above are free and unlimited regardless of
+connection status.
 
 * Service URL: [https://samplehq.io](https://samplehq.io)
 * Terms of Service: [https://samplehq.io/terms](https://samplehq.io/terms)
 * Privacy Policy: [https://samplehq.io/privacy](https://samplehq.io/privacy)
 
-**Third-Party Service: Cloudflare Turnstile**
-
-This plugin can optionally use [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/)
-for spam protection. When enabled in Settings > Spam Protection, form submissions are
-verified against the Turnstile API. No data is sent to Cloudflare unless you configure
-a Turnstile site key.
+*Cloudflare Turnstile (optional):* When enabled in Settings > Spam Protection,
+form submissions are verified against the
+[Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) API.
+No data is sent to Cloudflare unless you configure a Turnstile site key and secret.
 
 * Service URL: [https://www.cloudflare.com/products/turnstile/](https://www.cloudflare.com/products/turnstile/)
 * Terms of Service: [https://www.cloudflare.com/website-terms/](https://www.cloudflare.com/website-terms/)
@@ -70,13 +72,12 @@ a Turnstile site key.
 
 = Do I need a SampleHQ account? =
 
-No. The plugin works completely standalone. A SampleHQ account is optional and adds
-advanced features like approval workflows, CRM sync, and shipping integration.
+No. The plugin is fully standalone. All features work without any external account.
+Connecting to SampleHQ is optional and can be configured in Settings > Connection.
 
 = Is this plugin free? =
 
-Yes. All features listed in the description are free and will remain free. There are
-no time limits, submission quotas, or locked features.
+Yes. All features are free with no time limits, submission caps, or locked features.
 
 = How do I create a form? =
 
@@ -98,11 +99,11 @@ field uses your WooCommerce products instead of the built-in sample library. A
 "Request a Sample" button is added to product pages, and you can filter which product
 categories are available for sampling.
 
-= How do I configure the sample picker? =
+= What display modes does the sample picker support? =
 
-Add a "Sample Picker" field in the form builder. Choose between card grid, list, or
-checklist display modes. Set a maximum selection count, enable category filtering, and
-optionally allow quantity selection. The picker supports search and category tabs.
+The sample picker field supports card grid, list, and checklist display modes. You
+can set a maximum selection count, enable category filtering, and allow quantity
+input. The picker includes search and category tabs.
 
 = How do I set up email notifications? =
 
@@ -118,9 +119,9 @@ Excel compatibility and formula injection prevention built in.
 
 = What spam protection is available? =
 
-Three layers are always active: a honeypot field, rate limiting (10 submissions per form
-per IP per hour), and CSRF token validation. You can optionally add Cloudflare Turnstile
-(free invisible CAPTCHA) under Settings > Spam Protection.
+Three layers are always active: a honeypot field, rate limiting (configurable, default
+10 submissions per form per IP per hour), and CSRF token validation. You can optionally
+enable Cloudflare Turnstile under Settings > Spam Protection.
 
 = Does the plugin support conditional logic? =
 
@@ -143,49 +144,48 @@ purging after a set number of days.
 
 = Is the plugin accessible? =
 
-Yes. All forms are built following WCAG 2.2 Level AA guidelines, including proper
-labels, keyboard navigation, screen reader support, and focus management.
+Yes. Forms include proper label associations, keyboard navigation, ARIA attributes,
+screen reader announcements, and focus management following WCAG 2.2 Level AA practices.
 
 == Screenshots ==
 
-1. **Visual Form Builder** -- Drag-and-drop builder with 15+ field types, multi-column layouts, and the unique sample picker field.
-2. **Sample Library** -- Manage your product samples with categories, images, SKUs, and descriptions.
-3. **Submissions Dashboard** -- View, search, filter, star, and export form submissions with real-time status tracking.
-4. **Frontend Form** -- Multi-step wizard form with sample picker, category filters, and search.
-5. **Settings** -- Configure spam protection (Cloudflare Turnstile, honeypot, rate limiting), email notifications, and WooCommerce integration.
-6. **Sample Editor** -- Rich editor for sample details with custom fields, categories, and images.
-7. **Product Grid** -- Frontend sample picker with product cards, images, and category filtering.
-8. **Email Settings** -- Configure admin notifications, sender name, and submitter confirmation emails.
+1. Visual form builder with drag-and-drop fields, multi-column layouts, and the sample picker field.
+2. Sample library with categories, images, SKUs, and descriptions.
+3. Submissions dashboard with search, filters, starring, and CSV export.
+4. Frontend multi-step wizard form with sample picker and category filters.
+5. Settings page for spam protection, email notifications, and WooCommerce integration.
+6. Sample editor with categories, images, and descriptions.
+7. Frontend sample picker with product cards, images, and category filtering.
+8. Email notification settings with admin and submitter confirmation options.
 
 == Changelog ==
 
 = 1.0.1 =
-* Enforced release procedure with CI changelog validation
-* Automated changelog generation from conventional commits
-* Fix: Move file doc comment before ABSPATH guard in phpstan-constants.php
-* Fix: Ensure full CI runs in release workflow
-
+* Added release procedure with CI changelog validation
+* Added automated changelog generation from conventional commits
+* Fixed file doc comment placement in phpstan-constants.php
+* Fixed CI to run full suite in release workflow
 
 = 1.0.0 =
 * Sample library with categories, images, SKUs, and descriptions
-* Visual drag-and-drop form builder with 15+ field types
+* Visual drag-and-drop form builder with 17 field types
 * Sample picker field with product grid, category filters, and search
-* Multi-step wizard form layout with step indicator and validation
+* Multi-step wizard form layout with step indicator and per-step validation
 * Submissions dashboard with search, filter, star, and CSV export
 * Gutenberg block, Elementor widget, and shortcode embedding
-* Spam protection: honeypot, Cloudflare Turnstile, rate limiting
-* Email notifications with customizable templates
-* File upload field with server-side MIME validation
-* WooCommerce integration: product page button, modal form
-* Privacy controls: consent field, IP retention, WP Privacy API
+* Spam protection: honeypot, Cloudflare Turnstile, rate limiting, CSRF tokens
+* Email notifications with theme-overridable templates
+* File upload field with server-side MIME validation and protected storage
+* WooCommerce integration with product page sample request button
+* Privacy controls: consent field, IP retention, WordPress Privacy API
 * Conditional field visibility with rule builder
 * Undo/redo in form builder
-* WCAG 2.2 Level AA accessibility
+* WCAG 2.2 Level AA accessibility practices
 
 == Upgrade Notice ==
 
 = 1.0.1 =
-2 new feature(s), 2 fix(es).
+Release tooling improvements and minor fixes.
 
 = 1.0.0 =
 Initial release.
