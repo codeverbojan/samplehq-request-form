@@ -319,6 +319,10 @@ class MigratorTest extends TestCase {
 		Monkey\Functions\expect( 'delete_option' )
 			->once()->with( 'shqf_connection' );
 		Monkey\Functions\expect( 'delete_option' )
+			->once()->with( 'shqf_connect_state' );
+		Monkey\Functions\expect( 'delete_option' )
+			->once()->with( 'shqf_migration_progress' );
+		Monkey\Functions\expect( 'delete_option' )
 			->once()->with( 'shqf_woo_enabled' );
 		Monkey\Functions\expect( 'delete_option' )
 			->once()->with( 'shqf_woo_button_text' );

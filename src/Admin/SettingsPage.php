@@ -569,14 +569,18 @@ class SettingsPage {
 
 		echo '<p>' . esc_html__( 'When connected, new submissions are saved locally and then pushed to your workspace where you can manage them alongside CRM integrations, shipping, and team workflows.', 'samplehq-request-form' ) . '</p>';
 
-		// Placeholder -- ConnectionManager will generate the real OAuth URL in Phase 5A.
+		$connect_action_url = wp_nonce_url(
+			admin_url( 'admin.php?page=shqf-settings&tab=connection&action=connect' ),
+			'shqf_connect'
+		);
+
 		echo '<p style="margin-top:16px;">';
-		echo '<button type="button" class="button button-primary" disabled>';
-		echo esc_html__( 'Connect to SampleHQ', 'samplehq-request-form' ) . '</button>';
+		echo '<a href="' . esc_url( $connect_action_url ) . '" class="button button-primary">';
+		echo esc_html__( 'Connect to SampleHQ', 'samplehq-request-form' ) . '</a>';
 		echo '</p>';
 
 		echo '<p class="description" style="margin-top:12px;">';
-		echo esc_html__( 'Connection will be available in a future update. The plugin works fully without connecting.', 'samplehq-request-form' );
+		echo esc_html__( 'The plugin works fully without connecting. Connecting enables cloud sync for submissions.', 'samplehq-request-form' );
 		echo '</p>';
 
 		echo '</div></div>';

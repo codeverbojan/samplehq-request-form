@@ -346,4 +346,27 @@ class FormsTableTest extends TestCase {
 
 		$this->assertSame( 12, $this->table->count() );
 	}
+
+	/**
+	 * clear_all_shq_ids executes the correct SQL and returns row count.
+	 */
+	public function test_clear_all_shq_ids(): void {
+		$this->wpdb->shouldReceive( 'query' )
+			->once()
+			->with( \Mockery::pattern( '/UPDATE.*SET shq_form_id = NULL WHERE shq_form_id IS NOT NULL/' ) )
+			->andReturn( 5 );
+
+		$this->assertSame( 5, $this->table->clear_all_shq_ids() );
+	}
+
+	/**
+	 * clear_all_shq_ids returns 0 when query fails.
+	 */
+	public function test_clear_all_shq_ids_returns_zero_on_failure(): void {
+		$this->wpdb->shouldReceive( 'query' )
+			->once()
+			->andReturn( false );
+
+		$this->assertSame( 0, $this->table->clear_all_shq_ids() );
+	}
 }

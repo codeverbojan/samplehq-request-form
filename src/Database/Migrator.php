@@ -193,6 +193,8 @@ class Migrator {
 			'shqf_turnstile_secret_key',
 			'shqf_email_defaults',
 			'shqf_connection',
+			'shqf_connect_state',
+			'shqf_migration_progress',
 			'shqf_woo_enabled',
 			'shqf_woo_button_text',
 			'shqf_woo_form_id',

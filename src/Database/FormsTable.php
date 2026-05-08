@@ -379,6 +379,18 @@ class FormsTable {
 	}
 
 	/**
+	 * Clear shq_form_id on all forms (used during disconnect).
+	 *
+	 * @return int Number of rows updated.
+	 */
+	public function clear_all_shq_ids(): int {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$result = $this->wpdb->query( "UPDATE {$this->table} SET shq_form_id = NULL WHERE shq_form_id IS NOT NULL" );
+
+		return false === $result ? 0 : (int) $result;
+	}
+
+	/**
 	 * Get the default form config with schema_version.
 	 *
 	 * @return array<string, mixed> Default config structure.

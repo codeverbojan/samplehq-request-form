@@ -243,8 +243,12 @@ class Plugin {
 		$upload_api = new Api\UploadEndpoint( $forms_table, $form_token, $rate_limits );
 		$upload_api->register();
 
+		// --- Platform connection ---
+		$connection_verifier = new Connection\ConnectionVerifier();
+		$connection_manager  = new Connection\ConnectionManager( $forms_table, $connection_verifier );
+
 		// --- Admin menu ---
-		$admin_menu = new Admin\AdminMenu( $renderer, $form_token );
+		$admin_menu = new Admin\AdminMenu( $renderer, $form_token, $connection_manager );
 		$admin_menu->register();
 
 		// --- Admin notices: security health checks ---
