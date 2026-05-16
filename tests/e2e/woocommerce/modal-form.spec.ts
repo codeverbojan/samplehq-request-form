@@ -1,3 +1,4 @@
+/* eslint-disable @wordpress/no-global-active-element -- page.evaluate runs in browser context */
 /**
  * WooCommerce Modal + Form E2E Tests (Phases 4 & 5)
  *
@@ -7,16 +8,15 @@
  */
 
 import { test, expect } from '@playwright/test';
-import {
-	PRODUCTS,
-	BTN_SELECTOR,
-	MODAL_SELECTOR,
-} from './woo-helpers';
+import { PRODUCTS, BTN_SELECTOR, MODAL_SELECTOR } from './woo-helpers';
 
 const PRODUCT_URL = PRODUCTS.kraftMailer.url;
 
-/** Open the modal on the Kraft Mailer product page. */
-async function openModal( page: import( '@playwright/test' ).Page ) {
+/**
+ * Open the modal on the Kraft Mailer product page.
+ * @param page
+ */
+async function openModal( page: import('@playwright/test').Page ) {
 	await page.goto( PRODUCT_URL );
 	await page.locator( BTN_SELECTOR ).click();
 	await expect( page.locator( MODAL_SELECTOR ) ).toBeVisible();
@@ -94,15 +94,16 @@ test.describe( 'Modal Accessibility', () => {
 		await expect( title ).toBeVisible();
 	} );
 
-	test( '4.9 Focus moves to close button on open', async ( {
-		page,
-	} ) => {
+	test( '4.9 Focus moves to close button on open', async ( { page } ) => {
 		await openModal( page );
 		// Active element should be the close button.
+
 		const focused = await page.evaluate( () => {
 			const el = document.activeElement;
-			return el?.classList.contains( 'shqf-woo-modal__close' ) ||
-				el?.closest( '.shqf-woo-modal__close' ) !== null;
+			return (
+				el?.classList.contains( 'shqf-woo-modal__close' ) ||
+				el?.closest( '.shqf-woo-modal__close' ) !== null
+			);
 		} );
 		expect( focused ).toBe( true );
 	} );
@@ -113,6 +114,7 @@ test.describe( 'Modal Accessibility', () => {
 		await openModal( page );
 		await page.keyboard.press( 'Escape' );
 		// Active element should be back on the request button.
+
 		const focused = await page.evaluate( () => {
 			return document.activeElement?.classList.contains(
 				'shqf-woo-request-btn'
@@ -121,14 +123,13 @@ test.describe( 'Modal Accessibility', () => {
 		expect( focused ).toBe( true );
 	} );
 
-	test( '4.11 Focus trap: Tab stays within modal', async ( {
-		page,
-	} ) => {
+	test( '4.11 Focus trap: Tab stays within modal', async ( { page } ) => {
 		await openModal( page );
 		// Tab several times and verify focus stays inside modal.
 		for ( let i = 0; i < 15; i++ ) {
 			await page.keyboard.press( 'Tab' );
 		}
+
 		const insideModal = await page.evaluate( () => {
 			const el = document.activeElement;
 			return el?.closest( '#shqf-woo-modal' ) !== null;
@@ -140,9 +141,11 @@ test.describe( 'Modal Accessibility', () => {
 		await openModal( page );
 		// Shift+Tab from close button should wrap to last element.
 		await page.keyboard.press( 'Shift+Tab' );
+
 		const insideModal = await page.evaluate( () => {
-			return document.activeElement?.closest( '#shqf-woo-modal' ) !==
-				null;
+			return (
+				document.activeElement?.closest( '#shqf-woo-modal' ) !== null
+			);
 		} );
 		expect( insideModal ).toBe( true );
 	} );
@@ -167,9 +170,7 @@ test.describe( 'Modal Accessibility', () => {
 } );
 
 test.describe( 'Scroll Lock', () => {
-	test( '4.15 Body scroll locked when modal open', async ( {
-		page,
-	} ) => {
+	test( '4.15 Body scroll locked when modal open', async ( { page } ) => {
 		await openModal( page );
 		const hasClass = await page.evaluate( () => {
 			return document.documentElement.classList.contains(
@@ -227,10 +228,9 @@ test.describe( 'Form Fields', () => {
 	test( '5.1 Name field visible', async ( { page } ) => {
 		await openModal( page );
 		// Name field uses <legend> inside <fieldset>, not <label>.
-		const nameField = page.locator( '.shqf-woo-modal__body' ).getByText(
-			'Full Name',
-			{ exact: false }
-		);
+		const nameField = page
+			.locator( '.shqf-woo-modal__body' )
+			.getByText( 'Full Name', { exact: false } );
 		await expect( nameField.first() ).toBeVisible();
 	} );
 
@@ -252,9 +252,7 @@ test.describe( 'Form Fields', () => {
 
 	test( '5.4 Picker shows 6 WC products', async ( { page } ) => {
 		await openModal( page );
-		const items = page.locator(
-			'.shqf-woo-modal__body .shqf-picker-item'
-		);
+		const items = page.locator( '.shqf-woo-modal__body .shqf-picker-item' );
 		await expect( items ).toHaveCount( 6 );
 	} );
 
@@ -285,9 +283,7 @@ test.describe( 'Form Fields', () => {
 		).toHaveCount( 0 );
 	} );
 
-	test( '5.7 Draft product excluded from picker', async ( {
-		page,
-	} ) => {
+	test( '5.7 Draft product excluded from picker', async ( { page } ) => {
 		await openModal( page );
 		const body = page.locator( '.shqf-woo-modal__body' );
 		await expect(
@@ -368,9 +364,8 @@ test.describe( 'Search and Category Pills', () => {
 				document.querySelectorAll(
 					'.shqf-woo-modal__body .shqf-picker-item'
 				)
-			).filter(
-				( el ) => ( el as HTMLElement ).style.display !== 'none'
-			).length;
+			).filter( ( el ) => ( el as HTMLElement ).style.display !== 'none' )
+				.length;
 		} );
 		expect( count ).toBe( 1 );
 	} );
@@ -402,9 +397,7 @@ test.describe( 'Search and Category Pills', () => {
 
 	test( '5.15 Category pills visible', async ( { page } ) => {
 		await openModal( page );
-		const pills = page.locator(
-			'.shqf-woo-modal__body .shqf-pill'
-		);
+		const pills = page.locator( '.shqf-woo-modal__body .shqf-pill' );
 		const count = await pills.count();
 		// At least "All" + 3 categories.
 		expect( count ).toBeGreaterThanOrEqual( 4 );
@@ -423,9 +416,8 @@ test.describe( 'Search and Category Pills', () => {
 				document.querySelectorAll(
 					'.shqf-woo-modal__body .shqf-picker-item'
 				)
-			).filter(
-				( el ) => ( el as HTMLElement ).style.display !== 'none'
-			).length;
+			).filter( ( el ) => ( el as HTMLElement ).style.display !== 'none' )
+				.length;
 		} );
 		// Kraft Mailer + Corrugated Box = 2 in Boxes.
 		expect( count ).toBe( 2 );
@@ -468,9 +460,7 @@ test.describe( 'Quantity Stepper', () => {
 		const item = page.locator(
 			`.shqf-picker-item[data-sample-id="${ PRODUCTS.kraftMailer.id }"]`
 		);
-		const qtyControls = item.locator(
-			'.shqf-picker-item-qty-controls'
-		);
+		const qtyControls = item.locator( '.shqf-picker-item-qty-controls' );
 		const qtyValue = item.locator( '.shqf-picker-item-qty-value' );
 		const plusBtn = item.locator( '.shqf-qty-plus' );
 		const minusBtn = item.locator( '.shqf-qty-minus' );

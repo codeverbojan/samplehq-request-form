@@ -11,7 +11,6 @@ import {
 	BTN_SELECTOR,
 	BTN_LOOP_SELECTOR,
 	SHOP_URL,
-	SETTINGS_URL,
 	CATEGORIES,
 	withOption,
 	restoreDefaults,
@@ -101,15 +100,13 @@ test.describe( 'Button Visibility', () => {
 // =====================================================================
 
 test.describe( 'Button Styling', () => {
-	test( '2.6 Button has outline/secondary styling', async ( {
-		page,
-	} ) => {
+	test( '2.6 Button has outline/secondary styling', async ( { page } ) => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		const btn = page.locator( BTN_SELECTOR );
 		await expect( btn ).toHaveClass( /shqf-woo-request-btn/ );
 		// Should have transparent/no background (outline style).
-		const bg = await btn.evaluate( ( el ) =>
-			getComputedStyle( el ).backgroundColor
+		const bg = await btn.evaluate(
+			( el ) => getComputedStyle( el ).backgroundColor
 		);
 		// transparent = rgba(0,0,0,0)
 		expect( bg ).toMatch( /transparent|rgba\(0,\s*0,\s*0,\s*0\)/ );
@@ -141,9 +138,7 @@ test.describe( 'Button Styling', () => {
 } );
 
 test.describe( 'Button Position', () => {
-	test( '2.9 Button is below the add-to-cart form', async ( {
-		page,
-	} ) => {
+	test( '2.9 Button is below the add-to-cart form', async ( { page } ) => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		const btn = page.locator( BTN_SELECTOR );
 		await expect( btn ).toBeVisible();
@@ -173,9 +168,7 @@ test.describe( 'Product Filtering', () => {
 		}
 	} );
 
-	test( '2.14 Filter tagged: only tagged products', async ( {
-		page,
-	} ) => {
+	test( '2.14 Filter tagged: only tagged products', async ( { page } ) => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		await withOption(
 			page,
@@ -184,21 +177,15 @@ test.describe( 'Product Filtering', () => {
 			async () => {
 				// Tagged product: button visible
 				await page.reload();
-				await expect(
-					page.locator( BTN_SELECTOR )
-				).toBeVisible();
+				await expect( page.locator( BTN_SELECTOR ) ).toBeVisible();
 
 				// Untagged product: no button
 				await page.goto( PRODUCTS.bubbleWrap.url );
-				await expect(
-					page.locator( BTN_SELECTOR )
-				).toHaveCount( 0 );
+				await expect( page.locator( BTN_SELECTOR ) ).toHaveCount( 0 );
 
 				// Another untagged product
 				await page.goto( PRODUCTS.corrugatedBox.url );
-				await expect(
-					page.locator( BTN_SELECTOR )
-				).toHaveCount( 0 );
+				await expect( page.locator( BTN_SELECTOR ) ).toHaveCount( 0 );
 			}
 		);
 	} );
@@ -231,11 +218,7 @@ test.describe( 'Product Filtering', () => {
 	} ) => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		await setOption( page, 'shqf_woo_product_filter', 'tagged' );
-		await setOption(
-			page,
-			'shqf_woo_sample_tag',
-			'nonexistent-tag-xyz'
-		);
+		await setOption( page, 'shqf_woo_sample_tag', 'nonexistent-tag-xyz' );
 
 		await page.reload();
 		await expect( page.locator( BTN_SELECTOR ) ).toHaveCount( 0 );

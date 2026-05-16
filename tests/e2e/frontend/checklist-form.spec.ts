@@ -49,8 +49,8 @@ test.describe( 'Checklist form template', () => {
 		await page.locator( '.shqf-button--submit' ).click();
 
 		// Success message.
-		await expect(
-			page.locator( '.shqf-success' )
-		).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 	} );
 } );

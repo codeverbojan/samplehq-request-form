@@ -24,7 +24,9 @@ test.describe( 'Client-side validation', () => {
 	} );
 
 	test( 'invalid email shows error', async ( { page } ) => {
-		const emailInput = page.locator( '.shqf-field--email input[type="email"]' );
+		const emailInput = page.locator(
+			'.shqf-field--email input[type="email"]'
+		);
 		await emailInput.fill( 'abc' );
 		await page.locator( '.shqf-button--submit' ).click();
 		const errorEl = page.locator( '.shqf-field--email .shqf-error' );
@@ -33,7 +35,9 @@ test.describe( 'Client-side validation', () => {
 	} );
 
 	test( 'valid email clears error', async ( { page } ) => {
-		const emailInput = page.locator( '.shqf-field--email input[type="email"]' );
+		const emailInput = page.locator(
+			'.shqf-field--email input[type="email"]'
+		);
 		// Trigger error first.
 		await emailInput.fill( 'abc' );
 		await page.locator( '.shqf-button--submit' ).click();
@@ -50,7 +54,9 @@ test.describe( 'Client-side validation', () => {
 		// Submit empty form.
 		await page.locator( '.shqf-button--submit' ).click();
 		// Wait for errors to display.
-		await expect( page.locator( '.shqf-error:visible' ).first() ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-error:visible' ).first()
+		).toBeVisible();
 		// Fields with errors should have aria-invalid="true".
 		const invalidFields = page.locator( '[aria-invalid="true"]' );
 		const count = await invalidFields.count();

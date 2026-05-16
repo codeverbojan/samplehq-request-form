@@ -56,9 +56,7 @@ setup( 'create seed data', async () => {
 	// Skip if fixtures already exist (idempotent).
 	const fixturesPath = path.resolve( FIXTURES_FILE );
 	if ( fs.existsSync( fixturesPath ) ) {
-		const existing = JSON.parse(
-			fs.readFileSync( fixturesPath, 'utf-8' )
-		);
+		const existing = JSON.parse( fs.readFileSync( fixturesPath, 'utf-8' ) );
 		if ( existing.ready ) {
 			return;
 		}
@@ -101,7 +99,11 @@ setup( 'create seed data', async () => {
 			wpEval( `
 			global $wpdb;
 			$s = new SampleHQForm\\Database\\SamplesTable($wpdb);
-			try { echo $s->create(["name" => "${ sampleNames[ i ] }", "sku" => "${ sampleSkus[ i ] }", "description" => "E2E test sample ${ i + 1 }"]); } catch (Exception $e) { echo "0"; }
+			try { echo $s->create(["name" => "${ sampleNames[ i ] }", "sku" => "${
+				sampleSkus[ i ]
+			}", "description" => "E2E test sample ${
+				i + 1
+			}"]); } catch (Exception $e) { echo "0"; }
 		` )
 		);
 		sampleIds.push( id );
@@ -185,7 +187,7 @@ setup( 'create seed data', async () => {
 		echo $forms->create(["title" => "E2E All Fields Form", "status" => "published", "created_by" => 1, "config" => $config]);
 	` )
 	);
-	formIds[ 'allFields' ] = allFieldsFormId;
+	formIds.allFields = allFieldsFormId;
 
 	// Page for the all-fields form.
 	const allFieldsPageId = lastLine(
@@ -196,7 +198,7 @@ setup( 'create seed data', async () => {
 	const allFieldsSlug = lastLine(
 		cli( `wp post get ${ allFieldsPageId } --field=post_name` )
 	);
-	pageUrls[ 'allFields' ] = `http://localhost:8888/${ allFieldsSlug }/`;
+	pageUrls.allFields = `http://localhost:8888/${ allFieldsSlug }/`;
 
 	// Create "conditional" form for Phase H testing.
 	// Field A (trigger) + Field B (conditional, shown when trigger equals "show") + name + email + picker.
@@ -222,7 +224,7 @@ setup( 'create seed data', async () => {
 		echo $forms->create(["title" => "E2E Conditional Form", "status" => "published", "created_by" => 1, "config" => $config]);
 	` )
 	);
-	formIds[ 'conditional' ] = conditionalFormId;
+	formIds.conditional = conditionalFormId;
 
 	const conditionalPageId = lastLine(
 		cli(
@@ -232,7 +234,7 @@ setup( 'create seed data', async () => {
 	const conditionalSlug = lastLine(
 		cli( `wp post get ${ conditionalPageId } --field=post_name` )
 	);
-	pageUrls[ 'conditional' ] = `http://localhost:8888/${ conditionalSlug }/`;
+	pageUrls.conditional = `http://localhost:8888/${ conditionalSlug }/`;
 
 	// Write fixtures.
 	const fixtures = {

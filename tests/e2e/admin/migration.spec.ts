@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import {
 	seedConnectedState,
 	seedDisconnectedState,
-	seedMigrationProgress,
 	cleanupConnectionState,
 } from '../helpers/connection';
 
@@ -37,27 +36,31 @@ test.describe( 'Migration wizard', () => {
 		seedConnectedState();
 
 		// Intercept the preview REST call to return mock counts.
-		await page.route( '**/wp-json/samplehq-form/v1/migration/preview', ( route ) =>
-			route.fulfill( {
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify( {
-					categories: 3,
-					samples: 12,
-					submissions: 45,
-					platform: { max_samples: 100, current_samples: 20 },
-					error: null,
-				} ),
-			} )
+		await page.route(
+			'**/wp-json/samplehq-form/v1/migration/preview',
+			( route ) =>
+				route.fulfill( {
+					status: 200,
+					contentType: 'application/json',
+					body: JSON.stringify( {
+						categories: 3,
+						samples: 12,
+						submissions: 45,
+						platform: { max_samples: 100, current_samples: 20 },
+						error: null,
+					} ),
+				} )
 		);
 
 		// Intercept progress call (wizard checks on load).
-		await page.route( '**/wp-json/samplehq-form/v1/migration/progress', ( route ) =>
-			route.fulfill( {
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify( { phase: 'idle' } ),
-			} )
+		await page.route(
+			'**/wp-json/samplehq-form/v1/migration/progress',
+			( route ) =>
+				route.fulfill( {
+					status: 200,
+					contentType: 'application/json',
+					body: JSON.stringify( { phase: 'idle' } ),
+				} )
 		);
 
 		await page.goto( MIGRATION_URL );
@@ -72,14 +75,10 @@ test.describe( 'Migration wizard', () => {
 		await expect( rows.nth( 2 ) ).toContainText( '45' ); // Submissions
 
 		// Start button visible.
-		await expect(
-			page.locator( '#shqf-mig-start' )
-		).toBeVisible();
+		await expect( page.locator( '#shqf-mig-start' ) ).toBeVisible();
 
 		// Submissions checkbox present (since submissions > 0).
-		await expect(
-			page.locator( '#shqf-mig-include-subs' )
-		).toBeVisible();
+		await expect( page.locator( '#shqf-mig-include-subs' ) ).toBeVisible();
 	} );
 
 	test( 'running state shows progress bar and cancel button', async ( {
@@ -88,25 +87,27 @@ test.describe( 'Migration wizard', () => {
 		seedConnectedState();
 
 		// Intercept the progress REST call to return mid-phase data.
-		await page.route( '**/wp-json/samplehq-form/v1/migration/progress', ( route ) =>
-			route.fulfill( {
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify( {
-					phase: 'samples',
-					categories_total: 3,
-					categories_completed: 3,
-					categories_created: 2,
-					categories_updated: 1,
-					samples_total: 10,
-					samples_completed: 4,
-					samples_created: 4,
-					samples_updated: 0,
-					samples_skipped: 0,
-					submissions_total: 0,
-					submissions_completed: 0,
-				} ),
-			} )
+		await page.route(
+			'**/wp-json/samplehq-form/v1/migration/progress',
+			( route ) =>
+				route.fulfill( {
+					status: 200,
+					contentType: 'application/json',
+					body: JSON.stringify( {
+						phase: 'samples',
+						categories_total: 3,
+						categories_completed: 3,
+						categories_created: 2,
+						categories_updated: 1,
+						samples_total: 10,
+						samples_completed: 4,
+						samples_created: 4,
+						samples_updated: 0,
+						samples_skipped: 0,
+						submissions_total: 0,
+						submissions_completed: 0,
+					} ),
+				} )
 		);
 
 		await page.goto( MIGRATION_URL );
@@ -147,28 +148,30 @@ test.describe( 'Migration wizard', () => {
 		seedConnectedState();
 
 		// Intercept progress to return complete phase with summary data.
-		await page.route( '**/wp-json/samplehq-form/v1/migration/progress', ( route ) =>
-			route.fulfill( {
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify( {
-					phase: 'complete',
-					categories_total: 5,
-					categories_completed: 5,
-					categories_created: 3,
-					categories_updated: 2,
-					samples_total: 15,
-					samples_completed: 15,
-					samples_created: 10,
-					samples_updated: 3,
-					samples_skipped: 2,
-					submissions_total: 20,
-					submissions_completed: 20,
-					submissions_accepted: 18,
-					submissions_duplicates: 2,
-					include_submissions: true,
-				} ),
-			} )
+		await page.route(
+			'**/wp-json/samplehq-form/v1/migration/progress',
+			( route ) =>
+				route.fulfill( {
+					status: 200,
+					contentType: 'application/json',
+					body: JSON.stringify( {
+						phase: 'complete',
+						categories_total: 5,
+						categories_completed: 5,
+						categories_created: 3,
+						categories_updated: 2,
+						samples_total: 15,
+						samples_completed: 15,
+						samples_created: 10,
+						samples_updated: 3,
+						samples_skipped: 2,
+						submissions_total: 20,
+						submissions_completed: 20,
+						submissions_accepted: 18,
+						submissions_duplicates: 2,
+						include_submissions: true,
+					} ),
+				} )
 		);
 
 		await page.goto( MIGRATION_URL );

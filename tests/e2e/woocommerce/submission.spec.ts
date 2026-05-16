@@ -16,8 +16,11 @@ import {
 const PRODUCT_URL = PRODUCTS.kraftMailer.url;
 const UNIQUE_EMAIL = `e2e-wc-${ Date.now() }@test.example.com`;
 
-/** Open the modal on the Kraft Mailer product page. */
-async function openModal( page: import( '@playwright/test' ).Page ) {
+/**
+ * Open the modal on the Kraft Mailer product page.
+ * @param page
+ */
+async function openModal( page: import('@playwright/test').Page ) {
 	await page.goto( PRODUCT_URL );
 	await page.locator( BTN_SELECTOR ).click();
 	await expect( page.locator( MODAL_SELECTOR ) ).toBeVisible();
@@ -28,9 +31,7 @@ async function openModal( page: import( '@playwright/test' ).Page ) {
 // =====================================================================
 
 test.describe( 'Form Submission', () => {
-	test( '6.1-6.3 Fill form and submit successfully', async ( {
-		page,
-	} ) => {
+	test( '6.1-6.3 Fill form and submit successfully', async ( { page } ) => {
 		await openModal( page );
 		const modal = page.locator( MODAL_SELECTOR );
 
@@ -61,9 +62,9 @@ test.describe( 'Form Submission', () => {
 		// 6.2 Wait for success message.
 		const successEl = modal.locator( '.shqf-success' );
 		await expect( successEl ).toBeVisible( { timeout: 10000 } );
-		await expect(
-			modal.locator( '.shqf-success-title' )
-		).toHaveText( 'Request Received' );
+		await expect( modal.locator( '.shqf-success-title' ) ).toHaveText(
+			'Request Received'
+		);
 
 		// Check the success message contains the form's configured text.
 		const successMsg = modal.locator( '.shqf-success-message' );
@@ -81,21 +82,23 @@ test.describe( 'Validation Errors', () => {
 		const modal = page.locator( MODAL_SELECTOR );
 
 		// Fill email but leave name empty.
-		await modal
-			.locator( 'input[type="email"]' )
-			.fill( 'test@example.com' );
+		await modal.locator( 'input[type="email"]' ).fill( 'test@example.com' );
 
 		// Submit.
 		await modal.locator( '.shqf-button--submit' ).click();
 		await page.waitForTimeout( 500 );
 
 		// Should show error (either client-side or server-side).
-		const errors = modal.locator( '.shqf-error:visible, .shqf-messages .shqf-message--error' );
+		const errors = modal.locator(
+			'.shqf-error:visible, .shqf-messages .shqf-message--error'
+		);
 		const hasError = ( await errors.count() ) > 0;
 
 		// Also check for HTML5 validation via :invalid pseudo-class.
 		const hasInvalidField = await modal.evaluate( ( el ) => {
-			return el.querySelector( 'input:invalid, textarea:invalid' ) !== null;
+			return (
+				el.querySelector( 'input:invalid, textarea:invalid' ) !== null
+			);
 		} );
 
 		expect( hasError || hasInvalidField ).toBe( true );
@@ -117,7 +120,9 @@ test.describe( 'Validation Errors', () => {
 		await modal.locator( '.shqf-button--submit' ).click();
 		await page.waitForTimeout( 500 );
 
-		const errors = modal.locator( '.shqf-error:visible, .shqf-messages .shqf-message--error' );
+		const errors = modal.locator(
+			'.shqf-error:visible, .shqf-messages .shqf-message--error'
+		);
 		const hasError = ( await errors.count() ) > 0;
 		const hasInvalidField = await modal.evaluate( ( el ) => {
 			return el.querySelector( 'input:invalid' ) !== null;
@@ -134,14 +139,14 @@ test.describe( 'Validation Errors', () => {
 			'input[name*="first_name"], input[name*="[first_name]"]'
 		);
 		await firstNameInput.fill( 'TestName' );
-		await modal
-			.locator( 'input[type="email"]' )
-			.fill( 'not-an-email' );
+		await modal.locator( 'input[type="email"]' ).fill( 'not-an-email' );
 
 		await modal.locator( '.shqf-button--submit' ).click();
 		await page.waitForTimeout( 500 );
 
-		const errors = modal.locator( '.shqf-error:visible, .shqf-messages .shqf-message--error' );
+		const errors = modal.locator(
+			'.shqf-error:visible, .shqf-messages .shqf-message--error'
+		);
 		const hasError = ( await errors.count() ) > 0;
 		const hasInvalidField = await modal.evaluate( ( el ) => {
 			return el.querySelector( 'input:invalid' ) !== null;
@@ -154,9 +159,7 @@ test.describe( 'Validation Errors', () => {
 		const modal = page.locator( MODAL_SELECTOR );
 
 		// Deselect the pre-selected product by clicking it.
-		const preSelected = modal.locator(
-			`.shqf-picker-item--selected`
-		);
+		const preSelected = modal.locator( `.shqf-picker-item--selected` );
 		if ( ( await preSelected.count() ) > 0 ) {
 			await preSelected.first().click();
 		}
@@ -186,18 +189,22 @@ test.describe( 'Validation Errors', () => {
 		} );
 
 		const messageTexts = await modal.evaluate( ( el ) => {
-			const msgs = el.querySelectorAll( '.shqf-message--error, .shqf-messages' );
+			const msgs = el.querySelectorAll(
+				'.shqf-message--error, .shqf-messages'
+			);
 			return Array.from( msgs )
 				.map( ( m ) => m.textContent?.trim() )
 				.filter( ( t ) => t && t.length > 0 );
 		} );
 
-		const allErrors = [ ...errorTexts, ...messageTexts ].join( ' ' ).toLowerCase();
+		const allErrors = [ ...errorTexts, ...messageTexts ]
+			.join( ' ' )
+			.toLowerCase();
 		expect(
 			allErrors.includes( 'select' ) ||
-			allErrors.includes( 'sample' ) ||
-			allErrors.includes( 'required' ) ||
-			allErrors.includes( 'correct' )
+				allErrors.includes( 'sample' ) ||
+				allErrors.includes( 'required' ) ||
+				allErrors.includes( 'correct' )
 		).toBe( true );
 	} );
 } );
@@ -213,11 +220,6 @@ test.describe( 'Admin Verification', () => {
 		// 6.8: Navigate to submissions admin page.
 		await page.goto( SUBMISSIONS_URL );
 		await page.waitForLoadState( 'networkidle' );
-
-		// Find the submission with our unique email.
-		const emailCell = page.locator( 'td.column-email', {
-			hasText: UNIQUE_EMAIL,
-		} );
 
 		// If not found in list, email might be truncated. Search by partial.
 		const emailPart = UNIQUE_EMAIL.split( '@' )[ 0 ];

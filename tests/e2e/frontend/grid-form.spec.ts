@@ -40,9 +40,9 @@ test.describe( 'Grid form template', () => {
 	test( 'fill and submit grid form', async ( { page } ) => {
 		// Select a sample.
 		await page.locator( '.shqf-picker-item' ).first().click();
-		await expect(
-			page.locator( '.shqf-picker-item' ).first()
-		).toHaveClass( /shqf-picker-item--selected/ );
+		await expect( page.locator( '.shqf-picker-item' ).first() ).toHaveClass(
+			/shqf-picker-item--selected/
+		);
 
 		// Fill contact fields.
 		await page.locator( 'input[name*="first_name"]' ).fill( 'Jane' );
@@ -53,8 +53,8 @@ test.describe( 'Grid form template', () => {
 		await page.locator( '.shqf-button--submit' ).click();
 
 		// Success message.
-		await expect(
-			page.locator( '.shqf-success' )
-		).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 	} );
 } );

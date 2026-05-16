@@ -24,10 +24,14 @@ test.describe( 'Submissions page', () => {
 
 	test( 'empty state shows when no submissions', async ( { page } ) => {
 		// Filter to a form that has no submissions.
-		await page.goto( '/wp-admin/admin.php?page=shqf-submissions&form_id=99999' );
+		await page.goto(
+			'/wp-admin/admin.php?page=shqf-submissions&form_id=99999'
+		);
 
 		// Should see empty state or "No items found".
-		const hasEmptyState = await page.locator( '.shqf-empty-state-box' ).isVisible();
+		const hasEmptyState = await page
+			.locator( '.shqf-empty-state-box' )
+			.isVisible();
 		const hasNoItems = await page.locator( '.no-items' ).isVisible();
 		expect( hasEmptyState || hasNoItems ).toBeTruthy();
 	} );

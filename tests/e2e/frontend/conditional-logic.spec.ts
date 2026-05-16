@@ -20,48 +20,58 @@ test.describe( 'Conditional logic', () => {
 			page.locator( '.shqf-field[data-field-key="trigger"]' )
 		).toBeVisible();
 		// Conditional field should be hidden (display:none + aria-hidden).
-		const condField = page.locator( '.shqf-field[data-field-key="conditional_field"]' );
+		const condField = page.locator(
+			'.shqf-field[data-field-key="conditional_field"]'
+		);
 		await expect( condField ).toBeHidden();
 		await expect( condField ).toHaveAttribute( 'aria-hidden', 'true' );
 	} );
 
 	test( 'field shows when condition met', async ( { page } ) => {
-		const condField = page.locator( '.shqf-field[data-field-key="conditional_field"]' );
+		const condField = page.locator(
+			'.shqf-field[data-field-key="conditional_field"]'
+		);
 		await expect( condField ).toBeHidden();
 
 		// Type the trigger value.
-		await page.locator( 'input[name="shqf_fields[trigger]"]' ).fill( 'show' );
+		await page
+			.locator( 'input[name="shqf_fields[trigger]"]' )
+			.fill( 'show' );
 
 		// Conditional field should now be visible.
 		await expect( condField ).toBeVisible();
 		// aria-hidden should be removed.
 		await expect( condField ).not.toHaveAttribute( 'aria-hidden', 'true' );
 		// Input inside should be enabled.
-		await expect(
-			condField.locator( 'input' )
-		).toBeEnabled();
+		await expect( condField.locator( 'input' ) ).toBeEnabled();
 	} );
 
 	test( 'field hides again when condition cleared', async ( { page } ) => {
-		const condField = page.locator( '.shqf-field[data-field-key="conditional_field"]' );
+		const condField = page.locator(
+			'.shqf-field[data-field-key="conditional_field"]'
+		);
 
 		// Show the field.
-		await page.locator( 'input[name="shqf_fields[trigger]"]' ).fill( 'show' );
+		await page
+			.locator( 'input[name="shqf_fields[trigger]"]' )
+			.fill( 'show' );
 		await expect( condField ).toBeVisible();
 
 		// Clear the trigger.
 		await page.locator( 'input[name="shqf_fields[trigger]"]' ).fill( '' );
 		await expect( condField ).toBeHidden();
 		// Input inside should be disabled.
-		await expect(
-			condField.locator( 'input' )
-		).toBeDisabled();
+		await expect( condField.locator( 'input' ) ).toBeDisabled();
 	} );
 
 	test( 'hidden field excluded from submission', async ( { page } ) => {
 		// Fill the conditional field value while it's visible.
-		await page.locator( 'input[name="shqf_fields[trigger]"]' ).fill( 'show' );
-		const condInput = page.locator( '.shqf-field[data-field-key="conditional_field"] input' );
+		await page
+			.locator( 'input[name="shqf_fields[trigger]"]' )
+			.fill( 'show' );
+		const condInput = page.locator(
+			'.shqf-field[data-field-key="conditional_field"] input'
+		);
 		await expect( condInput ).toBeVisible();
 		await condInput.fill( 'secret data' );
 
@@ -77,8 +87,10 @@ test.describe( 'Conditional logic', () => {
 
 		// Intercept the AJAX request to verify the payload.
 		const [ request ] = await Promise.all( [
-			page.waitForRequest( ( req ) =>
-				req.url().includes( '/submissions' ) && req.method() === 'POST'
+			page.waitForRequest(
+				( req ) =>
+					req.url().includes( '/submissions' ) &&
+					req.method() === 'POST'
 			),
 			page.locator( '.shqf-button--submit' ).click(),
 		] );
@@ -89,6 +101,8 @@ test.describe( 'Conditional logic', () => {
 		expect( fields ).not.toHaveProperty( 'conditional_field' );
 
 		// Verify submission succeeded.
-		await expect( page.locator( '.shqf-success' ) ).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 	} );
 } );

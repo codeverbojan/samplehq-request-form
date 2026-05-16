@@ -109,6 +109,9 @@ export const DEFAULT_SETTINGS: Record< string, string > = {
 /**
  * Set a WordPress option via the admin settings page form post.
  * Uses a direct GET request with a custom endpoint we set up.
+ * @param page
+ * @param key
+ * @param value
  */
 export async function setOption(
 	page: Page,
@@ -118,7 +121,9 @@ export async function setOption(
 	await page.evaluate(
 		async ( { k, v, base } ) => {
 			const res = await fetch(
-				`${ base }/wp-admin/admin-ajax.php?action=shqf_e2e_set_option&key=${ encodeURIComponent( k ) }&value=${ encodeURIComponent( v ) }`,
+				`${ base }/wp-admin/admin-ajax.php?action=shqf_e2e_set_option&key=${ encodeURIComponent(
+					k
+				) }&value=${ encodeURIComponent( v ) }`,
 				{ credentials: 'same-origin' }
 			);
 			if ( ! res.ok ) {
@@ -133,15 +138,16 @@ export async function setOption(
 
 /**
  * Get a WordPress option value.
+ * @param page
+ * @param key
  */
-export async function getOption(
-	page: Page,
-	key: string
-): Promise< string > {
+export async function getOption( page: Page, key: string ): Promise< string > {
 	return page.evaluate(
 		async ( { k, base } ) => {
 			const res = await fetch(
-				`${ base }/wp-admin/admin-ajax.php?action=shqf_e2e_get_option&key=${ encodeURIComponent( k ) }`,
+				`${ base }/wp-admin/admin-ajax.php?action=shqf_e2e_get_option&key=${ encodeURIComponent(
+					k
+				) }`,
 				{ credentials: 'same-origin' }
 			);
 			return ( await res.json() ).data ?? '';
@@ -152,6 +158,10 @@ export async function getOption(
 
 /**
  * Temporarily set an option, run a callback, then restore the original.
+ * @param page
+ * @param key
+ * @param value
+ * @param fn
  */
 export async function withOption(
 	page: Page,
@@ -170,6 +180,7 @@ export async function withOption(
 
 /**
  * Restore all WC settings to defaults.
+ * @param page
  */
 export async function restoreDefaults( page: Page ): Promise< void > {
 	for ( const [ k, v ] of Object.entries( DEFAULT_SETTINGS ) ) {

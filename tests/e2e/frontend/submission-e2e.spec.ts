@@ -41,12 +41,20 @@ test.describe( 'Submission end-to-end', () => {
 		// Step 0: select sample.
 		await page.locator( '.shqf-picker-item' ).first().click();
 		await page.locator( '.shqf-button--next' ).click();
-		await expect( page.locator( '.shqf-step[data-step="1"]' ) ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-step[data-step="1"]' )
+		).toBeVisible();
 
 		// Step 1: fill contact fields.
-		await page.locator( '.shqf-step[data-step="1"] input[name*="first_name"]' ).fill( 'E2E' );
-		await page.locator( '.shqf-step[data-step="1"] input[name*="last_name"]' ).fill( 'Tester' );
-		await page.locator( '.shqf-step[data-step="1"] input[type="email"]' ).fill( `wizard-${ Date.now() }@test.com` );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[name*="first_name"]' )
+			.fill( 'E2E' );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[name*="last_name"]' )
+			.fill( 'Tester' );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[type="email"]' )
+			.fill( `wizard-${ Date.now() }@test.com` );
 
 		// Step 2: submit.
 		await page.locator( '.shqf-button--next' ).click();
@@ -54,9 +62,9 @@ test.describe( 'Submission end-to-end', () => {
 		await submitBtn.waitFor( { state: 'visible', timeout: 5000 } );
 		await submitBtn.click();
 
-		await expect(
-			page.locator( '.shqf-success' )
-		).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 	} );
 
 	test( 'submission appears in admin list', async ( { page } ) => {
@@ -70,14 +78,18 @@ test.describe( 'Submission end-to-end', () => {
 		await page.locator( 'input[name*="last_name"]' ).fill( 'Check' );
 		await page.locator( 'input[type="email"]' ).fill( email );
 		await page.locator( '.shqf-button--submit' ).click();
-		await expect( page.locator( '.shqf-success' ) ).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 
 		// Navigate to admin submissions page.
 		await page.goto( '/wp-admin/admin.php?page=shqf-submissions' );
 		await expect( page.locator( '.wp-list-table' ) ).toBeVisible();
 
 		// The submitted email should appear in the table.
-		await expect( page.locator( `.wp-list-table td:has-text("${ email }")` ) ).toBeVisible();
+		await expect(
+			page.locator( `.wp-list-table td:has-text("${ email }")` )
+		).toBeVisible();
 	} );
 
 	test( 'submission detail shows field values', async ( { page } ) => {
@@ -91,7 +103,9 @@ test.describe( 'Submission end-to-end', () => {
 		await page.locator( 'input[name*="last_name"]' ).fill( 'Test' );
 		await page.locator( 'input[type="email"]' ).fill( email );
 		await page.locator( '.shqf-button--submit' ).click();
-		await expect( page.locator( '.shqf-success' ) ).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 
 		// Go to submissions list, click View on the new submission.
 		await page.goto( '/wp-admin/admin.php?page=shqf-submissions' );
@@ -122,7 +136,10 @@ test.describe( 'Submission end-to-end', () => {
 			$form = $forms->get(${ gridFormId });
 			echo $form["submissions_count"] ?? "0";
 		` );
-		const before = parseInt( beforeRaw.split( '\n' ).pop()?.trim() || '0', 10 );
+		const before = parseInt(
+			beforeRaw.split( '\n' ).pop()?.trim() || '0',
+			10
+		);
 
 		// Submit a form.
 		await page.goto( GRID_URL );
@@ -130,9 +147,13 @@ test.describe( 'Submission end-to-end', () => {
 		await page.locator( '.shqf-picker-item' ).first().click();
 		await page.locator( 'input[name*="first_name"]' ).fill( 'Count' );
 		await page.locator( 'input[name*="last_name"]' ).fill( 'Test' );
-		await page.locator( 'input[type="email"]' ).fill( `count-${ Date.now() }@test.com` );
+		await page
+			.locator( 'input[type="email"]' )
+			.fill( `count-${ Date.now() }@test.com` );
 		await page.locator( '.shqf-button--submit' ).click();
-		await expect( page.locator( '.shqf-success' ) ).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 
 		// Get count after via DB query.
 		const afterRaw = wpEval( `
@@ -141,7 +162,10 @@ test.describe( 'Submission end-to-end', () => {
 			$form = $forms->get(${ gridFormId });
 			echo $form["submissions_count"] ?? "0";
 		` );
-		const after = parseInt( afterRaw.split( '\n' ).pop()?.trim() || '0', 10 );
+		const after = parseInt(
+			afterRaw.split( '\n' ).pop()?.trim() || '0',
+			10
+		);
 
 		expect( after ).toBeGreaterThan( before );
 	} );
@@ -149,7 +173,8 @@ test.describe( 'Submission end-to-end', () => {
 	test( 'success redirect works', async ( { page } ) => {
 		// Create a form with redirect behavior pointing to the grid page.
 		const redirectUrl = GRID_URL;
-		const formId = wpEval( `
+		const formId =
+			wpEval( `
 			global $wpdb;
 			$forms = new SampleHQForm\\Database\\FormsTable($wpdb);
 			$tpl = SampleHQForm\\Forms\\FormTemplates::get("grid");
@@ -157,19 +182,37 @@ test.describe( 'Submission end-to-end', () => {
 			$config["behavior"]["success_type"] = "redirect";
 			$config["behavior"]["redirect_url"] = "${ redirectUrl }";
 			echo $forms->create(["title" => "E2E Redirect Form", "status" => "published", "created_by" => 1, "config" => $config]);
-		` ).split( '\n' ).pop()?.trim() || '';
+		` )
+				.split( '\n' )
+				.pop()
+				?.trim() || '';
 
 		// Create a page with this form.
 		const raw = execSync(
 			`npx wp-env run cli -- wp post create --post_type=page --post_title="E2E Redirect Page" --post_status=publish --post_content='[samplehq_form id="${ formId }"]' --porcelain`,
 			{ encoding: 'utf-8', timeout: 20000 }
 		);
-		const pageId = raw.split( '\n' ).filter( ( l ) => /^\d+$/.test( l.trim() ) ).pop()?.trim() || '';
+		const pageId =
+			raw
+				.split( '\n' )
+				.filter( ( l ) => /^\d+$/.test( l.trim() ) )
+				.pop()
+				?.trim() || '';
 		const slugRaw = execSync(
 			`npx wp-env run cli -- wp post get ${ pageId } --field=post_name`,
 			{ encoding: 'utf-8', timeout: 20000 }
 		);
-		const slug = slugRaw.split( '\n' ).filter( ( l ) => ! l.includes( 'Starting' ) && ! l.includes( 'Ran' ) && l.trim() ).pop()?.trim() || '';
+		const slug =
+			slugRaw
+				.split( '\n' )
+				.filter(
+					( l ) =>
+						! l.includes( 'Starting' ) &&
+						! l.includes( 'Ran' ) &&
+						l.trim()
+				)
+				.pop()
+				?.trim() || '';
 		const formPageUrl = `http://localhost:8888/${ slug }/`;
 
 		// Visit the redirect form page.

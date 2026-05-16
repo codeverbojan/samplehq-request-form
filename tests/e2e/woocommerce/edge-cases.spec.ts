@@ -29,9 +29,7 @@ test.afterAll( async ( { browser } ) => {
 // =====================================================================
 
 test.describe( 'Product Rendering', () => {
-	test( '9.4 Products without SKU render correctly', async ( {
-		page,
-	} ) => {
+	test( '9.4 Products without SKU render correctly', async ( { page } ) => {
 		// All test products have SKUs. Verify button renders even if empty SKU.
 		await page.goto( PRODUCTS.kraftMailer.url );
 		const btn = page.locator( BTN_SELECTOR );
@@ -49,9 +47,7 @@ test.describe( 'Product Rendering', () => {
 		const modal = page.locator( MODAL_SELECTOR );
 		await expect( modal ).toBeVisible();
 		// Test products have no images -- all should show placeholder SVG.
-		const placeholders = modal.locator(
-			'.shqf-picker-item-placeholder'
-		);
+		const placeholders = modal.locator( '.shqf-picker-item-placeholder' );
 		const count = await placeholders.count();
 		expect( count ).toBeGreaterThanOrEqual( 1 );
 	} );
@@ -116,9 +112,7 @@ test.describe( 'Cache Behavior', () => {
 		await page.locator( BTN_SELECTOR ).click();
 		const modal = page.locator( MODAL_SELECTOR );
 		await expect( modal ).toBeVisible();
-		const itemsBefore = await modal
-			.locator( '.shqf-picker-item' )
-			.count();
+		const itemsBefore = await modal.locator( '.shqf-picker-item' ).count();
 		expect( itemsBefore ).toBeGreaterThanOrEqual( 5 );
 
 		// Clear cache via option helper (increment version).
@@ -134,9 +128,7 @@ test.describe( 'Cache Behavior', () => {
 		await page.reload();
 		await page.locator( BTN_SELECTOR ).click();
 		await expect( modal ).toBeVisible();
-		const itemsAfter = await modal
-			.locator( '.shqf-picker-item' )
-			.count();
+		const itemsAfter = await modal.locator( '.shqf-picker-item' ).count();
 		expect( itemsAfter ).toBe( itemsBefore );
 	} );
 } );

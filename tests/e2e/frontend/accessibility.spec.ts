@@ -1,3 +1,4 @@
+/* eslint-disable @wordpress/no-global-active-element -- page.evaluate runs in browser context */
 import { test, expect } from '@playwright/test';
 import { loadFixtures } from '../load-fixtures';
 
@@ -23,19 +24,37 @@ test.describe( 'Accessibility', () => {
 			const problems: string[] = [];
 			inputs.forEach( ( input ) => {
 				// Skip honeypot.
-				if ( input.closest( '.shqf-hp' ) ) return;
+				if ( input.closest( '.shqf-hp' ) ) {
+					return;
+				}
 				// Skip picker quantity inputs (have aria-label).
-				if ( input.classList.contains( 'shqf-picker-item-qty' ) ) return;
+				if ( input.classList.contains( 'shqf-picker-item-qty' ) ) {
+					return;
+				}
 
 				const id = input.id;
 				const ariaLabel = input.getAttribute( 'aria-label' );
 				const ariaLabelledBy = input.getAttribute( 'aria-labelledby' );
-				const hasLabel = id ? document.querySelector( `label[for="${ id }"]` ) : null;
+				const hasLabel = id
+					? document.querySelector( `label[for="${ id }"]` )
+					: null;
 				const parentLabel = input.closest( 'label' );
-				const inFieldset = input.closest( 'fieldset' )?.querySelector( 'legend' );
+				const inFieldset = input
+					.closest( 'fieldset' )
+					?.querySelector( 'legend' );
 
-				if ( ! hasLabel && ! parentLabel && ! ariaLabel && ! ariaLabelledBy && ! inFieldset ) {
-					problems.push( `${ input.tagName }[name=${ input.getAttribute( 'name' ) }] has no label` );
+				if (
+					! hasLabel &&
+					! parentLabel &&
+					! ariaLabel &&
+					! ariaLabelledBy &&
+					! inFieldset
+				) {
+					problems.push(
+						`${ input.tagName }[name=${ input.getAttribute(
+							'name'
+						) }] has no label`
+					);
 				}
 			} );
 			return problems;
@@ -53,7 +72,11 @@ test.describe( 'Accessibility', () => {
 			const problems: string[] = [];
 			inputs.forEach( ( input ) => {
 				if ( input.getAttribute( 'aria-required' ) !== 'true' ) {
-					problems.push( `${ input.tagName }[name=${ input.getAttribute( 'name' ) }] missing aria-required` );
+					problems.push(
+						`${ input.tagName }[name=${ input.getAttribute(
+							'name'
+						) }] missing aria-required`
+					);
 				}
 			} );
 			return problems;
@@ -62,7 +85,9 @@ test.describe( 'Accessibility', () => {
 		expect( missingAria ).toEqual( [] );
 
 		// Also check fieldsets with aria-required (sample picker).
-		const pickerFieldsets = await page.locator( '.shqf-picker[aria-required="true"]' ).count();
+		const pickerFieldsets = await page
+			.locator( '.shqf-picker[aria-required="true"]' )
+			.count();
 		expect( pickerFieldsets ).toBeGreaterThanOrEqual( 1 );
 	} );
 
@@ -75,10 +100,16 @@ test.describe( 'Accessibility', () => {
 			const problems: string[] = [];
 			inputs.forEach( ( input ) => {
 				const describedby = input.getAttribute( 'aria-describedby' );
-				if ( ! describedby ) return;
+				if ( ! describedby ) {
+					return;
+				}
 				const target = document.getElementById( describedby );
 				if ( ! target ) {
-					problems.push( `${ input.tagName }[name=${ input.getAttribute( 'name' ) }] points to missing #${ describedby }` );
+					problems.push(
+						`${ input.tagName }[name=${ input.getAttribute(
+							'name'
+						) }] points to missing #${ describedby }`
+					);
 				}
 			} );
 			return problems;
@@ -87,7 +118,9 @@ test.describe( 'Accessibility', () => {
 		expect( brokenLinks ).toEqual( [] );
 
 		// Verify at least some error containers exist.
-		const errorContainers = await page.locator( '.shqf-form .shqf-error' ).count();
+		const errorContainers = await page
+			.locator( '.shqf-form .shqf-error' )
+			.count();
 		expect( errorContainers ).toBeGreaterThanOrEqual( 3 );
 	} );
 
@@ -100,24 +133,36 @@ test.describe( 'Accessibility', () => {
 			await page.keyboard.press( 'Tab' );
 			const info = await page.evaluate( () => {
 				const el = document.activeElement;
-				if ( ! el || el === document.body ) return 'body';
+				if ( ! el || el === document.body ) {
+					return 'body';
+				}
 				const tag = el.tagName.toLowerCase();
 				const type = el.getAttribute( 'type' ) || '';
 				const cls = el.className || '';
-				return `${ tag }[${ type }]${ cls.includes( 'shqf-button--submit' ) ? ':submit' : '' }`;
+				return `${ tag }[${ type }]${
+					cls.includes( 'shqf-button--submit' ) ? ':submit' : ''
+				}`;
 			} );
 			focusedElements.push( info );
-			if ( info.includes( ':submit' ) ) break;
+			if ( info.includes( ':submit' ) ) {
+				break;
+			}
 		}
 
 		// Should tab through multiple form elements (last_name, email, etc.).
 		const formElements = focusedElements.filter(
-			( el ) => el.startsWith( 'input' ) || el.startsWith( 'select' ) || el.startsWith( 'textarea' ) || el.startsWith( 'button' )
+			( el ) =>
+				el.startsWith( 'input' ) ||
+				el.startsWith( 'select' ) ||
+				el.startsWith( 'textarea' ) ||
+				el.startsWith( 'button' )
 		);
 		expect( formElements.length ).toBeGreaterThanOrEqual( 3 );
 
 		// Submit button should be reachable via Tab.
-		const hitSubmit = focusedElements.some( ( el ) => el.includes( ':submit' ) || el.includes( '[submit]' ) );
+		const hitSubmit = focusedElements.some(
+			( el ) => el.includes( ':submit' ) || el.includes( '[submit]' )
+		);
 		expect( hitSubmit ).toBe( true );
 	} );
 } );

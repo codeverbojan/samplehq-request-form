@@ -25,7 +25,9 @@ test.describe( 'All field types', () => {
 		await expect( input ).toHaveAttribute( 'required', '' );
 	} );
 
-	test( 'email field renders, validates format, rejects invalid', async ( { page } ) => {
+	test( 'email field renders, validates format, rejects invalid', async ( {
+		page,
+	} ) => {
 		const field = page.locator( '.shqf-field--email' );
 		await expect( field ).toBeVisible();
 		const input = field.locator( 'input[type="email"]' );
@@ -51,7 +53,9 @@ test.describe( 'All field types', () => {
 		await expect( input ).toHaveValue( '+1-555-123-4567' );
 	} );
 
-	test( 'textarea field renders and accepts multi-line', async ( { page } ) => {
+	test( 'textarea field renders and accepts multi-line', async ( {
+		page,
+	} ) => {
 		const field = page.locator( '.shqf-field--textarea' );
 		await expect( field ).toBeVisible();
 		const textarea = field.locator( 'textarea' );
@@ -60,7 +64,9 @@ test.describe( 'All field types', () => {
 		await expect( textarea ).toHaveValue( 'Line 1\nLine 2' );
 	} );
 
-	test( 'number field renders with min/max and rejects out-of-range', async ( { page } ) => {
+	test( 'number field renders with min/max and rejects out-of-range', async ( {
+		page,
+	} ) => {
 		const field = page.locator( '.shqf-field--number' );
 		await expect( field ).toBeVisible();
 		const input = field.locator( 'input[type="number"]' );
@@ -137,7 +143,9 @@ test.describe( 'All field types', () => {
 		await expect( input ).toHaveValue( '2026-12-25' );
 	} );
 
-	test( 'url field renders, rejects invalid, accepts valid', async ( { page } ) => {
+	test( 'url field renders, rejects invalid, accepts valid', async ( {
+		page,
+	} ) => {
 		const field = page.locator( '.shqf-field--url' );
 		await expect( field ).toBeVisible();
 		const input = field.locator( 'input[type="url"]' );
@@ -164,7 +172,9 @@ test.describe( 'All field types', () => {
 		await field.locator( 'input[name*="state"]' ).fill( 'IL' );
 		await field.locator( 'input[name*="zip"]' ).fill( '62701' );
 		await field.locator( 'input[name*="country"]' ).fill( 'US' );
-		await expect( field.locator( 'input[name*="city"]' ) ).toHaveValue( 'Springfield' );
+		await expect( field.locator( 'input[name*="city"]' ) ).toHaveValue(
+			'Springfield'
+		);
 	} );
 
 	test( 'hidden field is in DOM but not visible', async ( { page } ) => {
@@ -179,7 +189,9 @@ test.describe( 'All field types', () => {
 	test( 'html field renders content block', async ( { page } ) => {
 		const field = page.locator( '.shqf-field--html' );
 		await expect( field ).toBeVisible();
-		await expect( field ).toContainText( 'This is an informational block.' );
+		await expect( field ).toContainText(
+			'This is an informational block.'
+		);
 		// No input elements inside HTML field.
 		const inputs = field.locator( 'input, select, textarea' );
 		await expect( inputs ).toHaveCount( 0 );
@@ -190,7 +202,9 @@ test.describe( 'All field types', () => {
 		await expect( field ).toBeVisible();
 		const checkbox = field.locator( 'input[type="checkbox"]' );
 		await expect( checkbox ).toBeVisible();
-		await expect( field ).toContainText( 'I agree to the terms and conditions.' );
+		await expect( field ).toContainText(
+			'I agree to the terms and conditions.'
+		);
 		// Submit without consent triggers error.
 		await page.locator( '.shqf-button--submit' ).click();
 		const errorEl = field.locator( '.shqf-error' );
@@ -201,7 +215,9 @@ test.describe( 'All field types', () => {
 		await expect( checkbox ).toBeChecked();
 	} );
 
-	test( 'file upload field renders with allowed types info', async ( { page } ) => {
+	test( 'file upload field renders with allowed types info', async ( {
+		page,
+	} ) => {
 		const field = page.locator( '.shqf-field--file_upload' );
 		await expect( field ).toBeVisible();
 		const input = field.locator( 'input[type="file"]' );

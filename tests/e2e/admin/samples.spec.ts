@@ -13,7 +13,9 @@ test.describe( 'Sample Library', () => {
 
 		// Save redirects to edit page with the name persisted.
 		await page.waitForSelector( '#shqf-name' );
-		await expect( page.locator( '#shqf-name' ) ).toHaveValue( 'E2E Widget' );
+		await expect( page.locator( '#shqf-name' ) ).toHaveValue(
+			'E2E Widget'
+		);
 	} );
 
 	test( 'edit sample updates name', async ( { page } ) => {
@@ -28,7 +30,9 @@ test.describe( 'Sample Library', () => {
 		await page.click( '#submit' );
 		await page.waitForSelector( '#shqf-name' );
 
-		await expect( page.locator( '#shqf-name' ) ).toHaveValue( 'After Edit' );
+		await expect( page.locator( '#shqf-name' ) ).toHaveValue(
+			'After Edit'
+		);
 	} );
 
 	test( 'trash and restore sample', async ( { page } ) => {
@@ -45,10 +49,15 @@ test.describe( 'Sample Library', () => {
 		await page.goto( SAMPLES_URL );
 		await page.locator( 'input[name="s"]' ).fill( uniqueName );
 		await page.locator( '#search-submit' ).click();
-		await expect( page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` ) ).toBeVisible();
+		await expect(
+			page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` )
+		).toBeVisible();
 
 		// Trash via row action link href.
-		const trashHref = await page.locator( `tr:has-text("${ uniqueName }") .row-actions a:has-text("Trash")` )
+		const trashHref = await page
+			.locator(
+				`tr:has-text("${ uniqueName }") .row-actions a:has-text("Trash")`
+			)
 			.getAttribute( 'href' );
 		expect( trashHref ).toBeTruthy();
 		await page.goto( trashHref! );
@@ -57,11 +66,16 @@ test.describe( 'Sample Library', () => {
 		await page.goto( SAMPLES_URL );
 		await page.locator( 'input[name="s"]' ).fill( uniqueName );
 		await page.locator( '#search-submit' ).click();
-		await expect( page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` ) ).toHaveCount( 0 );
+		await expect(
+			page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` )
+		).toHaveCount( 0 );
 
 		// Restore from trash.
 		await page.goto( SAMPLES_URL + '&status=trashed' );
-		const restoreHref = await page.locator( `tr:has-text("${ uniqueName }") .row-actions a:has-text("Restore")` )
+		const restoreHref = await page
+			.locator(
+				`tr:has-text("${ uniqueName }") .row-actions a:has-text("Restore")`
+			)
 			.getAttribute( 'href' );
 		expect( restoreHref ).toBeTruthy();
 		await page.goto( restoreHref! );
@@ -70,6 +84,8 @@ test.describe( 'Sample Library', () => {
 		await page.goto( SAMPLES_URL );
 		await page.locator( 'input[name="s"]' ).fill( uniqueName );
 		await page.locator( '#search-submit' ).click();
-		await expect( page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` ) ).toBeVisible();
+		await expect(
+			page.locator( `.wp-list-table tr:has-text("${ uniqueName }")` )
+		).toBeVisible();
 	} );
 } );

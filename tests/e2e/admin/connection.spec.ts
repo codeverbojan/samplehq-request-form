@@ -10,6 +10,9 @@ const CONNECTION_URL = '/wp-admin/admin.php?page=shqf-settings&tab=connection';
 /**
  * Guard against parallel spec race: if another worker's cleanup deleted
  * the connection between our seed and page load, re-seed and reload.
+ *
+ * @param page      Playwright page instance.
+ * @param overrides Optional fields forwarded to seedConnectedState.
  */
 async function ensureConnected(
 	page: Page,
@@ -18,6 +21,14 @@ async function ensureConnected(
 	const status = page.locator( '.shqf-connection-status--connected' );
 	if ( ! ( await status.isVisible().catch( () => false ) ) ) {
 		seedConnectedState( overrides );
+		await page.reload();
+	}
+}
+
+async function ensureDisconnected( page: Page ): Promise< void > {
+	const status = page.locator( '.shqf-connection-status--disconnected' );
+	if ( ! ( await status.isVisible().catch( () => false ) ) ) {
+		seedDisconnectedState();
 		await page.reload();
 	}
 }
@@ -34,13 +45,16 @@ test.describe( 'Connection tab', () => {
 	} ) => {
 		seedDisconnectedState();
 		await page.goto( CONNECTION_URL );
+		await ensureDisconnected( page );
 
 		await expect(
 			page.locator( '.shqf-connection-status--disconnected' )
 		).toBeVisible();
 		await expect( page.locator( 'text=Not connected' ) ).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', { hasText: 'Connect to SampleHQ' } )
+			page.locator( 'a.button-primary', {
+				hasText: 'Connect to SampleHQ',
+			} )
 		).toBeVisible();
 
 		// Migration tab should NOT be in the nav.
@@ -52,9 +66,13 @@ test.describe( 'Connection tab', () => {
 	test( 'connected state shows workspace details and disconnect button', async ( {
 		page,
 	} ) => {
-		seedConnectedState( { workspace_name: 'Acme Corp Workspace' } );
+		seedConnectedState( {
+			workspace_name: 'Acme Corp Workspace',
+		} );
 		await page.goto( CONNECTION_URL );
-		await ensureConnected( page, { workspace_name: 'Acme Corp Workspace' } );
+		await ensureConnected( page, {
+			workspace_name: 'Acme Corp Workspace',
+		} );
 
 		await expect(
 			page.locator( '.shqf-connection-status--connected' )
@@ -115,9 +133,7 @@ test.describe( 'Connection tab', () => {
 		).toContainText( 'Keep Me Connected' );
 	} );
 
-	test( 'disconnect confirm shows disconnected state', async ( {
-		page,
-	} ) => {
+	test( 'disconnect confirm shows disconnected state', async ( { page } ) => {
 		seedConnectedState( { workspace_name: 'Remove Me' } );
 		await page.goto( CONNECTION_URL );
 		await ensureConnected( page, { workspace_name: 'Remove Me' } );
@@ -136,7 +152,9 @@ test.describe( 'Connection tab', () => {
 		).toBeVisible();
 		await expect( page.locator( 'text=Not connected' ) ).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', { hasText: 'Connect to SampleHQ' } )
+			page.locator( 'a.button-primary', {
+				hasText: 'Connect to SampleHQ',
+			} )
 		).toBeVisible();
 	} );
 } );

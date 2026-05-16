@@ -68,7 +68,9 @@ export function createBlankForm( title: string, config = '{}' ): number {
 	const output = wpEval( `
 		global $wpdb;
 		$forms = new SampleHQForm\\Database\\FormsTable($wpdb);
-		echo $forms->create(["title" => "${ title }", "status" => "published", "created_by" => 1, "config" => json_encode(json_decode(base64_decode("${ Buffer.from( config ).toString( 'base64' ) }"), true))]);
+		echo $forms->create(["title" => "${ title }", "status" => "published", "created_by" => 1, "config" => json_encode(json_decode(base64_decode("${ Buffer.from(
+			config
+		).toString( 'base64' ) }"), true))]);
 	` );
 	return parseInt( output.split( '\n' ).pop() || '0', 10 );
 }

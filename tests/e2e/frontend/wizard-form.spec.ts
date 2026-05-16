@@ -17,8 +17,12 @@ test.describe( 'Wizard form template', () => {
 	test( 'stepper renders with 3 dots and labels', async ( { page } ) => {
 		await expect( page.locator( '.shqf-stepper' ) ).toBeVisible();
 		await expect( page.locator( '.shqf-step-dot' ) ).toHaveCount( 3 );
-		await expect( page.locator( '.shqf-step-label' ).nth( 0 ) ).toContainText( 'Samples' );
-		await expect( page.locator( '.shqf-step-label' ).nth( 1 ) ).toContainText( 'Your Info' );
+		await expect(
+			page.locator( '.shqf-step-label' ).nth( 0 )
+		).toContainText( 'Samples' );
+		await expect(
+			page.locator( '.shqf-step-label' ).nth( 1 )
+		).toContainText( 'Your Info' );
 	} );
 
 	test( 'only step 0 visible initially', async ( { page } ) => {
@@ -34,7 +38,9 @@ test.describe( 'Wizard form template', () => {
 		const count = await items.count();
 		expect( count ).toBeGreaterThanOrEqual( 1 );
 		// First seed sample name should be visible.
-		await expect( page.locator( '.shqf-picker-item' ).first() ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-picker-item' ).first()
+		).toBeVisible();
 	} );
 
 	test( 'clicking sample selects it', async ( { page } ) => {
@@ -49,17 +55,25 @@ test.describe( 'Wizard form template', () => {
 		// Click Next.
 		await page.locator( '.shqf-button--next' ).click();
 		// Step 1 visible, step 0 hidden.
-		await expect( page.locator( '.shqf-step[data-step="1"]' ) ).toBeVisible();
-		await expect( page.locator( '.shqf-step[data-step="0"]' ) ).toBeHidden();
+		await expect(
+			page.locator( '.shqf-step[data-step="1"]' )
+		).toBeVisible();
+		await expect(
+			page.locator( '.shqf-step[data-step="0"]' )
+		).toBeHidden();
 	} );
 
 	test( 'Back returns to step 0', async ( { page } ) => {
 		await page.locator( '.shqf-picker-item' ).first().click();
 		await page.locator( '.shqf-button--next' ).click();
-		await expect( page.locator( '.shqf-step[data-step="1"]' ) ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-step[data-step="1"]' )
+		).toBeVisible();
 		// Click Back.
 		await page.locator( '.shqf-button--prev' ).click();
-		await expect( page.locator( '.shqf-step[data-step="0"]' ) ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-step[data-step="0"]' )
+		).toBeVisible();
 	} );
 
 	test( 'cannot advance without selecting a sample', async ( { page } ) => {
@@ -78,12 +92,20 @@ test.describe( 'Wizard form template', () => {
 		// Step 0: select sample.
 		await page.locator( '.shqf-picker-item' ).first().click();
 		await page.locator( '.shqf-button--next' ).click();
-		await expect( page.locator( '.shqf-step[data-step="1"]' ) ).toBeVisible();
+		await expect(
+			page.locator( '.shqf-step[data-step="1"]' )
+		).toBeVisible();
 
 		// Step 1: fill contact fields.
-		await page.locator( '.shqf-step[data-step="1"] input[name*="first_name"]' ).fill( 'Jane' );
-		await page.locator( '.shqf-step[data-step="1"] input[name*="last_name"]' ).fill( 'Doe' );
-		await page.locator( '.shqf-step[data-step="1"] input[type="email"]' ).fill( 'jane@example.com' );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[name*="first_name"]' )
+			.fill( 'Jane' );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[name*="last_name"]' )
+			.fill( 'Doe' );
+		await page
+			.locator( '.shqf-step[data-step="1"] input[type="email"]' )
+			.fill( 'jane@example.com' );
 
 		// Go to next step (step 2 if exists) or submit.
 		await page.locator( '.shqf-button--next' ).click();
@@ -94,14 +116,14 @@ test.describe( 'Wizard form template', () => {
 		await submitBtn.click();
 
 		// Success message.
-		await expect(
-			page.locator( '.shqf-success' )
-		).toBeVisible( { timeout: 10000 } );
+		await expect( page.locator( '.shqf-success' ) ).toBeVisible( {
+			timeout: 10000,
+		} );
 	} );
 
 	test( 'title renders', async ( { page } ) => {
-		await expect(
-			page.locator( '.shqf-title' ).first()
-		).toContainText( 'Request a Sample' );
+		await expect( page.locator( '.shqf-title' ).first() ).toContainText(
+			'Request a Sample'
+		);
 	} );
 } );

@@ -36,7 +36,10 @@ test.describe( 'Sync status', () => {
 		cleanupConnectionState();
 
 		const fixtures = loadFixtures();
-		formId = parseInt( fixtures.formIds.blank || fixtures.formIds.wizard, 10 );
+		formId = parseInt(
+			fixtures.formIds.blank || fixtures.formIds.wizard,
+			10
+		);
 		expect( formId ).not.toBeNaN();
 	} );
 

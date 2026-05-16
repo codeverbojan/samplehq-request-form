@@ -23,7 +23,9 @@ test.describe( 'Visual Regression', () => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		await page.locator( BTN_SELECTOR ).waitFor();
 		// Capture the product summary area containing the button.
-		const summary = page.locator( '.summary, .wp-block-woocommerce-product-details' ).first();
+		const summary = page
+			.locator( '.summary, .wp-block-woocommerce-product-details' )
+			.first();
 		await expect( summary ).toHaveScreenshot( 'product-page-button.png', {
 			maxDiffPixelRatio: 0.02,
 		} );
@@ -59,42 +61,51 @@ test.describe( 'Visual Regression', () => {
 		const modal = page.locator( MODAL_SELECTOR );
 		await expect( modal ).toBeVisible();
 		// Clear the pre-selected product so validation fails on submit.
-		const selectedItem = modal.locator( '.shqf-picker-item--selected input[type="checkbox"]' );
+		const selectedItem = modal.locator(
+			'.shqf-picker-item--selected input[type="checkbox"]'
+		);
 		if ( ( await selectedItem.count() ) > 0 ) {
 			await selectedItem.first().uncheck( { force: true } );
 		}
 		// Clear required fields to trigger validation.
-		const nameInput = modal.locator( 'input[name*="first_name"], input[name*="name"]' ).first();
+		const nameInput = modal
+			.locator( 'input[name*="first_name"], input[name*="name"]' )
+			.first();
 		if ( ( await nameInput.count() ) > 0 ) {
 			await nameInput.fill( '' );
 		}
 		// Submit to trigger validation errors.
-		const submitBtn = modal.locator( 'button[type="submit"], input[type="submit"]' ).first();
+		const submitBtn = modal
+			.locator( 'button[type="submit"], input[type="submit"]' )
+			.first();
 		await expect( submitBtn ).toBeVisible();
 		await submitBtn.click();
 		// Wait for error indicators (class or aria).
-		await page.waitForSelector( '.shqf-field--error, .shqf-field-error, [aria-invalid="true"]', {
-			state: 'visible',
-			timeout: 5000,
-		} ).catch( () => {} );
-		await expect( modal ).toHaveScreenshot(
-			'modal-validation-errors.png',
-			{ maxDiffPixelRatio: 0.05 }
-		);
+		await page
+			.waitForSelector(
+				'.shqf-field--error, .shqf-field-error, [aria-invalid="true"]',
+				{
+					state: 'visible',
+					timeout: 5000,
+				}
+			)
+			.catch( () => {} );
+		await expect( modal ).toHaveScreenshot( 'modal-validation-errors.png', {
+			maxDiffPixelRatio: 0.05,
+		} );
 	} );
 
 	test( '11.5 Shop loop with badges', async ( { page } ) => {
 		await page.goto( SHOP_URL );
 		await page.waitForLoadState( 'networkidle' );
 		// Capture the product grid area.
-		const products = page.locator(
-			'.products, .wp-block-woocommerce-product-template'
-		).first();
+		const products = page
+			.locator( '.products, .wp-block-woocommerce-product-template' )
+			.first();
 		if ( ( await products.count() ) > 0 ) {
-			await expect( products ).toHaveScreenshot(
-				'shop-loop-badges.png',
-				{ maxDiffPixelRatio: 0.03 }
-			);
+			await expect( products ).toHaveScreenshot( 'shop-loop-badges.png', {
+				maxDiffPixelRatio: 0.03,
+			} );
 		}
 	} );
 

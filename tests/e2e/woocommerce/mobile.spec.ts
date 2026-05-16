@@ -44,9 +44,7 @@ test.describe( 'Mobile Layout', () => {
 		expect( box!.width ).toBeGreaterThanOrEqual( 340 );
 	} );
 
-	test( '10.3 Close button is tappable (>= 44x44px)', async ( {
-		page,
-	} ) => {
+	test( '10.3 Close button is tappable (>= 44x44px)', async ( { page } ) => {
 		await page.goto( PRODUCTS.kraftMailer.url );
 		await page.locator( BTN_SELECTOR ).click();
 		const modal = page.locator( MODAL_SELECTOR );
@@ -71,12 +69,8 @@ test.describe( 'Mobile Scroll and Grid', () => {
 		await expect( modal ).toBeVisible();
 		// The modal body should have scrollable content.
 		const body = modal.locator( '.shqf-woo-modal__body' );
-		const scrollHeight = await body.evaluate(
-			( el ) => el.scrollHeight
-		);
-		const clientHeight = await body.evaluate(
-			( el ) => el.clientHeight
-		);
+		const scrollHeight = await body.evaluate( ( el ) => el.scrollHeight );
+		const clientHeight = await body.evaluate( ( el ) => el.clientHeight );
 		// Content should overflow (scrollHeight > clientHeight).
 		expect( scrollHeight ).toBeGreaterThanOrEqual( clientHeight );
 	} );
@@ -124,9 +118,7 @@ test.describe( 'Mobile Scroll and Grid', () => {
 // =====================================================================
 
 test.describe( 'Mobile Shop Loop', () => {
-	test( '10.8 Shop loop badges visible and tappable', async ( {
-		page,
-	} ) => {
+	test( '10.8 Shop loop badges visible and tappable', async ( { page } ) => {
 		await page.goto( SHOP_URL );
 		const badges = page.locator( BTN_LOOP_SELECTOR );
 		const count = await badges.count();

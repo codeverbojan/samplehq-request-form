@@ -8,8 +8,14 @@ test.describe( 'Settings security', () => {
 	} ) => {
 		// First, set a known secret value.
 		await page.goto( SETTINGS_URL + '&tab=spam' );
-		await page.fill( 'input[name="shqf_turnstile_site_key"]', 'test_site_key_sec' );
-		await page.fill( 'input[name="shqf_turnstile_secret_key"]', 'real_secret_value_abc123' );
+		await page.fill(
+			'input[name="shqf_turnstile_site_key"]',
+			'test_site_key_sec'
+		);
+		await page.fill(
+			'input[name="shqf_turnstile_secret_key"]',
+			'real_secret_value_abc123'
+		);
 		await page.locator( '#submit' ).click();
 		await page.waitForURL( /tab=spam/ );
 
@@ -21,7 +27,9 @@ test.describe( 'Settings security', () => {
 		await expect( siteKey ).toHaveValue( 'test_site_key_sec' );
 
 		// Secret field should show the mask placeholder, NOT the actual secret.
-		const secretField = page.locator( 'input[name="shqf_turnstile_secret_key"]' );
+		const secretField = page.locator(
+			'input[name="shqf_turnstile_secret_key"]'
+		);
 		const secretValue = await secretField.inputValue();
 		expect( secretValue ).not.toContain( 'real_secret_value_abc123' );
 		expect( secretValue.length ).toBeGreaterThan( 0 ); // mask is non-empty
@@ -41,7 +49,9 @@ test.describe( 'Settings security', () => {
 	} ) => {
 		// General tab with empty fields.
 		await page.goto( SETTINGS_URL + '&tab=general' );
-		const retentionInput = page.locator( 'input[name="shqf_ip_retention_days"]' );
+		const retentionInput = page.locator(
+			'input[name="shqf_ip_retention_days"]'
+		);
 		await retentionInput.fill( '' );
 		await page.locator( '#submit' ).click();
 		await page.waitForURL( /tab=general/ );

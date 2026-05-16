@@ -18,11 +18,15 @@ setup( 'authenticate on Herd site', async ( { page } ) => {
 	// Use evaluate to set values directly on the DOM, bypassing race conditions.
 	await page.evaluate(
 		( { user, pass } ) => {
-			const loginEl = document.querySelector< HTMLInputElement >( '#user_login' );
-			const passEl = document.querySelector< HTMLInputElement >( '#user_pass' );
+			const loginEl =
+				document.querySelector< HTMLInputElement >( '#user_login' );
+			const passEl =
+				document.querySelector< HTMLInputElement >( '#user_pass' );
 			if ( loginEl ) {
 				loginEl.value = user;
-				loginEl.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+				loginEl.dispatchEvent(
+					new Event( 'input', { bubbles: true } )
+				);
 			}
 			if ( passEl ) {
 				passEl.value = pass;

@@ -51,16 +51,24 @@ test.describe( 'Sample picker', () => {
 		const controls = item.locator( '.shqf-picker-item-qty-controls' );
 		await expect( controls ).toBeVisible();
 		// Default display value is 1.
-		await expect( controls.locator( '.shqf-picker-item-qty-value' ) ).toHaveText( '1' );
+		await expect(
+			controls.locator( '.shqf-picker-item-qty-value' )
+		).toHaveText( '1' );
 		// Click + twice.
 		await controls.locator( '.shqf-qty-plus' ).click();
 		await controls.locator( '.shqf-qty-plus' ).click();
-		await expect( controls.locator( '.shqf-picker-item-qty-value' ) ).toHaveText( '3' );
+		await expect(
+			controls.locator( '.shqf-picker-item-qty-value' )
+		).toHaveText( '3' );
 		// Hidden input should be in sync.
-		await expect( controls.locator( '.shqf-picker-item-qty' ) ).toHaveValue( '3' );
+		await expect( controls.locator( '.shqf-picker-item-qty' ) ).toHaveValue(
+			'3'
+		);
 		// Click - once.
 		await controls.locator( '.shqf-qty-minus' ).click();
-		await expect( controls.locator( '.shqf-picker-item-qty-value' ) ).toHaveText( '2' );
+		await expect(
+			controls.locator( '.shqf-picker-item-qty-value' )
+		).toHaveText( '2' );
 	} );
 
 	test( 'max selections enforced', async ( { page } ) => {
@@ -70,9 +78,15 @@ test.describe( 'Sample picker', () => {
 		await items.nth( 1 ).click();
 		await items.nth( 2 ).click();
 		// All 3 should be selected.
-		await expect( items.nth( 0 ) ).toHaveClass( /shqf-picker-item--selected/ );
-		await expect( items.nth( 1 ) ).toHaveClass( /shqf-picker-item--selected/ );
-		await expect( items.nth( 2 ) ).toHaveClass( /shqf-picker-item--selected/ );
+		await expect( items.nth( 0 ) ).toHaveClass(
+			/shqf-picker-item--selected/
+		);
+		await expect( items.nth( 1 ) ).toHaveClass(
+			/shqf-picker-item--selected/
+		);
+		await expect( items.nth( 2 ) ).toHaveClass(
+			/shqf-picker-item--selected/
+		);
 		// 4th and 5th items' checkboxes should be disabled.
 		const cb4 = items.nth( 3 ).locator( 'input[type="checkbox"]' );
 		const cb5 = items.nth( 4 ).locator( 'input[type="checkbox"]' );

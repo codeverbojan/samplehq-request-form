@@ -28,7 +28,9 @@ test.describe( 'Extended settings', () => {
 
 	test( 'general tab retention days boundary values', async ( { page } ) => {
 		await page.goto( SETTINGS_URL + '&tab=general' );
-		const retention = page.locator( 'input[name="shqf_ip_retention_days"]' );
+		const retention = page.locator(
+			'input[name="shqf_ip_retention_days"]'
+		);
 
 		// Min boundary: 1.
 		await retention.fill( '1' );
@@ -50,7 +52,9 @@ test.describe( 'Extended settings', () => {
 	test( 'spam tab clear Turnstile keys', async ( { page } ) => {
 		await page.goto( SETTINGS_URL + '&tab=spam' );
 		const siteKey = page.locator( 'input[name="shqf_turnstile_site_key"]' );
-		const secretKey = page.locator( 'input[name="shqf_turnstile_secret_key"]' );
+		const secretKey = page.locator(
+			'input[name="shqf_turnstile_secret_key"]'
+		);
 
 		// Set test keys first.
 		await siteKey.fill( 'temp_site_key' );
@@ -70,7 +74,9 @@ test.describe( 'Extended settings', () => {
 		await expect( secretKey ).toHaveValue( '' );
 	} );
 
-	test( 'screen options per-page controls list length', async ( { page } ) => {
+	test( 'screen options per-page controls list length', async ( {
+		page,
+	} ) => {
 		await page.goto( '/wp-admin/admin.php?page=shqf-samples' );
 		await expect( page.locator( '.wp-list-table' ) ).toBeVisible();
 
@@ -87,7 +93,9 @@ test.describe( 'Extended settings', () => {
 
 		// Verify max 5 rows shown (could be fewer if < 5 samples).
 		await expect( page.locator( '.wp-list-table' ) ).toBeVisible();
-		const rowCount = await page.locator( '.wp-list-table tbody tr' ).count();
+		const rowCount = await page
+			.locator( '.wp-list-table tbody tr' )
+			.count();
 		expect( rowCount ).toBeLessThanOrEqual( 5 );
 
 		// Restore default.

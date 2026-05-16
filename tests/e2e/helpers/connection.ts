@@ -44,8 +44,11 @@ function lastLine( output: string ): string {
  *
  * Uses a fake connection_secret (is_connected() only checks non-emptiness,
  * it does not decrypt). This lets the settings page render the connected UI.
+ * @param overrides
  */
-export function seedConnectedState( overrides: Record< string, string | number > = {} ): void {
+export function seedConnectedState(
+	overrides: Record< string, string | number > = {}
+): void {
 	const defaults: Record< string, string | number > = {
 		workspace_url: 'https://app.samplehq.io/workspace/test-e2e',
 		workspace_id: 999,
@@ -59,7 +62,9 @@ export function seedConnectedState( overrides: Record< string, string | number >
 	const json = JSON.stringify( data );
 	const b64 = Buffer.from( json ).toString( 'base64' );
 
-	wpEval( `update_option( "shqf_connection", json_decode( base64_decode( "${ b64 }" ), true ) );` );
+	wpEval(
+		`update_option( "shqf_connection", json_decode( base64_decode( "${ b64 }" ), true ) );`
+	);
 }
 
 /**
@@ -71,6 +76,9 @@ export function seedDisconnectedState(): void {
 
 /**
  * Seed a sync failure on a submission by writing _sync_error meta.
+ * @param submissionId
+ * @param error
+ * @param attempts
  */
 export function seedFailedSync(
 	submissionId: number,
@@ -91,6 +99,8 @@ export function seedFailedSync(
 
 /**
  * Seed migration progress by writing the shqf_migration_progress option.
+ * @param phase
+ * @param counts
  */
 export function seedMigrationProgress(
 	phase: string,
@@ -117,13 +127,20 @@ export function seedMigrationProgress(
 	const json = JSON.stringify( progress );
 	const b64 = Buffer.from( json ).toString( 'base64' );
 
-	wpEval( `update_option( "shqf_migration_progress", json_decode( base64_decode( "${ b64 }" ), true ), false );` );
+	wpEval(
+		`update_option( "shqf_migration_progress", json_decode( base64_decode( "${ b64 }" ), true ), false );`
+	);
 }
 
 /**
  * Read a submission meta value via wp-cli.
+ * @param submissionId
+ * @param key
  */
-export function getSubmissionMeta( submissionId: number, key: string ): string | null {
+export function getSubmissionMeta(
+	submissionId: number,
+	key: string
+): string | null {
 	const output = lastLine(
 		wpEval( `
 			global $wpdb;
@@ -144,8 +161,13 @@ export function triggerCron(): void {
 
 /**
  * Create a submission and return its ID. Used to seed sync failure tests.
+ * @param formId
+ * @param email
  */
-export function createSubmission( formId: number, email = 'e2e@example.com' ): number {
+export function createSubmission(
+	formId: number,
+	email = 'e2e@example.com'
+): number {
 	const b64Email = Buffer.from( email ).toString( 'base64' );
 	const output = lastLine(
 		wpEval( `

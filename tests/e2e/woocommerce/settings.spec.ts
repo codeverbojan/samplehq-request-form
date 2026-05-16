@@ -41,9 +41,7 @@ test.describe( 'Settings Tab', () => {
 		await expect( wcTab ).toBeVisible();
 	} );
 
-	test( '7.2 Tab content loads with settings form', async ( {
-		page,
-	} ) => {
+	test( '7.2 Tab content loads with settings form', async ( { page } ) => {
 		await page.goto( SETTINGS_URL );
 		// Check the form and key elements exist.
 		await expect(
@@ -79,9 +77,7 @@ test.describe( 'Settings Fields', () => {
 		page,
 	} ) => {
 		await page.goto( SETTINGS_URL );
-		const select = page.locator(
-			'select[name="shqf_woo_product_filter"]'
-		);
+		const select = page.locator( 'select[name="shqf_woo_product_filter"]' );
 		await expect( select ).toBeVisible();
 		const options = select.locator( 'option' );
 		await expect( options ).toHaveCount( 3 );
@@ -150,9 +146,7 @@ test.describe( 'Save and Persist', () => {
 		await expect( page.locator( '.notice-success' ) ).toBeVisible();
 	} );
 
-	test( '7.13 Button text reflects on product page', async ( {
-		page,
-	} ) => {
+	test( '7.13 Button text reflects on product page', async ( { page } ) => {
 		// Set custom text via option helper.
 		await page.goto( PRODUCTS.kraftMailer.url );
 		await setOption( page, 'shqf_woo_button_text', 'Try It Free' );
@@ -174,9 +168,7 @@ test.describe( 'Save and Persist', () => {
 		await setOption( page, 'shqf_woo_product_filter', 'all' );
 	} );
 
-	test( '7.15 Badge text setting affects shop loop', async ( {
-		page,
-	} ) => {
+	test( '7.15 Badge text setting affects shop loop', async ( { page } ) => {
 		await page.goto( SHOP_URL );
 		await setOption( page, 'shqf_woo_badge_text', 'Sample this product' );
 		await page.reload();
@@ -186,9 +178,7 @@ test.describe( 'Save and Persist', () => {
 		await setOption( page, 'shqf_woo_badge_text', '' );
 	} );
 
-	test( '7.16 Show loop badge toggle hides badges', async ( {
-		page,
-	} ) => {
+	test( '7.16 Show loop badge toggle hides badges', async ( { page } ) => {
 		await page.goto( SHOP_URL );
 		await setOption( page, 'shqf_woo_show_loop_badge', '' );
 		await page.reload();

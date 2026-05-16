@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { createHmac } from 'crypto';
-import { wpEval, cleanupConnectionState, seedConnectedState } from '../helpers/connection';
+import {
+	wpEval,
+	cleanupConnectionState,
+	seedConnectedState,
+} from '../helpers/connection';
 
 const CONNECTION_URL = '/wp-admin/admin.php?page=shqf-settings&tab=connection';
 
@@ -27,6 +31,8 @@ function seedPendingState(): string {
 
 /**
  * Build a valid connection_token (base64 JSON) and compute its HMAC signature.
+ * @param stateToken
+ * @param overrides
  */
 function buildSignedCallback(
 	stateToken: string,
@@ -85,7 +91,7 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 
 		// Should be a 302 redirect to the success URL.
 		expect( response.status() ).toBe( 302 );
-		const location = response.headers()[ 'location' ] ?? '';
+		const location = response.headers().location ?? '';
 		expect( location ).toContain( 'page=shqf-settings' );
 		expect( location ).toContain( 'tab=connection' );
 		expect( location ).toContain( 'shqf_connected=1' );
@@ -94,9 +100,9 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 		await page.goto( CONNECTION_URL + '&shqf_connected=1' );
 
 		// Success notice visible.
-		await expect(
-			page.locator( '.notice-success' )
-		).toContainText( 'Successfully connected' );
+		await expect( page.locator( '.notice-success' ) ).toContainText(
+			'Successfully connected'
+		);
 
 		// Connection details present.
 		await expect(
@@ -126,14 +132,16 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 		);
 
 		expect( response.status() ).toBe( 302 );
-		const location = response.headers()[ 'location' ] ?? '';
+		const location = response.headers().location ?? '';
 		expect( location ).toContain( 'shqf_error' );
 
 		// Navigate to the error URL to verify error notice renders.
-		await page.goto( CONNECTION_URL + '&shqf_error=Invalid+connection+signature' );
-		await expect(
-			page.locator( '.notice-error' )
-		).toContainText( 'Invalid connection signature' );
+		await page.goto(
+			CONNECTION_URL + '&shqf_error=Invalid+connection+signature'
+		);
+		await expect( page.locator( '.notice-error' ) ).toContainText(
+			'Invalid connection signature'
+		);
 	} );
 
 	test( 'E2E-3: replayed state is rejected', async ( { request } ) => {
@@ -149,7 +157,9 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 			}
 		);
 		expect( first.status() ).toBe( 302 );
-		expect( first.headers()[ 'location' ] ?? '' ).toContain( 'shqf_connected=1' );
+		expect( first.headers().location ?? '' ).toContain(
+			'shqf_connected=1'
+		);
 
 		// Verify the state was consumed (deleted from DB).
 		const stateAfterFirst = wpEval(
@@ -166,9 +176,11 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 			}
 		);
 		expect( second.status() ).toBe( 302 );
-		const location = second.headers()[ 'location' ] ?? '';
+		const location = second.headers().location ?? '';
 		expect( location ).toContain( 'shqf_error' );
-		expect( decodeURIComponent( location ) ).toContain( 'No pending connection' );
+		expect( decodeURIComponent( location ) ).toContain(
+			'No pending connection'
+		);
 	} );
 
 	test( 'E2E-4: disconnect deletes connection option from database', async ( {
@@ -207,7 +219,9 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 			page.locator( '.shqf-connection-status--disconnected' )
 		).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', { hasText: 'Connect to SampleHQ' } )
+			page.locator( 'a.button-primary', {
+				hasText: 'Connect to SampleHQ',
+			} )
 		).toBeVisible();
 	} );
 
@@ -216,9 +230,9 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 	} ) => {
 		// Normal error message.
 		await page.goto( CONNECTION_URL + '&shqf_error=Test+error+message' );
-		await expect(
-			page.locator( '.notice-error' )
-		).toContainText( 'Test error message' );
+		await expect( page.locator( '.notice-error' ) ).toContainText(
+			'Test error message'
+		);
 
 		// XSS attempt: register dialog handler BEFORE navigation so we catch
 		// any alert that fires during page load.
@@ -240,7 +254,9 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 		expect( alertTriggered ).toBe( false );
 
 		// Verify no <script> element was injected into the DOM.
-		const scriptCount = await page.locator( '.notice-error script' ).count();
+		const scriptCount = await page
+			.locator( '.notice-error script' )
+			.count();
 		expect( scriptCount ).toBe( 0 );
 	} );
 } );

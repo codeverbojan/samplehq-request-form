@@ -7,11 +7,11 @@ test.describe( 'Frontend form submission', () => {
 	test.beforeAll( async () => {
 		// Create form and page via WP-CLI inside wp-env.
 		const createForm = execSync(
-			'npx wp-env run cli wp eval \'' +
-			'global $wpdb; ' +
-			'$forms = new SampleHQForm\\Database\\FormsTable($wpdb); ' +
-			'$id = $forms->create(["title" => "E2E Test Form", "status" => "published", "created_by" => 1]); ' +
-			'echo $id;\'',
+			"npx wp-env run cli wp eval '" +
+				'global $wpdb; ' +
+				'$forms = new SampleHQForm\\Database\\FormsTable($wpdb); ' +
+				'$id = $forms->create(["title" => "E2E Test Form", "status" => "published", "created_by" => 1]); ' +
+				"echo $id;'",
 			{ encoding: 'utf-8', timeout: 15000 }
 		).trim();
 
@@ -37,7 +37,10 @@ test.describe( 'Frontend form submission', () => {
 	} );
 
 	test( 'form renders on frontend page', async ( { page } ) => {
-		test.skip( ! formPageUrl || formPageUrl === '/', 'Form page not created' );
+		test.skip(
+			! formPageUrl || formPageUrl === '/',
+			'Form page not created'
+		);
 
 		await page.goto( formPageUrl );
 		const form = page.locator( '.shqf-form' );
