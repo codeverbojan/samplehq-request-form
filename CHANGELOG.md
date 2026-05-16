@@ -15,12 +15,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - PHP 8.0 compatibility: replaced `true` standalone return type with `bool` in ConnectionManager
 
+## [1.0.1] - 2026-05-07
+
+### Added
+
+- Release procedure with CI changelog validation
+
 ## [1.0.0] - 2026-05-06
 
 ### Added
 
 - Sample library with categories, images, SKUs, and descriptions
-- Visual drag-and-drop form builder with 15+ field types
+- Visual drag-and-drop form builder with 17 field types
 - Sample picker field with product grid, category filters, and search
 - Multi-step wizard form layout with step indicator and validation
 - Submissions dashboard with search, filter, star, and CSV export
@@ -34,4 +40,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Undo/redo in form builder
 - RTL stylesheet support
 - Accessibility: WCAG 2.2 Level AA compliance
-- Optional SampleHQ platform connection for cloud sync

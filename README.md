@@ -11,14 +11,6 @@ The [SampleHQ platform](https://samplehq.io) adds fulfillment tracking, CRM, tea
 
 ---
 
-## Current Status
-
-SampleHQ Request Form is in final review before WordPress.org submission. The plugin is suitable for local testing and developer review, but a packaged public release has not been published yet.
-
-Do not use this on production sites with real customer data until a tagged release has been published and tested in your environment.
-
----
-
 ## At a Glance
 
 - **Purpose:** Collect structured product sample requests in WordPress
@@ -26,7 +18,6 @@ Do not use this on production sites with real customer data until a tagged relea
 - **Embeds:** Shortcode, Gutenberg block, Elementor widget
 - **Data:** Stored locally in WordPress -- no external service required
 - **SaaS required:** No
-- **Status:** Final review before WordPress.org submission
 
 ---
 
@@ -119,6 +110,11 @@ Proper label associations, keyboard navigation, visible focus states, ARIA annou
 </p>
 
 <p align="center">
+  <img src=".wordpress-org/screenshot-4.png" alt="Frontend Wizard Form" width="800" /><br />
+  <strong>Frontend Wizard Form</strong> -- multi-step wizard with sample picker and category filters
+</p>
+
+<p align="center">
   <img src=".wordpress-org/screenshot-7.png" alt="Frontend Form (List View)" width="800" /><br />
   <strong>Frontend Form (List View)</strong> -- checklist layout with category tabs and search
 </p>
@@ -142,9 +138,10 @@ Proper label associations, keyboard navigation, visible focus states, ARIA annou
 
 ## Installation
 
-This plugin has not been published to WordPress.org yet. It is in final review before submission.
+**From WordPress.org:**
+Search for "SampleHQ Request Form" in **Plugins > Add New**, install, and activate.
 
-**For local testing:**
+**From source:**
 
 ```bash
 git clone https://github.com/codeverbojan/samplehq-request-form.git
@@ -299,7 +296,7 @@ npm run start             # Development mode with file watching
 
 ## Testing
 
-The plugin has 729 unit tests, 29 integration tests, and 27 Playwright spec files.
+The plugin has 909 unit tests, 29 integration tests, and 33 Playwright spec files.
 
 ```bash
 # Unit tests (no WordPress needed, fast)
@@ -334,7 +331,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the pull request process.
 ## Project Structure
 
 ```
-src/                       75 PHP files
+src/                       79 PHP files
   Admin/                   Admin pages, list tables, settings, dashboard
   Api/                     REST API (public submission + admin CRUD endpoints)
   Blocks/                  Gutenberg block (block.json, server-side render)
@@ -350,21 +347,17 @@ src/                       75 PHP files
   Spam/                    Honeypot, rate limiting, Turnstile
   WooCommerce/             Product button, modal form, product source
 tests/
-  Unit/                    729 PHPUnit tests (mocked WordPress, fast)
+  Unit/                    909 PHPUnit tests (mocked WordPress, fast)
   Integration/             29 PHPUnit tests (real WordPress via wp-env)
-  e2e/                     27 Playwright spec files
+  e2e/                     33 Playwright spec files
 ```
 
 ---
 
 ## Roadmap
 
-### v1.0 (shipped)
-Sample library, form builder (17 field types), sample picker, conditional logic, multi-step wizard, file uploads, Gutenberg block, Elementor widget, shortcode, WooCommerce integration, submissions dashboard, email notifications, spam protection, Privacy API, CSV export/import, JSON form export/import, form duplication.
-
-### v1.x (in progress)
-- SampleHQ platform connection -- sync submissions to the cloud platform
-- Data migration wizard (samples, categories, submission history)
+### v1.0 – v1.0.2 (shipped)
+Sample library, form builder (17 field types), sample picker, conditional logic, multi-step wizard, file uploads, Gutenberg block, Elementor widget, shortcode, WooCommerce integration, submissions dashboard, email notifications, spam protection, Privacy API, CSV export/import, JSON form export/import, form duplication, SampleHQ platform connection with submission sync, data migration wizard.
 
 ### v2 (planned)
 - Import from Gravity Forms, WPForms, Contact Form 7, Ninja Forms
