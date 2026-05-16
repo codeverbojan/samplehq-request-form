@@ -293,7 +293,7 @@ class ConnectionManager {
 	 * @param array{workspace_url: string, workspace_id: int, workspace_name: string, connection_secret: string, connected_by: string} $data Decoded connection data from the platform.
 	 * @return true|\WP_Error True on success, WP_Error if encryption fails.
 	 */
-	public function store_connection( array $data ): true|\WP_Error {
+	public function store_connection( array $data ): bool|\WP_Error {
 		$encrypted = self::encrypt_secret( $data['connection_secret'] );
 
 		if ( '' === $encrypted ) {
