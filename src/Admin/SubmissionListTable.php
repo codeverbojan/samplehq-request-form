@@ -122,9 +122,10 @@ class SubmissionListTable extends \WP_List_Table {
 		$actions = [];
 
 		if ( 'trash' !== $current_status ) {
-			$actions['bulk_read']  = __( 'Mark as Read', 'samplehq-request-form' );
-			$actions['bulk_spam']  = __( 'Mark as Spam', 'samplehq-request-form' );
-			$actions['bulk_trash'] = __( 'Move to Trash', 'samplehq-request-form' );
+			$actions['bulk_read']       = __( 'Mark as Read', 'samplehq-request-form' );
+			$actions['bulk_spam']       = __( 'Mark as Spam', 'samplehq-request-form' );
+			$actions['bulk_trash']      = __( 'Move to Trash', 'samplehq-request-form' );
+			$actions['bulk_retry_sync'] = __( 'Retry Sync', 'samplehq-request-form' );
 		}
 
 		if ( 'trash' === $current_status || 'spam' === $current_status ) {

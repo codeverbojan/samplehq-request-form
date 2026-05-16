@@ -68,6 +68,48 @@ class PrivacyHandler {
 	public function register(): void {
 		add_filter( 'wp_privacy_personal_data_exporters', [ $this, 'register_exporter' ] );
 		add_filter( 'wp_privacy_personal_data_erasers', [ $this, 'register_eraser' ] );
+		add_action( 'admin_init', [ $this, 'add_privacy_policy_content' ] );
+	}
+
+	/**
+	 * Register suggested privacy policy text for the site's privacy policy page.
+	 */
+	public function add_privacy_policy_content(): void {
+		$content = $this->get_privacy_policy_text();
+		wp_add_privacy_policy_content( 'SampleHQ Request Form', $content );
+	}
+
+	/**
+	 * Build the suggested privacy policy text.
+	 *
+	 * @return string HTML-formatted privacy policy suggestion.
+	 */
+	public function get_privacy_policy_text(): string {
+		$sections = [];
+
+		$sections[] = '<h3>' . __( 'Form Submissions', 'samplehq-request-form' ) . '</h3>'
+			. '<p>' . __( 'When a visitor submits a form, we collect the information entered in the form fields (such as name, email address, company, phone, address, and selected samples). We also record the page URL where the form was submitted and the submission timestamp. Submissions are stored in the site database and can be exported or deleted through the WordPress personal data tools.', 'samplehq-request-form' ) . '</p>';
+
+		$sections[] = '<h3>' . __( 'IP Addresses and Browser Data', 'samplehq-request-form' ) . '</h3>'
+			. '<p>' . __( 'By default, this plugin records the visitor\'s IP address and browser user agent string with each form submission. IP addresses are used for spam protection (rate limiting). User agent strings are stored for diagnostic purposes. IP address and user agent collection can be disabled in the plugin settings. When enabled, this data can be configured to be automatically purged after a set number of days.', 'samplehq-request-form' ) . '</p>';
+
+		$sections[] = '<h3>' . __( 'SampleHQ Platform (Optional)', 'samplehq-request-form' ) . '</h3>'
+			. '<p>' . __( 'This plugin can optionally connect to SampleHQ (samplehq.io), a sample management platform. When connected, form submission data (name, email, company, phone, address, job title, message, selected samples, custom field values, the page URL where the form was submitted, and the submission timestamp) is sent to your SampleHQ workspace for processing. IP addresses and user agent strings are not sent to SampleHQ. No data is sent unless the site administrator explicitly connects the plugin to SampleHQ.', 'samplehq-request-form' ) . '</p>'
+			. '<p>' . sprintf(
+				/* translators: %s: URL to SampleHQ privacy policy */
+				__( 'SampleHQ privacy policy: %s', 'samplehq-request-form' ),
+				'<a href="https://samplehq.io/privacy">https://samplehq.io/privacy</a>'
+			) . '</p>';
+
+		$sections[] = '<h3>' . __( 'Cloudflare Turnstile (Optional)', 'samplehq-request-form' ) . '</h3>'
+			. '<p>' . __( 'When Cloudflare Turnstile is enabled for spam protection, a verification token and the visitor\'s IP address are sent to the Cloudflare Turnstile API to confirm the submission is not automated. No form field data (name, email, etc.) is sent to Cloudflare. No data is sent to Cloudflare unless the site administrator configures Turnstile credentials in the plugin settings.', 'samplehq-request-form' ) . '</p>'
+			. '<p>' . sprintf(
+				/* translators: %s: URL to Cloudflare privacy policy */
+				__( 'Cloudflare privacy policy: %s', 'samplehq-request-form' ),
+				'<a href="https://www.cloudflare.com/privacypolicy/">https://www.cloudflare.com/privacypolicy/</a>'
+			) . '</p>';
+
+		return implode( '', $sections );
 	}
 
 	/**
@@ -147,8 +189,11 @@ class PrivacyHandler {
 				],
 			];
 
-			// Add submitted field values.
+			// Add submitted field values (skip internal keys prefixed with _).
 			foreach ( $meta as $key => $value ) {
+				if ( str_starts_with( $key, '_' ) ) {
+					continue;
+				}
 				$display = is_string( $value ) ? $value : wp_json_encode( $value );
 				$data[]  = [
 					'name'  => $key,

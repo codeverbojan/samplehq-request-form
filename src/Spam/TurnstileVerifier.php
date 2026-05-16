@@ -125,8 +125,10 @@ class TurnstileVerifier {
 	 * @return void
 	 */
 	private function log_api_failure( string $reason ): void {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( '[SampleHQ Form] Turnstile API failure: ' . $reason );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( '[SampleHQ Form] Turnstile API failure: ' . $reason );
+		}
 
 		set_transient( self::FAILURE_TRANSIENT, $reason, HOUR_IN_SECONDS );
 	}

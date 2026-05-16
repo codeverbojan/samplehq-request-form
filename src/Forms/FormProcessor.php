@@ -237,8 +237,33 @@ class FormProcessor {
 		// 10. Send email notifications.
 		$submission_row = $this->submissions->get( $submission_id );
 		if ( null !== $submission_row ) {
-			$this->mailer->send_admin_notification( $submission_row, $sanitized, $form );
-			$this->mailer->send_confirmation( $submission_row, $sanitized, $form );
+			try {
+				$this->mailer->send_admin_notification( $submission_row, $sanitized, $form );
+			} catch ( \Throwable $e ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+					error_log( sprintf( 'shqf admin notification error (submission %d): %s', $submission_id, $e->getMessage() ) );
+				}
+			}
+
+			try {
+				$this->mailer->send_confirmation( $submission_row, $sanitized, $form );
+			} catch ( \Throwable $e ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+					error_log( sprintf( 'shqf confirmation email error (submission %d): %s', $submission_id, $e->getMessage() ) );
+				}
+			}
+
+			// 11. Notify listeners (e.g., platform sync).
+			try {
+				do_action( 'shqf_submission_created', $submission_id, $form_id );
+			} catch ( \Throwable $e ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+					error_log( sprintf( 'shqf_submission_created listener error (submission %d): %s', $submission_id, $e->getMessage() ) );
+				}
+			}
 		}
 
 		return $this->success_response( $config, $submission_id );

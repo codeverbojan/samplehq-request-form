@@ -357,4 +357,129 @@ class SubmissionsTableTest extends TestCase {
 
 		$this->assertSame( [], $this->table->get_distinct_months() );
 	}
+
+	// ── get_sync_failure_summary() ───────────────────────────────────
+
+	public function test_get_sync_failure_summary_categorizes_errors(): void {
+		$this->wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with(
+				Mockery::on(
+					static fn( string $sql ) => str_contains( $sql, 'COUNT(DISTINCT' )
+						&& str_contains( $sql, 'INNER JOIN' )
+						&& str_contains( $sql, 'synced_to_shq = 0' )
+				),
+				Mockery::andAnyOtherArgs()
+			)
+			->andReturn( 'prepared_sql' );
+
+		$this->wpdb->shouldReceive( 'get_row' )
+			->once()
+			->with( 'prepared_sql', ARRAY_A )
+			->andReturn( [ 'total' => '5', 'auth' => '2', 'plan_limit' => '1' ] );
+
+		$summary = $this->table->get_sync_failure_summary();
+
+		$this->assertSame( 5, $summary['total'] );
+		$this->assertSame( 2, $summary['auth'] );
+		$this->assertSame( 1, $summary['plan_limit'] );
+		$this->assertSame( 2, $summary['other'] );
+	}
+
+	public function test_get_sync_failure_summary_returns_zero_when_none(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( 'prepared_sql' );
+		$this->wpdb->shouldReceive( 'get_row' )->once()->with( 'prepared_sql', ARRAY_A )
+			->andReturn( [ 'total' => '0', 'auth' => '0', 'plan_limit' => '0' ] );
+
+		$summary = $this->table->get_sync_failure_summary();
+
+		$this->assertSame( 0, $summary['total'] );
+		$this->assertSame( 0, $summary['auth'] );
+		$this->assertSame( 0, $summary['plan_limit'] );
+		$this->assertSame( 0, $summary['other'] );
+	}
+
+	public function test_get_sync_failure_summary_returns_zero_on_null_result(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( 'prepared_sql' );
+		$this->wpdb->shouldReceive( 'get_row' )->once()->andReturn( null );
+
+		$summary = $this->table->get_sync_failure_summary();
+
+		$this->assertSame( 0, $summary['total'] );
+		$this->assertSame( 0, $summary['other'] );
+	}
+
+	public function test_get_sync_failure_summary_other_is_remainder(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( 'prepared_sql' );
+		$this->wpdb->shouldReceive( 'get_row' )->once()->with( 'prepared_sql', ARRAY_A )
+			->andReturn( [ 'total' => '10', 'auth' => '3', 'plan_limit' => '2' ] );
+
+		$summary = $this->table->get_sync_failure_summary();
+
+		$this->assertSame( 5, $summary['other'] );
+	}
+
+	public function test_get_sync_failure_summary_uses_prepare_with_patterns(): void {
+		$this->wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with(
+				Mockery::type( 'string' ),
+				'%auth%',
+				'%signature%',
+				'%401%',
+				'%not connected%',
+				'%no connection%',
+				'%timestamp%',
+				'%decrypt%',
+				'%plan%',
+				'%limit%',
+				'%auth%',
+				'%signature%',
+				'%401%',
+				'%not connected%',
+				'%no connection%',
+				'%timestamp%',
+				'%decrypt%',
+				'_sync_error',
+				'trash',
+				'spam'
+			)
+			->andReturn( 'prepared_sql' );
+
+		$this->wpdb->shouldReceive( 'get_row' )->once()->andReturn( [ 'total' => '0', 'auth' => '0', 'plan_limit' => '0' ] );
+
+		$this->table->get_sync_failure_summary();
+	}
+
+	// ── get_sync_failure_ids() ───────────────────────────────────────
+
+	public function test_get_sync_failure_ids_returns_int_array(): void {
+		$this->wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with(
+				Mockery::on(
+					static fn( string $sql ) => str_contains( $sql, 'SELECT DISTINCT s.id' )
+				),
+				'_sync_error',
+				'trash',
+				'spam'
+			)
+			->andReturn( 'prepared_sql' );
+
+		$this->wpdb->shouldReceive( 'get_col' )
+			->once()
+			->with( 'prepared_sql' )
+			->andReturn( [ '10', '20', '30' ] );
+
+		$ids = $this->table->get_sync_failure_ids();
+
+		$this->assertSame( [ 10, 20, 30 ], $ids );
+	}
+
+	public function test_get_sync_failure_ids_returns_empty_when_none(): void {
+		$this->wpdb->shouldReceive( 'prepare' )->once()->andReturn( 'prepared_sql' );
+		$this->wpdb->shouldReceive( 'get_col' )->once()->with( 'prepared_sql' )->andReturn( [] );
+
+		$this->assertSame( [], $this->table->get_sync_failure_ids() );
+	}
 }

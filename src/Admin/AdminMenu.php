@@ -85,7 +85,7 @@ class AdminMenu {
 	private SubmissionsPage $submissions_page;
 
 	/**
-	 * Connection manager for platform connect/disconnect/callback.
+	 * Connection manager for platform connect/disconnect.
 	 *
 	 * @var ?ConnectionManager
 	 */
@@ -101,7 +101,7 @@ class AdminMenu {
 	public function __construct( ?\SampleHQForm\Forms\FormRenderer $renderer = null, ?\SampleHQForm\Spam\FormToken $form_token = null, ?ConnectionManager $connection_manager = null ) {
 		$this->connection_manager = $connection_manager;
 		$this->dashboard          = new DashboardPage();
-		$this->settings           = new SettingsPage();
+		$this->settings           = new SettingsPage( $connection_manager );
 		$this->categories_page    = new CategoriesPage();
 		$this->samples_page       = new SamplesPage( $this->categories_page );
 		$this->forms_page         = new FormsPage( $renderer, $form_token );
@@ -261,8 +261,8 @@ class AdminMenu {
 			}
 		}
 
-		// Settings save (POST redirect must happen before output). Exclude callback action (platform POST uses HMAC, not nonce).
-		if ( 'shqf-settings' === $page && 'callback' !== $action && isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) {
+		// Settings save (POST redirect must happen before output).
+		if ( 'shqf-settings' === $page && isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) {
 			if ( current_user_can( self::CAPABILITY ) ) {
 				$this->settings->handle_save();
 			}
@@ -311,11 +311,6 @@ class AdminMenu {
 			// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- external redirect to SampleHQ platform.
 			wp_redirect( $connect_url );
 			exit;
-		}
-
-		// Handle SampleHQ connection callback (POST from platform).
-		if ( 'shqf-settings' === $page && 'callback' === $action && null !== $this->connection_manager ) {
-			$this->handle_connection_callback();
 		}
 
 		// Disconnect from SampleHQ.
@@ -475,57 +470,6 @@ class AdminMenu {
 			wp_safe_redirect( admin_url( 'admin.php?page=shqf-forms' ) );
 			exit;
 		}
-	}
-
-	/**
-	 * Handle POST callback from the SampleHQ platform after email verification.
-	 *
-	 * The platform HMAC-signs the payload using the state token, so WordPress
-	 * nonce verification is not applicable here — the HMAC provides CSRF protection.
-	 *
-	 * @return void
-	 */
-	private function handle_connection_callback(): void {
-		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Unauthorized.', 'samplehq-request-form' ) );
-		}
-
-		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || 'POST' !== sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) {
-			wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
-			exit;
-		}
-
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- HMAC signature replaces nonce for this cross-origin POST.
-		$result = $this->connection_manager->validate_callback(
-			[
-				'state'            => sanitize_text_field( wp_unslash( $_POST['state'] ?? '' ) ),
-				// connection_token is base64 — sanitize_text_field would corrupt newlines/whitespace.
-				// HMAC signature + base64_decode(strict) validate integrity.
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				'connection_token' => (string) wp_unslash( $_POST['connection_token'] ?? '' ),
-				'signature'        => sanitize_text_field( wp_unslash( $_POST['signature'] ?? '' ) ),
-			],
-			get_current_user_id()
-		);
-		// phpcs:enable
-
-		if ( is_wp_error( $result ) ) {
-			AdminNotice::error( $result->get_error_message() );
-			wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
-			exit;
-		}
-
-		$stored = $this->connection_manager->store_connection( $result );
-
-		if ( is_wp_error( $stored ) ) {
-			AdminNotice::error( $stored->get_error_message() );
-			wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
-			exit;
-		}
-
-		AdminNotice::success( __( 'Connected to SampleHQ!', 'samplehq-request-form' ) );
-		wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
-		exit;
 	}
 
 	/**

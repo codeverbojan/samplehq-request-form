@@ -159,13 +159,20 @@ class ConnectionManagerTest extends TestCase {
 	// --- is_connected() ---
 
 	/**
-	 * is_connected returns true when connection option has a workspace_id.
+	 * is_connected returns true when all required keys are present.
 	 */
 	public function test_is_connected_returns_true(): void {
 		Monkey\Functions\expect( 'get_option' )
 			->with( 'shqf_connection', [] )
 			->once()
-			->andReturn( [ 'workspace_id' => 42 ] );
+			->andReturn( [
+				'workspace_url'     => 'https://acme.samplehq.io',
+				'workspace_id'      => 42,
+				'workspace_name'    => 'Acme',
+				'connection_secret' => 'encrypted-secret',
+				'connected_by'      => 'john@acme.com',
+				'connected_at'      => 1700000000,
+			] );
 
 		$this->assertTrue( $this->make_manager()->is_connected() );
 	}
@@ -190,6 +197,58 @@ class ConnectionManagerTest extends TestCase {
 			->with( 'shqf_connection', [] )
 			->once()
 			->andReturn( [ 'workspace_id' => 0 ] );
+
+		$this->assertFalse( $this->make_manager()->is_connected() );
+	}
+
+	/**
+	 * is_connected returns false when required keys are missing (e.g., corrupted connection_secret).
+	 */
+	public function test_is_connected_returns_false_when_missing_required_keys(): void {
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_id' => 42,
+				'workspace_url' => 'https://acme.samplehq.io',
+			] );
+
+		$this->assertFalse( $this->make_manager()->is_connected() );
+	}
+
+	/**
+	 * is_connected returns false when connection_secret key is missing.
+	 */
+	public function test_is_connected_returns_false_when_secret_missing(): void {
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_url'  => 'https://acme.samplehq.io',
+				'workspace_id'   => 42,
+				'workspace_name' => 'Acme',
+				'connected_by'   => 'john@acme.com',
+				'connected_at'   => 1700000000,
+			] );
+
+		$this->assertFalse( $this->make_manager()->is_connected() );
+	}
+
+	/**
+	 * is_connected returns false when a required key has an empty string value.
+	 */
+	public function test_is_connected_returns_false_when_secret_empty_string(): void {
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_url'     => 'https://acme.samplehq.io',
+				'workspace_id'      => 42,
+				'workspace_name'    => 'Acme',
+				'connection_secret' => '',
+				'connected_by'      => 'john@acme.com',
+				'connected_at'      => 1700000000,
+			] );
 
 		$this->assertFalse( $this->make_manager()->is_connected() );
 	}
@@ -296,10 +355,10 @@ class ConnectionManagerTest extends TestCase {
 			->andReturn( 'random-token-32-chars' );
 
 		Monkey\Functions\expect( 'site_url' )->once()->andReturn( 'https://example.com' );
-		Monkey\Functions\expect( 'admin_url' )
+		Monkey\Functions\expect( 'home_url' )
 			->once()
-			->with( 'admin.php?page=shqf-settings&tab=connection&action=callback' )
-			->andReturn( 'https://example.com/wp-admin/admin.php?page=shqf-settings&tab=connection&action=callback' );
+			->with( '/shqf-connect-callback' )
+			->andReturn( 'https://example.com/shqf-connect-callback' );
 
 		Monkey\Functions\expect( 'update_option' )
 			->once()
@@ -321,7 +380,7 @@ class ConnectionManagerTest extends TestCase {
 		$this->assertSame( 'https://example.com', $captured['site_url'] );
 		$this->assertSame( 1, $captured['user_id'] );
 		$this->assertEqualsWithDelta( time(), $captured['created_at'], 2 );
-		$this->assertStringContainsString( 'action=callback', $captured['return_url'] );
+		$this->assertSame( 'https://example.com/shqf-connect-callback', $captured['return_url'] );
 	}
 
 	// --- get_connect_url() ---
@@ -336,9 +395,10 @@ class ConnectionManagerTest extends TestCase {
 			->andReturn( 'state-token-abc' );
 
 		Monkey\Functions\expect( 'site_url' )->once()->andReturn( 'https://example.com' );
-		Monkey\Functions\expect( 'admin_url' )
+		Monkey\Functions\expect( 'home_url' )
 			->once()
-			->andReturn( 'https://example.com/wp-admin/admin.php?page=shqf-settings&tab=connection&action=callback' );
+			->with( '/shqf-connect-callback' )
+			->andReturn( 'https://example.com/shqf-connect-callback' );
 
 		Monkey\Functions\expect( 'update_option' )->once();
 
@@ -349,7 +409,7 @@ class ConnectionManagerTest extends TestCase {
 				[
 					'token'      => 'state-token-abc',
 					'site_url'   => 'https://example.com',
-					'return_url' => 'https://example.com/wp-admin/admin.php?page=shqf-settings&tab=connection&action=callback',
+					'return_url' => 'https://example.com/shqf-connect-callback',
 					'user_id'    => 1,
 					'created_at' => 1700000000,
 				]
@@ -379,12 +439,12 @@ class ConnectionManagerTest extends TestCase {
 
 		$this->make_manager()->get_connect_url( $user );
 
-		$this->assertSame( 'state-token-abc', $captured_args['state'] );
-		$this->assertSame( 'https://example.com', $captured_args['site_url'] );
-		$this->assertSame( 'admin@example.com', $captured_args['email'] );
-		$this->assertSame( 'John', $captured_args['first_name'] );
-		$this->assertSame( 'Doe', $captured_args['last_name'] );
-		$this->assertStringContainsString( 'action=callback', $captured_args['return_url'] );
+		$this->assertSame( rawurlencode( 'state-token-abc' ), $captured_args['state'] );
+		$this->assertSame( rawurlencode( 'https://example.com' ), $captured_args['site_url'] );
+		$this->assertSame( rawurlencode( 'admin@example.com' ), $captured_args['email'] );
+		$this->assertSame( rawurlencode( 'John' ), $captured_args['first_name'] );
+		$this->assertSame( rawurlencode( 'Doe' ), $captured_args['last_name'] );
+		$this->assertSame( rawurlencode( 'https://example.com/shqf-connect-callback' ), $captured_args['return_url'] );
 	}
 
 	// --- validate_callback() ---
@@ -429,7 +489,7 @@ class ConnectionManagerTest extends TestCase {
 				[
 					'token'      => $state_token,
 					'site_url'   => 'https://example.com',
-					'return_url' => 'https://example.com/wp-admin/admin.php?page=shqf-settings&tab=connection&action=callback',
+					'return_url' => 'https://example.com/shqf-connect-callback',
 					'user_id'    => 1,
 					'created_at' => time() - 60,
 				]
@@ -482,6 +542,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		$result = $this->make_manager()->validate_callback( [ 'state' => 'wrong-token' ], 1 );
@@ -529,6 +590,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		$result = $this->make_manager()->validate_callback( [ 'state' => 'token' ], 99 );
@@ -554,6 +616,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -589,6 +652,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -623,6 +687,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		$result = $this->make_manager()->validate_callback( [ 'state' => 'token' ], 1 );
@@ -648,6 +713,7 @@ class ConnectionManagerTest extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
 		Monkey\Functions\expect( '__' )->andReturnFirstArg();
 
 		$bad_b64   = '!!!not-base64!!!';
@@ -664,6 +730,45 @@ class ConnectionManagerTest extends TestCase {
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
 		$this->assertSame( 'shqf_invalid_token', $result->get_error_code() );
+	}
+
+	/**
+	 * State token replay: second validate_callback with same token is rejected
+	 * because the state option is deleted on first successful use.
+	 */
+	public function test_validate_callback_replay_rejected_after_consumption(): void {
+		$state_token = 'replay-test-token-32chars';
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connect_state', [] )
+			->twice()
+			->andReturnValues( [
+				[
+					'token'      => $state_token,
+					'site_url'   => 'https://example.com',
+					'return_url' => 'https://example.com/callback',
+					'user_id'    => 1,
+					'created_at' => time() - 60,
+				],
+				[],
+			] );
+
+		Monkey\Functions\expect( 'wp_json_encode' )
+			->andReturnUsing( fn( $data ) => json_encode( $data ) );
+
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connect_state' )->once();
+		Monkey\Functions\expect( '__' )->andReturnFirstArg();
+
+		$payload = $this->build_callback_payload( $state_token );
+		$manager = $this->make_manager();
+
+		$result1 = $manager->validate_callback( $payload, 1 );
+		$this->assertIsArray( $result1 );
+		$this->assertSame( 42, $result1['workspace_id'] );
+
+		$result2 = $manager->validate_callback( $payload, 1 );
+		$this->assertInstanceOf( \WP_Error::class, $result2 );
+		$this->assertSame( 'shqf_no_state', $result2->get_error_code() );
 	}
 
 	// --- store_connection() ---
@@ -766,6 +871,8 @@ class ConnectionManagerTest extends TestCase {
 			->with( 'DELETE', 'https://acme.samplehq.io/wp-json/samplehq/v1/plugin/connection', '', 'raw-secret' )
 			->andReturn( [ 'X-SHQF-Signature' => 'sig' ] );
 
+		$mock_response = [ 'response' => [ 'code' => 200 ] ];
+
 		Monkey\Functions\expect( 'wp_remote_request' )
 			->once()
 			->with(
@@ -775,7 +882,11 @@ class ConnectionManagerTest extends TestCase {
 						return 'DELETE' === $args['method'] && 5 === $args['timeout'];
 					}
 				)
-			);
+			)
+			->andReturn( $mock_response );
+
+		Monkey\Functions\expect( 'is_wp_error' )->with( $mock_response )->andReturn( false );
+		Monkey\Functions\expect( 'wp_remote_retrieve_response_code' )->with( $mock_response )->andReturn( 200 );
 
 		$manager = $this->make_manager( $forms, $verifier );
 		$manager->disconnect();
@@ -798,6 +909,110 @@ class ConnectionManagerTest extends TestCase {
 		Monkey\Functions\expect( 'wp_remote_request' )->never();
 
 		$manager = $this->make_manager( $forms );
+		$manager->disconnect();
+	}
+
+	/**
+	 * Disconnect clears local data even when platform is unreachable (wp_remote_request returns WP_Error).
+	 */
+	public function test_disconnect_clears_local_data_when_platform_unreachable(): void {
+		Monkey\Functions\expect( 'wp_salt' )->with( 'auth' )->andReturn( self::SALT );
+
+		$encrypted = ConnectionManager::encrypt_secret( 'raw-secret' );
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_id'      => 42,
+				'workspace_url'     => 'https://acme.samplehq.io',
+				'workspace_name'    => 'Acme',
+				'connection_secret' => $encrypted,
+				'connected_by'      => 'john@acme.com',
+				'connected_at'      => 1700000000,
+			] );
+
+		Monkey\Functions\expect( 'wp_salt' )->with( 'auth' )->andReturn( self::SALT );
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connection' )->once();
+
+		$forms = \Mockery::mock( FormsTable::class );
+		$forms->shouldReceive( 'clear_all_shq_ids' )->once();
+
+		$verifier = \Mockery::mock( ConnectionVerifier::class );
+		$verifier->shouldReceive( 'sign_request' )->once()->andReturn( [ 'X-SHQF-Signature' => 'sig' ] );
+
+		Monkey\Functions\expect( 'wp_remote_request' )
+			->once()
+			->andReturn( new \WP_Error( 'http_request_failed', 'Connection refused' ) );
+
+		$manager = $this->make_manager( $forms, $verifier );
+		$manager->disconnect();
+	}
+
+	/**
+	 * Disconnect with corrupted secret skips platform DELETE but still clears local options.
+	 */
+	public function test_disconnect_with_corrupted_secret_skips_http(): void {
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_id'      => 42,
+				'workspace_url'     => 'https://acme.samplehq.io',
+				'workspace_name'    => 'Acme',
+				'connection_secret' => 'corrupted-not-valid-cipher',
+				'connected_by'      => 'john@acme.com',
+				'connected_at'      => 1700000000,
+			] );
+
+		Monkey\Functions\expect( 'wp_salt' )->with( 'auth' )->andReturn( self::SALT );
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connection' )->once();
+
+		$forms = \Mockery::mock( FormsTable::class );
+		$forms->shouldReceive( 'clear_all_shq_ids' )->once();
+
+		Monkey\Functions\expect( 'wp_remote_request' )->never();
+
+		$manager = $this->make_manager( $forms );
+		$manager->disconnect();
+	}
+
+	/**
+	 * Disconnect fires shqf_disconnected action even when platform call fails.
+	 */
+	public function test_disconnect_fires_action_even_when_platform_fails(): void {
+		Monkey\Functions\expect( 'wp_salt' )->with( 'auth' )->andReturn( self::SALT );
+
+		$encrypted = ConnectionManager::encrypt_secret( 'raw-secret' );
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'shqf_connection', [] )
+			->once()
+			->andReturn( [
+				'workspace_id'      => 42,
+				'workspace_url'     => 'https://acme.samplehq.io',
+				'workspace_name'    => 'Acme',
+				'connection_secret' => $encrypted,
+				'connected_by'      => 'john@acme.com',
+				'connected_at'      => 1700000000,
+			] );
+
+		Monkey\Functions\expect( 'wp_salt' )->with( 'auth' )->andReturn( self::SALT );
+		Monkey\Functions\expect( 'delete_option' )->with( 'shqf_connection' )->once();
+
+		$forms = \Mockery::mock( FormsTable::class );
+		$forms->shouldReceive( 'clear_all_shq_ids' )->once();
+
+		$verifier = \Mockery::mock( ConnectionVerifier::class );
+		$verifier->shouldReceive( 'sign_request' )->once()->andReturn( [ 'X-SHQF-Signature' => 'sig' ] );
+
+		Monkey\Functions\expect( 'wp_remote_request' )
+			->once()
+			->andReturn( new \WP_Error( 'timeout', 'Request timed out' ) );
+
+		Monkey\Actions\expectDone( 'shqf_disconnected' )->once();
+
+		$manager = $this->make_manager( $forms, $verifier );
 		$manager->disconnect();
 	}
 }

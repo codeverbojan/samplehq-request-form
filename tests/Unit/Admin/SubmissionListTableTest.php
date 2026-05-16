@@ -72,6 +72,7 @@ class SubmissionListTableTest extends TestCase {
 		$this->assertArrayHasKey( 'bulk_read', $actions );
 		$this->assertArrayHasKey( 'bulk_spam', $actions );
 		$this->assertArrayHasKey( 'bulk_trash', $actions );
+		$this->assertArrayHasKey( 'bulk_retry_sync', $actions );
 	}
 
 	public function test_bulk_actions_trash_view(): void {

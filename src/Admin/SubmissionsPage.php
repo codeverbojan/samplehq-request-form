@@ -72,6 +72,7 @@ class SubmissionsPage {
 
 		echo '<hr class="wp-header-end">';
 		AdminNotice::render();
+		$this->render_sync_failure_notice( $submissions );
 
 		echo '<form method="get">';
 		echo '<input type="hidden" name="page" value="shqf-submissions" />';
@@ -96,6 +97,9 @@ class SubmissionsPage {
 		$submissions     = new \SampleHQForm\Database\SubmissionsTable( $wpdb );
 		$submission_meta = new \SampleHQForm\Database\SubmissionMetaTable( $wpdb );
 		$forms_table     = new \SampleHQForm\Database\FormsTable( $wpdb );
+
+		// Retry all failed (standalone action from notice button).
+		$this->process_retry_all_failed( $submissions, $submission_meta, $forms_table );
 
 		// Single row actions.
 		$this->process_submission_actions( $submissions, $submission_meta, $forms_table );
@@ -141,6 +145,76 @@ class SubmissionsPage {
 	}
 
 	/**
+	 * Render a persistent notice when submissions have failed to sync.
+	 *
+	 * @param \SampleHQForm\Database\SubmissionsTable $submissions Submissions repo.
+	 * @return void
+	 */
+	private function render_sync_failure_notice( \SampleHQForm\Database\SubmissionsTable $submissions ): void {
+		$summary = $submissions->get_sync_failure_summary();
+		if ( 0 === $summary['total'] ) {
+			return;
+		}
+
+		$messages = [];
+
+		if ( $summary['auth'] > 0 ) {
+			$settings_url = admin_url( 'admin.php?page=shqf-settings&tab=connection' );
+			$messages[]   = sprintf(
+				/* translators: 1: number of failures, 2: opening anchor tag, 3: closing anchor tag */
+				_n(
+					'%1$d submission failed due to a connection issue. %2$sReconnect in Settings%3$s.',
+					'%1$d submissions failed due to a connection issue. %2$sReconnect in Settings%3$s.',
+					$summary['auth'],
+					'samplehq-request-form'
+				),
+				$summary['auth'],
+				'<a href="' . esc_url( $settings_url ) . '">',
+				'</a>'
+			);
+		}
+
+		if ( $summary['plan_limit'] > 0 ) {
+			$messages[] = sprintf(
+				/* translators: %d: number of failures */
+				_n(
+					'%d submission failed due to a plan limit.',
+					'%d submissions failed due to a plan limit.',
+					$summary['plan_limit'],
+					'samplehq-request-form'
+				),
+				$summary['plan_limit']
+			);
+		}
+
+		if ( $summary['other'] > 0 ) {
+			$messages[] = sprintf(
+				/* translators: %d: number of failures */
+				_n(
+					'%d submission failed to sync.',
+					'%d submissions failed to sync.',
+					$summary['other'],
+					'samplehq-request-form'
+				),
+				$summary['other']
+			);
+		}
+
+		$retry_url = wp_nonce_url(
+			admin_url( 'admin.php?page=shqf-submissions&action=retry_all_failed' ),
+			'shqf_retry_all_failed'
+		);
+
+		echo '<div class="notice notice-warning">';
+		echo '<p><strong>' . esc_html__( 'Sync Issues', 'samplehq-request-form' ) . ':</strong> ';
+		echo wp_kses( implode( ' ', $messages ), [ 'a' => [ 'href' => [] ] ] );
+		echo '</p>';
+		echo '<p><a href="' . esc_url( $retry_url ) . '" class="button button-small">';
+		echo esc_html__( 'Retry All Failed', 'samplehq-request-form' ) . '</a></p>';
+		echo '</div>';
+	}
+
+	/**
 	 * Process single submission row actions (star, spam, trash, restore, delete).
 	 *
 	 * @param \SampleHQForm\Database\SubmissionsTable    $submissions     Submissions repo.
@@ -158,7 +232,7 @@ class SubmissionsPage {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$id = absint( $_GET['id'] ?? 0 );
 
-		$single_actions = [ 'star', 'unstar', 'mark_spam', 'to_trash', 'restore', 'delete_permanently' ];
+		$single_actions = [ 'star', 'unstar', 'mark_spam', 'to_trash', 'restore', 'delete_permanently', 'retry_sync' ];
 
 		if ( ! in_array( $action, $single_actions, true ) || 0 === $id ) {
 			return;
@@ -194,6 +268,14 @@ class SubmissionsPage {
 					AdminNotice::error( __( 'Submission not found.', 'samplehq-request-form' ) );
 				}
 				break;
+			case 'retry_sync':
+				$syncer = $this->build_syncer( $submissions, $submission_meta, $forms );
+				if ( $syncer->retry( $id ) ) {
+					AdminNotice::success( __( 'Sync retry scheduled.', 'samplehq-request-form' ) );
+				} else {
+					AdminNotice::error( __( 'Could not retry sync. Check connection or submission status.', 'samplehq-request-form' ) );
+				}
+				break;
 		}
 
 		delete_transient( 'shqf_unread_count' );
@@ -221,7 +303,7 @@ class SubmissionsPage {
 			$action = sanitize_text_field( wp_unslash( $_GET['action2'] ?? '' ) );
 		}
 
-		$bulk_actions = [ 'bulk_read', 'bulk_spam', 'bulk_trash', 'bulk_restore', 'bulk_delete' ];
+		$bulk_actions = [ 'bulk_read', 'bulk_spam', 'bulk_trash', 'bulk_restore', 'bulk_delete', 'bulk_retry_sync' ];
 		if ( ! in_array( $action, $bulk_actions, true ) ) {
 			return;
 		}
@@ -236,7 +318,8 @@ class SubmissionsPage {
 			return;
 		}
 
-		$count = 0;
+		$count  = 0;
+		$syncer = null;
 
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
@@ -255,12 +338,62 @@ class SubmissionsPage {
 				case 'bulk_delete':
 					$this->delete_submission_cascade( $id, $submissions, $submission_meta, $forms );
 					break;
+				case 'bulk_retry_sync':
+					if ( null === $syncer ) {
+						$syncer = $this->build_syncer( $submissions, $submission_meta, $forms );
+					}
+					if ( ! $syncer->retry( $id ) ) {
+						continue 2;
+					}
+					break;
 			}
 			++$count;
 		}
 
 		/* translators: %d: number of submissions affected */
 		AdminNotice::success( sprintf( __( '%d submission(s) updated.', 'samplehq-request-form' ), $count ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=shqf-submissions' ) );
+		exit;
+	}
+
+	/**
+	 * Handle the "Retry All Failed" standalone action from the sync failure notice.
+	 *
+	 * @param \SampleHQForm\Database\SubmissionsTable    $submissions     Submissions repo.
+	 * @param \SampleHQForm\Database\SubmissionMetaTable $submission_meta Meta repo.
+	 * @param \SampleHQForm\Database\FormsTable          $forms           Forms repo.
+	 * @return void
+	 */
+	private function process_retry_all_failed(
+		\SampleHQForm\Database\SubmissionsTable $submissions,
+		\SampleHQForm\Database\SubmissionMetaTable $submission_meta,
+		\SampleHQForm\Database\FormsTable $forms
+	): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$action = sanitize_text_field( wp_unslash( $_GET['action'] ?? '' ) );
+		if ( 'retry_all_failed' !== $action ) {
+			return;
+		}
+
+		check_admin_referer( 'shqf_retry_all_failed' );
+
+		$ids    = $submissions->get_sync_failure_ids();
+		$syncer = $this->build_syncer( $submissions, $submission_meta, $forms );
+		$count  = 0;
+
+		foreach ( $ids as $id ) {
+			if ( $syncer->retry( $id ) ) {
+				++$count;
+			}
+		}
+
+		if ( $count > 0 ) {
+			/* translators: %d: number of submissions queued for retry */
+			AdminNotice::success( sprintf( __( '%d sync retry(s) scheduled.', 'samplehq-request-form' ), $count ) );
+		} else {
+			AdminNotice::warning( __( 'No submissions could be retried. Check your connection status.', 'samplehq-request-form' ) );
+		}
+
 		wp_safe_redirect( admin_url( 'admin.php?page=shqf-submissions' ) );
 		exit;
 	}
@@ -295,6 +428,36 @@ class SubmissionsPage {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Build a SubmissionSyncer instance for retry operations.
+	 *
+	 * @param \SampleHQForm\Database\SubmissionsTable    $submissions     Submissions repo.
+	 * @param \SampleHQForm\Database\SubmissionMetaTable $submission_meta Meta repo.
+	 * @param \SampleHQForm\Database\FormsTable          $forms           Forms repo.
+	 * @return \SampleHQForm\Connection\SubmissionSyncer
+	 */
+	private function build_syncer(
+		\SampleHQForm\Database\SubmissionsTable $submissions,
+		\SampleHQForm\Database\SubmissionMetaTable $submission_meta,
+		\SampleHQForm\Database\FormsTable $forms
+	): \SampleHQForm\Connection\SubmissionSyncer {
+		global $wpdb;
+
+		$verifier   = new \SampleHQForm\Connection\ConnectionVerifier();
+		$connection = new \SampleHQForm\Connection\ConnectionManager( $forms, $verifier );
+		$samples    = new \SampleHQForm\Database\SamplesTable( $wpdb );
+		$mapper     = new \SampleHQForm\Connection\DataMapper( $samples );
+
+		return new \SampleHQForm\Connection\SubmissionSyncer(
+			$connection,
+			$verifier,
+			$mapper,
+			$submissions,
+			$submission_meta,
+			$forms
+		);
 	}
 
 	/**
@@ -479,12 +642,40 @@ class SubmissionsPage {
 		echo '<td>' . esc_html( $submission['ip_address'] ?? '--' ) . '</td></tr>';
 		echo '<tr><th>' . esc_html__( 'Submitted', 'samplehq-request-form' ) . '</th>';
 		echo '<td>' . esc_html( $submission['created_at'] ?? '--' ) . '</td></tr>';
-		$synced = ! empty( $submission['synced_to_shq'] )
-			? __( 'Yes', 'samplehq-request-form' )
-			: __( 'No', 'samplehq-request-form' );
-		echo '<tr><th>' . esc_html__( 'Synced', 'samplehq-request-form' ) . '</th>';
-		echo '<td>' . esc_html( $synced ) . '</td></tr>';
+		$sync_error = $submission_meta->get( $id, '_sync_error' );
+		if ( ! empty( $submission['synced_to_shq'] ) ) {
+			echo '<tr><th>' . esc_html__( 'Synced', 'samplehq-request-form' ) . '</th>';
+			echo '<td>' . esc_html__( 'Yes', 'samplehq-request-form' ) . '</td></tr>';
+		} elseif ( null !== $sync_error ) {
+			$sync_attempts = $submission_meta->get( $id, '_sync_attempts' );
+			echo '<tr><th>' . esc_html__( 'Synced', 'samplehq-request-form' ) . '</th>';
+			echo '<td><span style="color:#d63638;">' . esc_html__( 'Failed', 'samplehq-request-form' ) . '</span></td></tr>';
+			echo '<tr><th>' . esc_html__( 'Error', 'samplehq-request-form' ) . '</th>';
+			echo '<td><code>' . esc_html( $sync_error ) . '</code>';
+			if ( null !== $sync_attempts ) {
+				echo ' <em>(' . sprintf(
+					/* translators: %d: number of attempts */
+					esc_html__( '%d attempts', 'samplehq-request-form' ),
+					(int) $sync_attempts
+				) . ')</em>';
+			}
+			echo '</td></tr>';
+		} else {
+			echo '<tr><th>' . esc_html__( 'Synced', 'samplehq-request-form' ) . '</th>';
+			echo '<td>' . esc_html__( 'No', 'samplehq-request-form' ) . '</td></tr>';
+		}
 		echo '</table>';
+
+		if ( null !== $sync_error && empty( $submission['synced_to_shq'] ) ) {
+			$retry_url = wp_nonce_url(
+				admin_url( 'admin.php?page=shqf-submissions&action=retry_sync&id=' . $id ),
+				'shqf_submission_action_' . $id
+			);
+			echo '<p style="margin-top:8px;"><a href="' . esc_url( $retry_url ) . '" class="button">';
+			echo '<span class="dashicons dashicons-update" style="vertical-align:text-bottom;"></span> ';
+			echo esc_html__( 'Retry Sync', 'samplehq-request-form' ) . '</a></p>';
+		}
+
 		echo '</div></div>';
 
 		echo '</div>'; // #postbox-container-1

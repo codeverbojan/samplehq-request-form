@@ -200,4 +200,52 @@ class ConnectionVerifierTest extends TestCase {
 		$this->assertGreaterThanOrEqual( $before, $ts );
 		$this->assertLessThanOrEqual( $after, $ts );
 	}
+
+	// --- 15B.3: Signature edge cases ---
+
+	/**
+	 * URL with query parameters produces a consistent (deterministic) signature.
+	 */
+	public function test_url_with_query_params_produces_consistent_signature(): void {
+		Monkey\Functions\expect( 'site_url' )->twice()->andReturn( self::SITE_URL );
+
+		$url      = 'https://acme.samplehq.io/v1/submissions?page=2&per_page=50';
+		$verifier = new ConnectionVerifier();
+
+		$headers1 = $verifier->sign_request( 'GET', $url, '', self::SECRET, self::FIXED_TS );
+		$headers2 = $verifier->sign_request( 'GET', $url, '', self::SECRET, self::FIXED_TS );
+
+		$this->assertSame( $headers1['X-SHQF-Signature'], $headers2['X-SHQF-Signature'] );
+	}
+
+	/**
+	 * Empty body and null-literal body produce distinct signatures.
+	 */
+	public function test_empty_body_vs_null_string_produce_different_signatures(): void {
+		Monkey\Functions\expect( 'site_url' )->twice()->andReturn( self::SITE_URL );
+
+		$verifier      = new ConnectionVerifier();
+		$headers_empty = $verifier->sign_request( 'POST', self::API_URL, '', self::SECRET, self::FIXED_TS );
+		$headers_null  = $verifier->sign_request( 'POST', self::API_URL, 'null', self::SECRET, self::FIXED_TS );
+
+		$this->assertNotSame( $headers_empty['X-SHQF-Signature'], $headers_null['X-SHQF-Signature'] );
+	}
+
+	/**
+	 * Timestamp header is always a decimal integer string, never a float or negative.
+	 */
+	public function test_timestamp_is_integer_string_in_header(): void {
+		Monkey\Functions\expect( 'site_url' )->once()->andReturn( self::SITE_URL );
+
+		$headers = ( new ConnectionVerifier() )->sign_request(
+			'GET',
+			self::API_URL,
+			'',
+			self::SECRET,
+			self::FIXED_TS
+		);
+
+		$this->assertMatchesRegularExpression( '/^\d+$/', $headers['X-SHQF-Timestamp'] );
+		$this->assertSame( (string) self::FIXED_TS, $headers['X-SHQF-Timestamp'] );
+	}
 }

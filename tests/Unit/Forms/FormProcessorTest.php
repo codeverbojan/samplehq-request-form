@@ -317,4 +317,102 @@ class FormProcessorTest extends TestCase {
 		$this->assertFalse( $result['success'] );
 		$this->assertSame( 404, $result['status_code'] );
 	}
+
+	/**
+	 * Mailer exception does not break the submission response.
+	 */
+	public function test_mailer_exception_preserves_submission(): void {
+		$form = $this->published_form();
+		$this->forms->shouldReceive( 'get' )->with( 1 )->andReturn( $form );
+		$this->rate_limits->shouldReceive( 'check_and_increment' )->once()->andReturn( true );
+		$this->token->shouldReceive( 'validate' )->with( 1, 'valid-token' )->andReturn( true );
+		$this->submissions->shouldReceive( 'create' )->once()->andReturn( 100 );
+		$this->submission_meta->shouldReceive( 'add_many' )->once();
+		$this->forms->shouldReceive( 'increment_submissions_count' )->with( 1 )->once();
+
+		$this->submissions->shouldReceive( 'get' )->with( 100 )->andReturn( [ 'id' => 100, 'email' => 'john@example.com' ] );
+		$this->mailer->shouldReceive( 'send_admin_notification' )->once()->andThrow( new \RuntimeException( 'SMTP timeout' ) );
+		$this->mailer->shouldReceive( 'send_confirmation' )->once()->andReturn( true );
+
+		$result = $this->processor->process( $this->valid_data() );
+
+		$this->assertTrue( $result['success'] );
+		$this->assertSame( 100, $result['submission_id'] );
+		$this->assertSame( 200, $result['status_code'] );
+	}
+
+	// --- 15B.6: CSRF token consumption ---
+
+	/**
+	 * Second submission with same CSRF token is rejected (token consumed on first validate).
+	 */
+	public function test_csrf_token_consumed_after_first_submission(): void {
+		$form = $this->published_form();
+		$this->forms->shouldReceive( 'get' )->with( 1 )->andReturn( $form );
+		$this->rate_limits->shouldReceive( 'check_and_increment' )->twice()->andReturn( true );
+		$this->token->shouldReceive( 'validate' )
+			->with( 1, 'valid-token' )
+			->twice()
+			->andReturnValues( [ true, false ] );
+		$this->submissions->shouldReceive( 'create' )->once()->andReturn( 100 );
+		$this->submission_meta->shouldReceive( 'add_many' )->once();
+		$this->forms->shouldReceive( 'increment_submissions_count' )->once();
+		$this->submissions->shouldReceive( 'get' )->with( 100 )->andReturn( [ 'id' => 100, 'email' => 'john@example.com' ] );
+		$this->mailer->shouldReceive( 'send_admin_notification' )->once();
+		$this->mailer->shouldReceive( 'send_confirmation' )->once();
+
+		$data = $this->valid_data();
+
+		$result1 = $this->processor->process( $data );
+		$this->assertTrue( $result1['success'] );
+		$this->assertSame( 100, $result1['submission_id'] );
+
+		$result2 = $this->processor->process( $data );
+		$this->assertFalse( $result2['success'] );
+		$this->assertSame( 403, $result2['status_code'] );
+		$this->assertStringContainsString( 'session', $result2['errors']['general'] );
+	}
+
+	/**
+	 * Admin user bypasses rate limiting but NOT CSRF token check.
+	 */
+	public function test_admin_bypasses_rate_limit_but_not_csrf(): void {
+		Monkey\Functions\stubs( [
+			'current_user_can' => static fn() => true,
+		] );
+
+		$form = $this->published_form();
+		$this->forms->shouldReceive( 'get' )->andReturn( $form );
+		$this->rate_limits->shouldReceive( 'check_and_increment' )->never();
+		$this->token->shouldReceive( 'validate' )->with( 1, 'valid-token' )->once()->andReturn( false );
+
+		$result = $this->processor->process( $this->valid_data() );
+
+		$this->assertFalse( $result['success'] );
+		$this->assertSame( 403, $result['status_code'] );
+		$this->assertStringContainsString( 'session', $result['errors']['general'] );
+	}
+
+	/**
+	 * Both mailer methods throwing does not break the submission response.
+	 */
+	public function test_both_mailer_exceptions_preserve_submission(): void {
+		$form = $this->published_form();
+		$this->forms->shouldReceive( 'get' )->with( 1 )->andReturn( $form );
+		$this->rate_limits->shouldReceive( 'check_and_increment' )->once()->andReturn( true );
+		$this->token->shouldReceive( 'validate' )->with( 1, 'valid-token' )->andReturn( true );
+		$this->submissions->shouldReceive( 'create' )->once()->andReturn( 100 );
+		$this->submission_meta->shouldReceive( 'add_many' )->once();
+		$this->forms->shouldReceive( 'increment_submissions_count' )->with( 1 )->once();
+
+		$this->submissions->shouldReceive( 'get' )->with( 100 )->andReturn( [ 'id' => 100, 'email' => 'john@example.com' ] );
+		$this->mailer->shouldReceive( 'send_admin_notification' )->once()->andThrow( new \RuntimeException( 'SMTP timeout' ) );
+		$this->mailer->shouldReceive( 'send_confirmation' )->once()->andThrow( new \RuntimeException( 'Template error' ) );
+
+		$result = $this->processor->process( $this->valid_data() );
+
+		$this->assertTrue( $result['success'] );
+		$this->assertSame( 100, $result['submission_id'] );
+		$this->assertSame( 200, $result['status_code'] );
+	}
 }

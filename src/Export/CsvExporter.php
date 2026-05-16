@@ -60,14 +60,16 @@ class CsvExporter {
 
 		$rows = $this->submissions->list_all( $filters );
 
-		// Collect all unique meta keys across submissions.
+		// Collect all unique meta keys across submissions (skip internal _-prefixed keys).
 		$meta_keys = [];
 		$meta_data = [];
 		foreach ( $rows as $row ) {
 			$row_meta                = $this->meta->get_all( (int) $row['id'] );
 			$meta_data[ $row['id'] ] = $row_meta;
 			foreach ( array_keys( $row_meta ) as $key ) {
-				$meta_keys[ $key ] = true;
+				if ( ! str_starts_with( $key, '_' ) ) {
+					$meta_keys[ $key ] = true;
+				}
 			}
 		}
 		$meta_keys = array_keys( $meta_keys );

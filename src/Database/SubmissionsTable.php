@@ -413,6 +413,114 @@ class SubmissionsTable {
 	}
 
 	/**
+	 * Get a summary of sync failure errors for categorized admin notices.
+	 *
+	 * Categorizes at the SQL level for efficiency. Auth errors include signature
+	 * failures, timestamp issues, missing connections. Plan errors include limit
+	 * messages and 402 codes. Everything else is "other".
+	 *
+	 * @return array{total: int, auth: int, plan_limit: int, other: int}
+	 */
+	public function get_sync_failure_summary(): array {
+		$meta_table = $this->wpdb->prefix . 'shqf_submission_meta';
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names from $wpdb->prefix.
+		$sql = $this->wpdb->prepare(
+			"SELECT
+				COUNT(DISTINCT s.id) AS total,
+				COUNT(DISTINCT CASE WHEN LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s
+					THEN s.id END) AS auth,
+				COUNT(DISTINCT CASE WHEN (LOWER(m.field_value) LIKE %s
+					OR LOWER(m.field_value) LIKE %s)
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					AND LOWER(m.field_value) NOT LIKE %s
+					THEN s.id END) AS plan_limit
+			FROM {$this->table} s
+			INNER JOIN {$meta_table} m ON m.submission_id = s.id AND m.field_key = %s
+			WHERE s.synced_to_shq = 0 AND s.status NOT IN (%s, %s)",
+		// phpcs:enable
+			'%auth%',
+			'%signature%',
+			'%401%',
+			'%not connected%',
+			'%no connection%',
+			'%timestamp%',
+			'%decrypt%',
+			'%plan%',
+			'%limit%',
+			'%auth%',
+			'%signature%',
+			'%401%',
+			'%not connected%',
+			'%no connection%',
+			'%timestamp%',
+			'%decrypt%',
+			'_sync_error',
+			'trash',
+			'spam'
+		);
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$row = $this->wpdb->get_row( $sql, ARRAY_A );
+
+		if ( empty( $row ) ) {
+			return [
+				'total'      => 0,
+				'auth'       => 0,
+				'plan_limit' => 0,
+				'other'      => 0,
+			];
+		}
+
+		$total      = (int) $row['total'];
+		$auth       = (int) $row['auth'];
+		$plan_limit = (int) $row['plan_limit'];
+
+		return [
+			'total'      => $total,
+			'auth'       => $auth,
+			'plan_limit' => $plan_limit,
+			'other'      => max( 0, $total - $auth - $plan_limit ),
+		];
+	}
+
+	/**
+	 * Get IDs of all submissions that failed to sync.
+	 *
+	 * @return int[] Submission IDs with sync errors.
+	 */
+	public function get_sync_failure_ids(): array {
+		$meta_table = $this->wpdb->prefix . 'shqf_submission_meta';
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names from $wpdb->prefix.
+		$sql = $this->wpdb->prepare(
+			"SELECT DISTINCT s.id FROM {$this->table} s
+			INNER JOIN {$meta_table} m ON m.submission_id = s.id AND m.field_key = %s
+			WHERE s.synced_to_shq = 0 AND s.status NOT IN (%s, %s)",
+			'_sync_error',
+			'trash',
+			'spam'
+		);
+		// phpcs:enable
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$ids = $this->wpdb->get_col( $sql );
+
+		return array_map( 'intval', $ids );
+	}
+
+	/**
 	 * Get distinct year-month values for date filtering.
 	 *
 	 * @return array<int, array{year: int, month: int}> Sorted descending.

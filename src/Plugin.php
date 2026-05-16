@@ -107,6 +107,13 @@ class Plugin {
 	private Database\SubmissionsTable $submissions;
 
 	/**
+	 * Migration engine.
+	 *
+	 * @var Connection\MigrationEngine
+	 */
+	private Connection\MigrationEngine $migration_engine;
+
+	/**
 	 * WordPress database abstraction.
 	 *
 	 * @var \wpdb
@@ -246,6 +253,85 @@ class Plugin {
 		// --- Platform connection ---
 		$connection_verifier = new Connection\ConnectionVerifier();
 		$connection_manager  = new Connection\ConnectionManager( $forms_table, $connection_verifier );
+		$data_mapper         = new Connection\DataMapper( $samples_table );
+
+		$submission_syncer = new Connection\SubmissionSyncer(
+			$connection_manager,
+			$connection_verifier,
+			$data_mapper,
+			$submissions,
+			$submission_meta,
+			$forms_table
+		);
+		$submission_syncer->register();
+
+		$this->migration_engine = new Connection\MigrationEngine(
+			$connection_manager,
+			$connection_verifier,
+			$samples_table,
+			$categories,
+			$category_map,
+			$submissions,
+			$submission_meta,
+			$forms_table,
+			$data_mapper
+		);
+		add_action( Connection\MigrationEngine::CRON_HOOK, [ $this->migration_engine, 'process_next_batch' ] );
+
+		$migration_api = new Api\MigrationEndpoints( $this->migration_engine, $connection_manager );
+		$migration_api->register();
+
+		// --- Front-end callback for cross-origin POST from platform ---
+		add_action(
+			'template_redirect',
+			static function () use ( $connection_manager ): void {
+				$uri = wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH );
+
+				if ( rtrim( (string) $uri, '/' ) !== '/shqf-connect-callback' ) {
+					return;
+				}
+
+				header( 'Referrer-Policy: no-referrer' );
+				header( 'X-Robots-Tag: noindex, nofollow' );
+				header( 'Cache-Control: no-store' );
+
+				if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+					wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
+					exit;
+				}
+
+				// phpcs:disable WordPress.Security.NonceVerification.Missing -- HMAC signature replaces nonce.
+				$result = $connection_manager->validate_callback(
+					[
+						'state'            => sanitize_text_field( wp_unslash( $_POST['state'] ?? '' ) ),
+						// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						'connection_token' => (string) wp_unslash( $_POST['connection_token'] ?? '' ),
+						'signature'        => sanitize_text_field( wp_unslash( $_POST['signature'] ?? '' ) ),
+					]
+				);
+				// phpcs:enable
+
+				if ( is_wp_error( $result ) ) {
+					wp_safe_redirect(
+						add_query_arg( 'shqf_error', rawurlencode( $result->get_error_message() ), admin_url( 'admin.php?page=shqf-settings&tab=connection' ) )
+					);
+					exit;
+				}
+
+				$stored = $connection_manager->store_connection( $result );
+
+				if ( is_wp_error( $stored ) ) {
+					wp_safe_redirect(
+						add_query_arg( 'shqf_error', rawurlencode( $stored->get_error_message() ), admin_url( 'admin.php?page=shqf-settings&tab=connection' ) )
+					);
+					exit;
+				}
+
+				wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection&shqf_connected=1' ) );
+				exit;
+			},
+			1
+		);
 
 		// --- Admin menu ---
 		$admin_menu = new Admin\AdminMenu( $renderer, $form_token, $connection_manager );
@@ -324,6 +410,11 @@ class Plugin {
 		if ( $timestamp ) {
 			wp_unschedule_event( $timestamp, 'shqf_daily_cleanup' );
 		}
+
+		wp_unschedule_hook( Connection\MigrationEngine::CRON_HOOK );
+		wp_unschedule_hook( 'shqf_sync_submission' );
+
+		$this->migration_engine->cancel_migration();
 	}
 
 	/**

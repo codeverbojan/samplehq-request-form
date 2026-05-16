@@ -118,7 +118,17 @@ class ConnectionManager {
 	public function is_connected(): bool {
 		$connection = get_option( self::CONNECTION_OPTION, [] );
 
-		return ! empty( $connection['workspace_id'] );
+		if ( empty( $connection['workspace_id'] ) ) {
+			return false;
+		}
+
+		foreach ( self::REQUIRED_KEYS as $key ) {
+			if ( empty( $connection[ $key ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -178,7 +188,7 @@ class ConnectionManager {
 			[
 				'token'      => $token,
 				'site_url'   => site_url(),
-				'return_url' => admin_url( 'admin.php?page=shqf-settings&tab=connection&action=callback' ),
+				'return_url' => home_url( '/shqf-connect-callback' ),
 				'user_id'    => $user_id,
 				'created_at' => time(),
 			],
@@ -198,14 +208,18 @@ class ConnectionManager {
 		$token = $this->generate_state( $user->ID );
 		$state = get_option( self::STATE_OPTION, [] );
 
+		// add_query_arg() does not URL-encode values (build_query uses
+		// _http_build_query with $urlencode=false). Values that themselves
+		// contain query strings (like return_url) must be pre-encoded so
+		// their & and ? are not parsed as outer-URL delimiters.
 		return add_query_arg(
 			[
-				'state'      => $token,
-				'site_url'   => $state['site_url'],
-				'return_url' => $state['return_url'],
-				'email'      => $user->user_email,
-				'first_name' => $user->first_name,
-				'last_name'  => $user->last_name,
+				'state'      => rawurlencode( $token ),
+				'site_url'   => rawurlencode( $state['site_url'] ),
+				'return_url' => rawurlencode( $state['return_url'] ),
+				'email'      => rawurlencode( $user->user_email ),
+				'first_name' => rawurlencode( $user->first_name ),
+				'last_name'  => rawurlencode( $user->last_name ),
 			],
 			self::platform_url() . '/connect/wordpress'
 		);
@@ -220,23 +234,25 @@ class ConnectionManager {
 	 * @param int                   $user_id   The current logged-in user's ID.
 	 * @return array{workspace_url: string, workspace_id: int, workspace_name: string, connection_secret: string, connected_by: string}|\WP_Error Decoded token data or error.
 	 */
-	public function validate_callback( array $post_data, int $user_id ): array|\WP_Error {
+	public function validate_callback( array $post_data, ?int $user_id = null ): array|\WP_Error {
 		$state = get_option( self::STATE_OPTION, [] );
 
 		if ( empty( $state['token'] ) ) {
 			return new \WP_Error( 'shqf_no_state', __( 'No pending connection. Please try again.', 'samplehq-request-form' ) );
 		}
 
+		// Consume state token immediately to prevent replay.
+		delete_option( self::STATE_OPTION );
+
 		if ( ! hash_equals( $state['token'], $post_data['state'] ?? '' ) ) {
 			return new \WP_Error( 'shqf_state_mismatch', __( 'Connection state mismatch. Please try again.', 'samplehq-request-form' ) );
 		}
 
 		if ( ( time() - ( $state['created_at'] ?? 0 ) ) > self::STATE_TTL ) {
-			delete_option( self::STATE_OPTION );
 			return new \WP_Error( 'shqf_state_expired', __( 'Connection expired. Please try again.', 'samplehq-request-form' ) );
 		}
 
-		if ( ( $state['user_id'] ?? 0 ) !== $user_id ) {
+		if ( null !== $user_id && ( $state['user_id'] ?? 0 ) !== $user_id ) {
 			return new \WP_Error( 'shqf_user_mismatch', __( 'This connection was initiated by a different user. Please ask them to complete it.', 'samplehq-request-form' ) );
 		}
 
@@ -265,8 +281,6 @@ class ConnectionManager {
 		if ( ! is_array( $data ) || empty( $data['workspace_id'] ) || empty( $data['connection_secret'] ) ) {
 			return new \WP_Error( 'shqf_invalid_token', __( 'Connection data is incomplete.', 'samplehq-request-form' ) );
 		}
-
-		delete_option( self::STATE_OPTION );
 
 		return $data;
 	}
@@ -319,21 +333,35 @@ class ConnectionManager {
 
 		$this->forms->clear_all_shq_ids();
 
-		if ( null === $connection ) {
-			return;
+		if ( null !== $connection ) {
+			$url     = rtrim( $connection['workspace_url'], '/' ) . '/wp-json/samplehq/v1/plugin/connection';
+			$headers = $this->verifier->sign_request( 'DELETE', $url, '', $connection['connection_secret'] );
+
+			$response = wp_remote_request(
+				$url,
+				[
+					'method'    => 'DELETE',
+					'headers'   => $headers,
+					'timeout'   => 5,
+					'sslverify' => ! defined( 'SHQF_PLATFORM_URL' ),
+				]
+			);
+
+			if ( is_wp_error( $response ) ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+					error_log( 'shqf_disconnect: DELETE to platform failed: ' . $response->get_error_message() );
+				}
+			} else {
+				$code = (int) wp_remote_retrieve_response_code( $response );
+				if ( $code >= 400 && 404 !== $code && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+					error_log( sprintf( 'shqf_disconnect: platform returned HTTP %d', $code ) );
+				}
+			}
 		}
 
-		$url     = rtrim( $connection['workspace_url'], '/' ) . '/wp-json/samplehq/v1/plugin/connection';
-		$headers = $this->verifier->sign_request( 'DELETE', $url, '', $connection['connection_secret'] );
-
-		wp_remote_request(
-			$url,
-			[
-				'method'  => 'DELETE',
-				'headers' => $headers,
-				'timeout' => 5,
-			]
-		);
+		do_action( 'shqf_disconnected' );
 	}
 
 	/**

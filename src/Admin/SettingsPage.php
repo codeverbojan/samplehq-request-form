@@ -22,6 +22,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class SettingsPage {
 
+	private const SECRET_MASK = '••••••••••••••••';
+
+	/**
+	 * Connection manager instance (null when connection feature unavailable).
+	 *
+	 * @var \SampleHQForm\Connection\ConnectionManager|null
+	 */
+	private ?\SampleHQForm\Connection\ConnectionManager $connection_manager;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \SampleHQForm\Connection\ConnectionManager|null $connection_manager Optional connection manager.
+	 */
+	public function __construct( ?\SampleHQForm\Connection\ConnectionManager $connection_manager = null ) {
+		$this->connection_manager = $connection_manager;
+	}
+
 	/**
 	 * Render the settings page.
 	 *
@@ -46,6 +64,11 @@ class SettingsPage {
 			'connection' => __( 'SampleHQ Connection', 'samplehq-request-form' ),
 		];
 
+		$is_connected = $this->connection_manager ? $this->connection_manager->is_connected() : ! empty( get_option( 'shqf_connection', [] )['workspace_id'] );
+		if ( $is_connected ) {
+			$tabs['migration'] = __( 'Migration', 'samplehq-request-form' );
+		}
+
 		if ( \SampleHQForm\WooCommerce\WooDetector::is_active() ) {
 			$tabs['woocommerce'] = __( 'WooCommerce', 'samplehq-request-form' );
 		}
@@ -66,6 +89,11 @@ class SettingsPage {
 				break;
 			case 'connection':
 				$this->render_settings_connection_tab();
+				break;
+			case 'migration':
+				if ( $is_connected ) {
+					$this->render_settings_migration_tab();
+				}
 				break;
 			case 'woocommerce':
 				$this->render_settings_woocommerce_tab();
@@ -98,7 +126,9 @@ class SettingsPage {
 				$turnstile_site_key   = sanitize_text_field( wp_unslash( $_POST['shqf_turnstile_site_key'] ?? '' ) );
 				$turnstile_secret_key = sanitize_text_field( wp_unslash( $_POST['shqf_turnstile_secret_key'] ?? '' ) );
 				update_option( 'shqf_turnstile_site_key', $turnstile_site_key );
-				update_option( 'shqf_turnstile_secret_key', $turnstile_secret_key );
+				if ( self::SECRET_MASK !== $turnstile_secret_key ) {
+					update_option( 'shqf_turnstile_secret_key', $turnstile_secret_key );
+				}
 				break;
 
 			case 'email':
@@ -222,9 +252,10 @@ class SettingsPage {
 		echo '<td><input type="text" id="shqf-turnstile-site" name="shqf_turnstile_site_key" class="regular-text"';
 		echo ' value="' . esc_attr( $turnstile_site_key ) . '" autocomplete="off" /></td></tr>';
 
+		$secret_display = '' !== $turnstile_secret_key ? self::SECRET_MASK : '';
 		echo '<tr><th><label for="shqf-turnstile-secret">' . esc_html__( 'Secret Key', 'samplehq-request-form' ) . '</label></th>';
 		echo '<td><input type="password" id="shqf-turnstile-secret" name="shqf_turnstile_secret_key" class="regular-text"';
-		echo ' value="' . esc_attr( $turnstile_secret_key ) . '" autocomplete="off" />';
+		echo ' value="' . esc_attr( $secret_display ) . '" autocomplete="off" />';
 		echo '<p class="description">' . esc_html__( 'Leave both fields empty to disable Turnstile. Existing honeypot and rate limiting remain active.', 'samplehq-request-form' ) . '</p></td></tr>';
 
 		echo '</table>';
@@ -486,7 +517,22 @@ class SettingsPage {
 	 */
 	private function render_settings_connection_tab(): void {
 		$connection   = get_option( 'shqf_connection', [] );
-		$is_connected = ! empty( $connection['workspace_id'] );
+		$is_connected = $this->connection_manager ? $this->connection_manager->is_connected() : ! empty( $connection['workspace_id'] );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['shqf_error'] ) ) {
+			echo '<div class="notice notice-error is-dismissible"><p>';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			echo esc_html( sanitize_text_field( wp_unslash( $_GET['shqf_error'] ) ) );
+			echo '</p></div>';
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['shqf_connected'] ) && $is_connected ) {
+			echo '<div class="notice notice-success is-dismissible"><p>';
+			echo esc_html__( 'Successfully connected to SampleHQ!', 'samplehq-request-form' );
+			echo '</p></div>';
+		}
 
 		echo '<div id="poststuff">';
 
@@ -552,6 +598,255 @@ class SettingsPage {
 
 	/**
 	 * Render the disconnected state of the connection tab.
+	 *
+	 * @return void
+	 */
+	private function render_settings_migration_tab(): void {
+		$rest_url = rest_url( 'samplehq-form/v1/migration/' );
+		$nonce    = wp_create_nonce( 'wp_rest' );
+
+		echo '<div id="poststuff">';
+		echo '<div id="shqf-migration-wizard" data-rest-url="' . esc_attr( $rest_url ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+
+		echo '<div class="postbox">';
+		echo '<div class="postbox-header"><h2 class="hndle">' . esc_html__( 'Migration Wizard', 'samplehq-request-form' ) . '</h2></div>';
+		echo '<div class="inside">';
+
+		// Step 1: Preview (default visible).
+		echo '<div id="shqf-mig-preview">';
+		echo '<p>' . esc_html__( 'Migrate your categories, samples, and optionally submissions to your SampleHQ workspace.', 'samplehq-request-form' ) . '</p>';
+		echo '<p>' . esc_html__( 'Loading preview...', 'samplehq-request-form' ) . '</p>';
+		echo '</div>';
+
+		// Step 2: Running (hidden).
+		echo '<div id="shqf-mig-running" style="display:none;">';
+		echo '<p><strong id="shqf-mig-phase">' . esc_html__( 'Starting...', 'samplehq-request-form' ) . '</strong></p>';
+		echo '<div class="shqf-progress-bar" style="background:#e0e0e0;border-radius:4px;height:24px;margin:16px 0;">';
+		echo '<div id="shqf-mig-bar" style="background:#2271b1;height:100%;border-radius:4px;width:0%;transition:width .3s;"></div>';
+		echo '</div>';
+		echo '<p id="shqf-mig-detail"></p>';
+		echo '<p style="margin-top:16px;"><button type="button" id="shqf-mig-cancel" class="button">' . esc_html__( 'Cancel', 'samplehq-request-form' ) . '</button></p>';
+		echo '</div>';
+
+		// Step 3: Complete (hidden).
+		echo '<div id="shqf-mig-complete" style="display:none;">';
+		echo '<div class="notice notice-success inline"><p><strong>' . esc_html__( 'Migration complete.', 'samplehq-request-form' ) . '</strong></p></div>';
+		echo '<div id="shqf-mig-summary"></div>';
+		echo '</div>';
+
+		echo '</div></div>';
+		echo '</div>';
+		echo '</div>';
+
+		$this->render_migration_js();
+	}
+
+	/**
+	 * Render the inline JavaScript for the migration wizard.
+	 *
+	 * @return void
+	 */
+	private function render_migration_js(): void {
+		?>
+		<script>
+		(function() {
+			var wizard = document.getElementById('shqf-migration-wizard');
+			if (!wizard) return;
+
+			var restUrl = wizard.getAttribute('data-rest-url');
+			var nonce = wizard.getAttribute('data-nonce');
+			var pollTimer = null;
+			var pollErrors = 0;
+
+			function api(method, endpoint, body) {
+				var opts = {
+					method: method,
+					headers: { 'X-WP-Nonce': nonce, 'Content-Type': 'application/json' }
+				};
+				if (body) opts.body = JSON.stringify(body);
+				return fetch(restUrl + endpoint, opts).then(function(r) {
+					if (!r.ok) {
+						return r.json().catch(function() { return {}; }).then(function(d) {
+							var err = new Error('HTTP ' + r.status);
+							err.data = d;
+							throw err;
+						});
+					}
+					return r.json();
+				});
+			}
+
+			function showStep(id) {
+				['shqf-mig-preview', 'shqf-mig-running', 'shqf-mig-complete'].forEach(function(s) {
+					document.getElementById(s).style.display = (s === id) ? '' : 'none';
+				});
+			}
+
+			function loadPreview() {
+				api('GET', 'preview').then(function(data) {
+					var el = document.getElementById('shqf-mig-preview');
+					if (data.error) {
+						el.innerHTML = '<div class="notice notice-error inline"><p>' + esc(data.error) + '</p></div>';
+						return;
+					}
+
+					var platform = data.platform || {};
+					var maxSamples = platform.max_samples || 0;
+					var currentSamples = platform.current_samples || 0;
+					var available = maxSamples > 0 ? Math.max(0, maxSamples - currentSamples) : data.samples;
+					var limited = maxSamples > 0 && data.samples > available;
+
+					var html = '<p><?php echo esc_js( __( 'Migrate your categories, samples, and optionally submissions to your SampleHQ workspace.', 'samplehq-request-form' ) ); ?></p>';
+					html += '<table class="widefat striped" style="max-width:400px;">';
+					html += '<tr><td><?php echo esc_js( __( 'Categories', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.categories + '</strong></td></tr>';
+					html += '<tr><td><?php echo esc_js( __( 'Samples', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.samples + '</strong>';
+					if (limited) html += ' <em>(<?php echo esc_js( __( 'plan limit:', 'samplehq-request-form' ) ); ?> ' + available + ' <?php echo esc_js( __( 'available', 'samplehq-request-form' ) ); ?>)</em>';
+					html += '</td></tr>';
+					html += '<tr><td><?php echo esc_js( __( 'Submissions', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.submissions + '</strong></td></tr>';
+					html += '</table>';
+
+					if (data.submissions > 0) {
+						html += '<p style="margin-top:12px;"><label><input type="checkbox" id="shqf-mig-include-subs"> <?php echo esc_js( __( 'Also migrate submissions', 'samplehq-request-form' ) ); ?></label></p>';
+					}
+
+					html += '<p style="margin-top:16px;"><button type="button" id="shqf-mig-start" class="button button-primary"><?php echo esc_js( __( 'Start Migration', 'samplehq-request-form' ) ); ?></button></p>';
+
+					if (data.categories === 0 && data.samples === 0 && data.submissions === 0) {
+						html = '<div class="notice notice-info inline"><p><?php echo esc_js( __( 'Nothing to migrate. Your sample library is empty.', 'samplehq-request-form' ) ); ?></p></div>';
+					}
+
+					el.innerHTML = html;
+
+					var startBtn = document.getElementById('shqf-mig-start');
+					if (startBtn) {
+						startBtn.addEventListener('click', function() {
+							startBtn.disabled = true;
+							var cb = document.getElementById('shqf-mig-include-subs');
+							startMigration(cb ? cb.checked : false);
+						});
+					}
+				}).catch(function() {
+					document.getElementById('shqf-mig-preview').innerHTML = '<div class="notice notice-error inline"><p><?php echo esc_js( __( 'Failed to load preview. Please reload the page.', 'samplehq-request-form' ) ); ?></p></div>';
+				});
+			}
+
+			function startMigration(includeSubs) {
+				showStep('shqf-mig-running');
+				api('POST', 'start', { include_submissions: includeSubs }).then(function(data) {
+					startPolling();
+				}).catch(function(err) {
+					var d = err.data || {};
+					if (d.code === 'migration_in_progress') {
+						document.getElementById('shqf-mig-phase').textContent = '<?php echo esc_js( __( 'Migration already running...', 'samplehq-request-form' ) ); ?>';
+						startPolling();
+					} else {
+						showStep('shqf-mig-preview');
+						loadPreview();
+					}
+				});
+			}
+
+			function startPolling() {
+				if (pollTimer) return;
+				pollErrors = 0;
+				pollTimer = setInterval(function() {
+					api('GET', 'progress').then(function(data) {
+						pollErrors = 0;
+						updateProgress(data);
+						if (data.phase === 'complete' || data.phase === 'cancelled' || data.phase === 'error') {
+							clearInterval(pollTimer);
+							pollTimer = null;
+							showComplete(data);
+						}
+					}).catch(function() {
+						pollErrors++;
+						if (pollErrors >= 3) {
+							clearInterval(pollTimer);
+							pollTimer = null;
+							document.getElementById('shqf-mig-phase').textContent = '<?php echo esc_js( __( 'Lost connection. Please reload the page.', 'samplehq-request-form' ) ); ?>';
+						}
+					});
+				}, 2000);
+			}
+
+			function updateProgress(data) {
+				var phases = {
+					categories: '<?php echo esc_js( __( 'Migrating categories...', 'samplehq-request-form' ) ); ?>',
+					samples: '<?php echo esc_js( __( 'Migrating samples...', 'samplehq-request-form' ) ); ?>',
+					submissions: '<?php echo esc_js( __( 'Migrating submissions...', 'samplehq-request-form' ) ); ?>',
+					error: '<?php echo esc_js( __( 'Migration error', 'samplehq-request-form' ) ); ?>',
+					cancelled: '<?php echo esc_js( __( 'Migration cancelled', 'samplehq-request-form' ) ); ?>'
+				};
+				document.getElementById('shqf-mig-phase').textContent = phases[data.phase] || data.phase;
+
+				var total = (data.categories_total || 0) + (data.samples_total || 0) + (data.submissions_total || 0);
+				var done = (data.categories_completed || 0) + (data.samples_completed || 0) + (data.submissions_completed || 0);
+				var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+				document.getElementById('shqf-mig-bar').style.width = pct + '%';
+				document.getElementById('shqf-mig-detail').textContent = done + ' / ' + total;
+			}
+
+			function showComplete(data) {
+				showStep('shqf-mig-complete');
+				var el = document.getElementById('shqf-mig-summary');
+				var html = '<table class="widefat striped" style="max-width:500px;margin-top:12px;">';
+				html += '<tr><td><?php echo esc_js( __( 'Categories created', 'samplehq-request-form' ) ); ?></td><td>' + (data.categories_created || 0) + '</td></tr>';
+				html += '<tr><td><?php echo esc_js( __( 'Categories updated', 'samplehq-request-form' ) ); ?></td><td>' + (data.categories_updated || 0) + '</td></tr>';
+				html += '<tr><td><?php echo esc_js( __( 'Samples created', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_created || 0) + '</td></tr>';
+				html += '<tr><td><?php echo esc_js( __( 'Samples updated', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_updated || 0) + '</td></tr>';
+				html += '<tr><td><?php echo esc_js( __( 'Samples skipped', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_skipped || 0) + '</td></tr>';
+
+				if (data.include_submissions) {
+					html += '<tr><td><?php echo esc_js( __( 'Submissions accepted', 'samplehq-request-form' ) ); ?></td><td>' + (data.submissions_accepted || 0) + '</td></tr>';
+					html += '<tr><td><?php echo esc_js( __( 'Submissions duplicates', 'samplehq-request-form' ) ); ?></td><td>' + (data.submissions_duplicates || 0) + '</td></tr>';
+				}
+
+				html += '</table>';
+
+				if (data.plan_limit_reached) {
+					html += '<div class="notice notice-warning inline" style="margin-top:12px;"><p><?php echo esc_js( __( 'Plan limit reached. Upgrade your plan to migrate more samples.', 'samplehq-request-form' ) ); ?></p></div>';
+				}
+
+				if (data.errors && data.errors.length > 0) {
+					html += '<div class="notice notice-error inline" style="margin-top:12px;"><p>' + data.errors.length + ' <?php echo esc_js( __( 'error(s) occurred during migration.', 'samplehq-request-form' ) ); ?></p></div>';
+				}
+
+				if (data.phase === 'cancelled') {
+					document.querySelector('#shqf-mig-complete .notice-success p strong').textContent = '<?php echo esc_js( __( 'Migration cancelled.', 'samplehq-request-form' ) ); ?>';
+				}
+
+				el.innerHTML = html;
+			}
+
+			function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+			// Cancel handler
+			document.getElementById('shqf-mig-cancel').addEventListener('click', function() {
+				api('POST', 'cancel');
+			});
+
+			// Check for in-progress migration on load
+			api('GET', 'progress').then(function(data) {
+				if (data.phase && data.phase !== 'idle' && data.phase !== 'complete' && data.phase !== 'cancelled' && data.phase !== 'error') {
+					showStep('shqf-mig-running');
+					updateProgress(data);
+					startPolling();
+				} else if (data.phase === 'complete' || data.phase === 'cancelled') {
+					showComplete(data);
+				} else {
+					loadPreview();
+				}
+			}).catch(function() {
+				loadPreview();
+			});
+		})();
+		</script>
+		<?php
+	}
+
+	/**
+	 * Render the disconnected connection state.
 	 *
 	 * @return void
 	 */

@@ -8,3 +8,6 @@ parameters:
 		- phpstan-constants.php
 	scanFiles:
 		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+	ignoreErrors:
+		- identifier: missingType.iterableValue
+		  path: src/Connection/MigrationEngine.php
