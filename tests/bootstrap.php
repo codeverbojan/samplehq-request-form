@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Define plugin constants for tests (mirrors the main plugin file).
 // Keep version in sync with the plugin header.
 if ( ! defined( 'SHQF_VERSION' ) ) {
-	define( 'SHQF_VERSION', '1.0.1' );
+	define( 'SHQF_VERSION', '1.0.2' );
 }
 if ( ! defined( 'SHQF_FILE' ) ) {
 	define( 'SHQF_FILE', dirname( __DIR__ ) . '/samplehq-request-form.php' );

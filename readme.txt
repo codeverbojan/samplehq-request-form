@@ -4,7 +4,7 @@ Tags: sample request, form builder, product samples, sample management, request 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,11 +160,12 @@ screen reader announcements, and focus management following WCAG 2.2 Level AA pr
 
 == Changelog ==
 
+= 1.0.2 =
+* Added optional SampleHQ platform connection with submission sync and data migration
+* Fixed PHP 8.0 compatibility issue with standalone return type in ConnectionManager
+
 = 1.0.1 =
 * Added release procedure with CI changelog validation
-* Added automated changelog generation from conventional commits
-* Fixed file doc comment placement in phpstan-constants.php
-* Fixed CI to run full suite in release workflow
 
 = 1.0.0 =
 * Sample library with categories, images, SKUs, and descriptions
@@ -183,6 +184,9 @@ screen reader announcements, and focus management following WCAG 2.2 Level AA pr
 * WCAG 2.2 Level AA accessibility practices
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Platform connection support and PHP 8.0 compatibility fix.
 
 = 1.0.1 =
 Release tooling improvements and minor fixes.

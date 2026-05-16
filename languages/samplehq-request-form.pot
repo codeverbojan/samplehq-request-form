@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SampleHQ Request Form 1.0.0\n"
+"Project-Id-Version: SampleHQ Request Form 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/samplehq-request-form\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T16:37:30+00:00\n"
+"POT-Creation-Date: 2026-05-16T12:47:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: samplehq-request-form\n"
@@ -34,52 +34,53 @@ msgstr ""
 msgid "https://samplehq.io"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:142
+#: src/Admin/AdminMenu.php:153
 msgid "Samples per page"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:158
+#: src/Admin/AdminMenu.php:169
 msgid "Forms per page"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:174
+#: src/Admin/AdminMenu.php:185
 msgid "Submissions per page"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:213
+#: src/Admin/AdminMenu.php:224
 msgid "You do not have permission to create forms."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:227
+#: src/Admin/AdminMenu.php:238
 #: src/Forms/FormTemplates.php:180
 msgid "Untitled Form"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:236
+#: src/Admin/AdminMenu.php:247
 msgid "Form created."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:240
+#: src/Admin/AdminMenu.php:251
 msgid "Failed to create form. Please try again."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:270
-#: src/Admin/AdminMenu.php:284
+#: src/Admin/AdminMenu.php:281
 #: src/Admin/AdminMenu.php:295
+#: src/Admin/AdminMenu.php:306
+#: src/Admin/AdminMenu.php:319
 #: src/Admin/SamplesPage.php:113
 msgid "Unauthorized."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:299
+#: src/Admin/AdminMenu.php:325
 msgid "Disconnected from SampleHQ."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:314
+#: src/Admin/AdminMenu.php:340
 msgid "You do not have permission to manage forms."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:332
-#: src/Admin/AdminMenu.php:367
+#: src/Admin/AdminMenu.php:358
+#: src/Admin/AdminMenu.php:393
 #: src/Admin/FormsPage.php:217
 #: src/Admin/FormsPage.php:276
 #: src/Api/AdminFormsEndpoints.php:136
@@ -92,81 +93,83 @@ msgid "Form not found."
 msgstr ""
 
 #. translators: %s: original form title
-#: src/Admin/AdminMenu.php:339
+#: src/Admin/AdminMenu.php:365
 msgid "Copy of %s"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:348
+#: src/Admin/AdminMenu.php:374
 msgid "Form duplicated."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:352
+#: src/Admin/AdminMenu.php:378
 msgid "Failed to duplicate form."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:399
+#: src/Admin/AdminMenu.php:425
 msgid "Form moved to trash."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:412
+#: src/Admin/AdminMenu.php:438
 msgid "Form restored."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:443
+#: src/Admin/AdminMenu.php:469
 msgid "Form permanently deleted."
 msgstr ""
 
-#: src/Admin/AdminMenu.php:456
-#: src/Admin/AdminMenu.php:457
+#: src/Admin/AdminMenu.php:482
+#: src/Admin/AdminMenu.php:483
 #: src/Admin/DashboardPage.php:46
 #: src/Blocks/FormBlock.php:118
 msgid "SampleHQ Forms"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:467
-#: src/Admin/AdminMenu.php:468
+#: src/Admin/AdminMenu.php:493
+#: src/Admin/AdminMenu.php:494
 msgid "Dashboard"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:476
-#: src/Admin/AdminMenu.php:477
+#: src/Admin/AdminMenu.php:502
+#: src/Admin/AdminMenu.php:503
 #: src/Admin/SamplesPage.php:82
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/SamplePickerSettings.js:72
 msgid "Sample Library"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:485
-#: src/Admin/AdminMenu.php:486
+#: src/Admin/AdminMenu.php:511
+#: src/Admin/AdminMenu.php:512
 #: src/Admin/SampleEditPage.php:239
 #: src/Admin/SampleListTable.php:111
+#: src/Admin/SettingsPage.php:701
 msgid "Categories"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:494
-#: src/Admin/AdminMenu.php:495
+#: src/Admin/AdminMenu.php:520
+#: src/Admin/AdminMenu.php:521
 #: src/Admin/DashboardPage.php:66
 #: src/Admin/FormsPage.php:96
 msgid "Forms"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:502
-#: src/Admin/AdminMenu.php:511
+#: src/Admin/AdminMenu.php:528
+#: src/Admin/AdminMenu.php:537
 #: src/Admin/FormListTable.php:61
+#: src/Admin/SettingsPage.php:705
 #: src/Admin/SubmissionsPage.php:52
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:403
 msgid "Submissions"
 msgstr ""
 
-#: src/Admin/AdminMenu.php:531
-#: src/Admin/AdminMenu.php:532
-#: src/Admin/SettingsPage.php:37
+#: src/Admin/AdminMenu.php:557
+#: src/Admin/AdminMenu.php:558
+#: src/Admin/SettingsPage.php:55
 msgid "Settings"
 msgstr ""
 
 #: src/Admin/CategoriesPage.php:89
-#: src/Admin/SettingsPage.php:437
+#: src/Admin/SettingsPage.php:468
 msgid "Sample Categories"
 msgstr ""
 
@@ -191,8 +194,8 @@ msgstr ""
 #: src/Admin/SampleEditPage.php:425
 #: src/Admin/SampleListTable.php:109
 #: src/Admin/SubmissionListTable.php:93
-#: src/Admin/SubmissionsPage.php:453
-#: src/Privacy/PrivacyHandler.php:129
+#: src/Admin/SubmissionsPage.php:616
+#: src/Privacy/PrivacyHandler.php:171
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/constants.js:54
 msgid "Name"
@@ -247,6 +250,7 @@ msgstr ""
 
 #: src/Admin/CategoriesPage.php:162
 #: src/Admin/SampleEditPage.php:262
+#: src/Admin/SettingsPage.php:628
 msgid "Cancel"
 msgstr ""
 
@@ -281,7 +285,7 @@ msgstr ""
 
 #: src/Admin/CategoryListTable.php:107
 #: src/Admin/CategoryListTable.php:141
-#: src/Admin/SubmissionListTable.php:355
+#: src/Admin/SubmissionListTable.php:356
 msgid "Delete"
 msgstr ""
 
@@ -297,6 +301,7 @@ msgid "Delete this category?"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:57
+#: src/Admin/SettingsPage.php:702
 #: src/Forms/FormTemplates.php:68
 msgid "Samples"
 msgstr ""
@@ -366,42 +371,42 @@ msgid "Recent Submissions"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:234
-#: src/Admin/SubmissionListTable.php:493
+#: src/Admin/SubmissionListTable.php:494
 msgid "Filter by form"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:241
-#: src/Admin/SubmissionListTable.php:496
+#: src/Admin/SubmissionListTable.php:497
 msgid "All Forms"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:252
-#: src/Admin/SubmissionListTable.php:538
+#: src/Admin/SubmissionListTable.php:539
 msgid "No submissions yet. Once visitors submit your forms, they will appear here."
 msgstr ""
 
 #: src/Admin/DashboardPage.php:263
-#: src/Admin/SettingsPage.php:45
+#: src/Admin/SettingsPage.php:63
 #: src/Admin/SubmissionListTable.php:92
-#: src/Admin/SubmissionsPage.php:456
+#: src/Admin/SubmissionsPage.php:619
 #: src/Forms/FormTemplates.php:267
-#: src/Privacy/PrivacyHandler.php:125
+#: src/Privacy/PrivacyHandler.php:167
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/constants.js:34
 msgid "Email"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:265
-#: src/Admin/SettingsPage.php:343
+#: src/Admin/SettingsPage.php:374
 #: src/Admin/SubmissionListTable.php:94
-#: src/Admin/SubmissionsPage.php:470
+#: src/Admin/SubmissionsPage.php:633
 msgid "Form"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:266
 #: src/Admin/SampleListTable.php:114
 #: src/Admin/SubmissionListTable.php:97
-#: src/Privacy/PrivacyHandler.php:145
+#: src/Privacy/PrivacyHandler.php:187
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/constants.js:84
 msgid "Date"
@@ -416,7 +421,7 @@ msgid "Status"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:277
-#: src/Admin/SubmissionsPage.php:464
+#: src/Admin/SubmissionsPage.php:627
 msgid "Unknown"
 msgstr ""
 
@@ -498,9 +503,9 @@ msgstr ""
 #: src/Admin/FormListTable.php:78
 #: src/Admin/FormListTable.php:203
 #: src/Admin/SampleListTable.php:276
-#: src/Admin/SubmissionListTable.php:131
-#: src/Admin/SubmissionListTable.php:344
-#: src/Admin/SubmissionsPage.php:432
+#: src/Admin/SubmissionListTable.php:132
+#: src/Admin/SubmissionListTable.php:345
+#: src/Admin/SubmissionsPage.php:595
 msgid "Restore"
 msgstr ""
 
@@ -508,8 +513,8 @@ msgstr ""
 #: src/Admin/FormListTable.php:204
 #: src/Admin/SampleListTable.php:139
 #: src/Admin/SampleListTable.php:277
-#: src/Admin/SubmissionListTable.php:135
-#: src/Admin/SubmissionsPage.php:442
+#: src/Admin/SubmissionListTable.php:136
+#: src/Admin/SubmissionsPage.php:605
 msgid "Delete Permanently"
 msgstr ""
 
@@ -525,7 +530,7 @@ msgstr ""
 
 #: src/Admin/FormListTable.php:86
 #: src/Admin/SubmissionListTable.php:127
-#: src/Admin/SubmissionsPage.php:423
+#: src/Admin/SubmissionsPage.php:586
 msgid "Move to Trash"
 msgstr ""
 
@@ -545,8 +550,8 @@ msgstr ""
 
 #: src/Admin/FormListTable.php:230
 #: src/Admin/SampleListTable.php:294
-#: src/Admin/SubmissionListTable.php:193
-#: src/Admin/SubmissionListTable.php:335
+#: src/Admin/SubmissionListTable.php:194
+#: src/Admin/SubmissionListTable.php:336
 msgid "Trash"
 msgstr ""
 
@@ -748,7 +753,7 @@ msgstr ""
 #: src/Admin/SampleEditPage.php:162
 #: src/Admin/SampleEditPage.php:371
 #: src/Admin/SampleEditPage.php:426
-#: src/Admin/SubmissionsPage.php:355
+#: src/Admin/SubmissionsPage.php:518
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/ConditionalLogicPanel.js:169
 #: assets/src/js/admin/form-builder/components/FieldSettings.js:468
@@ -789,7 +794,7 @@ msgid "SKU"
 msgstr ""
 
 #: src/Admin/SampleEditPage.php:228
-#: src/Admin/SettingsPage.php:448
+#: src/Admin/SettingsPage.php:479
 msgid "Max Quantity"
 msgstr ""
 
@@ -874,17 +879,17 @@ msgid "All Categories"
 msgstr ""
 
 #: src/Admin/SampleListTable.php:475
-#: src/Admin/SubmissionListTable.php:512
+#: src/Admin/SubmissionListTable.php:513
 msgid "Filter by date"
 msgstr ""
 
 #: src/Admin/SampleListTable.php:478
-#: src/Admin/SubmissionListTable.php:515
+#: src/Admin/SubmissionListTable.php:516
 msgid "All Dates"
 msgstr ""
 
 #: src/Admin/SampleListTable.php:488
-#: src/Admin/SubmissionListTable.php:525
+#: src/Admin/SubmissionListTable.php:526
 msgid "Filter"
 msgstr ""
 
@@ -929,133 +934,137 @@ msgstr ""
 msgid "Issues:"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:43
+#: src/Admin/SettingsPage.php:61
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/FieldSettings.js:190
 #: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:45
 msgid "General"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:44
+#: src/Admin/SettingsPage.php:62
 msgid "Spam Protection"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:46
+#: src/Admin/SettingsPage.php:64
 msgid "SampleHQ Connection"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:50
-#: src/Admin/SubmissionsPage.php:639
+#: src/Admin/SettingsPage.php:69
+msgid "Migration"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:73
+#: src/Admin/SubmissionsPage.php:830
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:156
+#: src/Admin/SettingsPage.php:186
 msgid "Settings saved."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:176
+#: src/Admin/SettingsPage.php:206
 msgid "Privacy & Data"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:180
+#: src/Admin/SettingsPage.php:210
 msgid "Collect IP Address"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:183
+#: src/Admin/SettingsPage.php:213
 msgid "Record IP address and user agent with submissions."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:185
+#: src/Admin/SettingsPage.php:215
 msgid "Used for spam protection and rate limiting."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:188
+#: src/Admin/SettingsPage.php:218
 msgid "IP Retention (days)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:191
+#: src/Admin/SettingsPage.php:221
 msgid "IP addresses older than this will be automatically purged."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:216
+#: src/Admin/SettingsPage.php:246
 msgid "Cloudflare Turnstile"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:218
+#: src/Admin/SettingsPage.php:248
 msgid "Cloudflare Turnstile adds an invisible CAPTCHA to your forms. Free at cloudflare.com/products/turnstile."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:221
+#: src/Admin/SettingsPage.php:251
 msgid "Site Key"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:225
+#: src/Admin/SettingsPage.php:256
 msgid "Secret Key"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:228
+#: src/Admin/SettingsPage.php:259
 msgid "Leave both fields empty to disable Turnstile. Existing honeypot and rate limiting remain active."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:234
+#: src/Admin/SettingsPage.php:265
 msgid "Built-in Protection"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:236
+#: src/Admin/SettingsPage.php:267
 msgid "The following protections are always active and require no configuration:"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:238
+#: src/Admin/SettingsPage.php:269
 msgid "Honeypot field -- hidden field that catches bots"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:239
+#: src/Admin/SettingsPage.php:270
 msgid "Rate limiting -- 10 submissions per form per IP per hour"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:240
+#: src/Admin/SettingsPage.php:271
 msgid "CSRF token -- prevents cross-site request forgery"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:269
+#: src/Admin/SettingsPage.php:300
 msgid "Admin Notification"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:273
+#: src/Admin/SettingsPage.php:304
 msgid "Send To"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:276
+#: src/Admin/SettingsPage.php:307
 msgid "Email address for admin notifications. Separate multiple addresses with commas. Leave blank to use the site admin email."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:278
+#: src/Admin/SettingsPage.php:309
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:285
 msgid "From Name"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:281
+#: src/Admin/SettingsPage.php:312
 msgid "Name shown in the \"From\" field of emails. Leave blank to use the site name."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:288
+#: src/Admin/SettingsPage.php:319
 msgid "Submitter Confirmation"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:292
+#: src/Admin/SettingsPage.php:323
 msgid "Confirmation Email"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:295
+#: src/Admin/SettingsPage.php:326
 msgid "Send a confirmation email to the person who submitted the form."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:297
+#: src/Admin/SettingsPage.php:328
 msgid "The confirmation includes their submitted data and a thank-you message. Individual forms can override this setting."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:316
+#: src/Admin/SettingsPage.php:347
 #: src/Forms/FormTemplates.php:60
 #: src/Forms/FormTemplates.php:64
 #: src/Forms/FormTemplates.php:69
@@ -1068,161 +1077,278 @@ msgstr ""
 msgid "Request a Sample"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:329
+#: src/Admin/SettingsPage.php:360
 msgid "WooCommerce Integration"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:333
+#: src/Admin/SettingsPage.php:364
 msgid "Enable"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:336
+#: src/Admin/SettingsPage.php:367
 msgid "Use WooCommerce products as your sample library."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:338
+#: src/Admin/SettingsPage.php:369
 msgid "When enabled, forms with WooCommerce source will show your WC products instead of the built-in sample library."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:345
+#: src/Admin/SettingsPage.php:376
 msgid "Default (first published form)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:358
+#: src/Admin/SettingsPage.php:389
 msgid "Which form to show when the product page button is clicked."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:366
+#: src/Admin/SettingsPage.php:397
 msgid "Product Page Button"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:370
+#: src/Admin/SettingsPage.php:401
 msgid "Button Text"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:373
+#: src/Admin/SettingsPage.php:404
 msgid "Label for the button on single product pages."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:381
+#: src/Admin/SettingsPage.php:412
 #: src/WooCommerce/ProductButton.php:112
 #: src/WooCommerce/ProductButton.php:114
 msgid "Free sample available"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:384
+#: src/Admin/SettingsPage.php:415
 msgid "Shop Page Badge"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:388
+#: src/Admin/SettingsPage.php:419
 msgid "Show Badge"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:391
+#: src/Admin/SettingsPage.php:422
 msgid "Show \"Free sample available\" badge on shop/archive product listings."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:394
+#: src/Admin/SettingsPage.php:425
 msgid "Badge Text"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:397
+#: src/Admin/SettingsPage.php:428
 msgid "Text shown below the Add to Cart button on shop pages."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:405
+#: src/Admin/SettingsPage.php:436
 msgid "Product Filter"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:409
+#: src/Admin/SettingsPage.php:440
 msgid "Which products"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:412
+#: src/Admin/SettingsPage.php:443
 msgid "All published products"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:413
+#: src/Admin/SettingsPage.php:444
 msgid "Only products with a specific tag"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:414
+#: src/Admin/SettingsPage.php:445
 msgid "Only products in specific categories"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:422
+#: src/Admin/SettingsPage.php:453
 msgid "Sample Tag"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:425
+#: src/Admin/SettingsPage.php:456
 msgid "Product tag slug that marks a product as sample-eligible (used when filter is \"tagged\")."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:444
+#: src/Admin/SettingsPage.php:475
 msgid "Product categories to include (used when filter is \"category\"). Hold Ctrl/Cmd to select multiple."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:451
+#: src/Admin/SettingsPage.php:482
 msgid "Maximum quantity per sample in the picker."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:469
+#: src/Admin/SettingsPage.php:500
 msgid "WooCommerce integration enabled. The \"Request a Sample\" button will now appear on eligible product pages."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:511
+#: src/Admin/SettingsPage.php:533
+msgid "Successfully connected to SampleHQ!"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:557
 msgid "Connected"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:515
+#: src/Admin/SettingsPage.php:561
 msgid "Connection Details"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:519
+#: src/Admin/SettingsPage.php:565
 msgid "Workspace"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:523
+#: src/Admin/SettingsPage.php:569
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/constants.js:89
 msgid "URL"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:529
+#: src/Admin/SettingsPage.php:575
 msgid "Connected by"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:535
+#: src/Admin/SettingsPage.php:581
 msgid "Connected on"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:546
+#: src/Admin/SettingsPage.php:592
 msgid "Disconnect from SampleHQ? Submission sync will stop."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:547
+#: src/Admin/SettingsPage.php:593
 msgid "Disconnect"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:561
+#: src/Admin/SettingsPage.php:612
+msgid "Migration Wizard"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:617
+#: src/Admin/SettingsPage.php:699
+msgid "Migrate your categories, samples, and optionally submissions to your SampleHQ workspace."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:618
+msgid "Loading preview..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:623
+msgid "Starting..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:633
+msgid "Migration complete."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:703
+msgid "plan limit:"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:703
+msgid "available"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:709
+msgid "Also migrate submissions"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:712
+msgid "Start Migration"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:715
+msgid "Nothing to migrate. Your sample library is empty."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:729
+msgid "Failed to load preview. Please reload the page."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:740
+msgid "Migration already running..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:766
+msgid "Lost connection. Please reload the page."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:774
+msgid "Migrating categories..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:775
+msgid "Migrating samples..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:776
+msgid "Migrating submissions..."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:777
+msgid "Migration error"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:778
+msgid "Migration cancelled"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:794
+msgid "Categories created"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:795
+msgid "Categories updated"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:796
+msgid "Samples created"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:797
+msgid "Samples updated"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:798
+msgid "Samples skipped"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:801
+msgid "Submissions accepted"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:802
+msgid "Submissions duplicates"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:808
+msgid "Plan limit reached. Upgrade your plan to migrate more samples."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:812
+msgid "error(s) occurred during migration."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:816
+msgid "Migration cancelled."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:856
 msgid "Not connected"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:565
-#: src/Admin/SettingsPage.php:575
+#: src/Admin/SettingsPage.php:860
+#: src/Admin/SettingsPage.php:874
 msgid "Connect to SampleHQ"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:568
+#: src/Admin/SettingsPage.php:863
 msgid "Connect this plugin to your SampleHQ workspace to sync submissions to the cloud platform. If you do not have an account yet, one will be created during the connection process."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:570
+#: src/Admin/SettingsPage.php:865
 msgid "When connected, new submissions are saved locally and then pushed to your workspace where you can manage them alongside CRM integrations, shipping, and team workflows."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:579
-msgid "Connection will be available in a future update. The plugin works fully without connecting."
+#: src/Admin/SettingsPage.php:878
+msgid "The plugin works fully without connecting. Connecting enables cloud sync for submissions."
 msgstr ""
 
 #: src/Admin/SubmissionListTable.php:96
@@ -1234,38 +1360,43 @@ msgid "Mark as Read"
 msgstr ""
 
 #: src/Admin/SubmissionListTable.php:126
-#: src/Admin/SubmissionsPage.php:414
+#: src/Admin/SubmissionsPage.php:577
 msgid "Mark as Spam"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:169
+#: src/Admin/SubmissionListTable.php:128
+#: src/Admin/SubmissionsPage.php:676
+msgid "Retry Sync"
+msgstr ""
+
+#: src/Admin/SubmissionListTable.php:170
 #: src/Fields/SamplePickerField.php:193
 msgid "All"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:177
+#: src/Admin/SubmissionListTable.php:178
 msgid "New"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:185
-#: src/Admin/SubmissionListTable.php:326
+#: src/Admin/SubmissionListTable.php:186
+#: src/Admin/SubmissionListTable.php:327
 msgid "Spam"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:317
+#: src/Admin/SubmissionListTable.php:318
 msgid "View"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:354
-#: src/Admin/SubmissionsPage.php:441
+#: src/Admin/SubmissionListTable.php:355
+#: src/Admin/SubmissionsPage.php:604
 msgid "Delete permanently?"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:411
+#: src/Admin/SubmissionListTable.php:412
 msgid "Deleted"
 msgstr ""
 
-#: src/Admin/SubmissionListTable.php:540
+#: src/Admin/SubmissionListTable.php:541
 msgid "View Forms"
 msgstr ""
 
@@ -1273,134 +1404,195 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:79
+#: src/Admin/SubmissionsPage.php:80
 msgid "Search Submissions"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:172
+#. translators: 1: number of failures, 2: opening anchor tag, 3: closing anchor tag
+#: src/Admin/SubmissionsPage.php:165
+msgid "%1$d submission failed due to a connection issue. %2$sReconnect in Settings%3$s."
+msgid_plural "%1$d submissions failed due to a connection issue. %2$sReconnect in Settings%3$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of failures
+#: src/Admin/SubmissionsPage.php:180
+msgid "%d submission failed due to a plan limit."
+msgid_plural "%d submissions failed due to a plan limit."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of failures
+#: src/Admin/SubmissionsPage.php:193
+msgid "%d submission failed to sync."
+msgid_plural "%d submissions failed to sync."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/SubmissionsPage.php:209
+msgid "Sync Issues"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:213
+msgid "Retry All Failed"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:246
 msgid "Submission starred."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:176
+#: src/Admin/SubmissionsPage.php:250
 msgid "Submission unstarred."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:180
+#: src/Admin/SubmissionsPage.php:254
 msgid "Submission marked as spam."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:184
+#: src/Admin/SubmissionsPage.php:258
 msgid "Submission moved to trash."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:188
+#: src/Admin/SubmissionsPage.php:262
 msgid "Submission restored."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:192
+#: src/Admin/SubmissionsPage.php:266
 msgid "Submission permanently deleted."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:194
-#: src/Admin/SubmissionsPage.php:321
+#: src/Admin/SubmissionsPage.php:268
+#: src/Admin/SubmissionsPage.php:484
 #: src/Api/AdminSubmissionsEndpoints.php:187
 msgid "Submission not found."
 msgstr ""
 
+#: src/Admin/SubmissionsPage.php:274
+msgid "Sync retry scheduled."
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:276
+msgid "Could not retry sync. Check connection or submission status."
+msgstr ""
+
 #. translators: %d: number of submissions affected
-#: src/Admin/SubmissionsPage.php:263
+#: src/Admin/SubmissionsPage.php:354
 msgid "%d submission(s) updated."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:335
+#. translators: %d: number of submissions queued for retry
+#: src/Admin/SubmissionsPage.php:392
+msgid "%d sync retry(s) scheduled."
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:394
+msgid "No submissions could be retried. Check your connection status."
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:498
 msgid "Submission"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:338
+#: src/Admin/SubmissionsPage.php:501
 msgid "Back to Submissions"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:350
+#: src/Admin/SubmissionsPage.php:513
 msgid "Submitted Fields"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:354
+#: src/Admin/SubmissionsPage.php:517
 msgid "Field"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:370
+#: src/Admin/SubmissionsPage.php:533
 msgid "No field data submitted."
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:387
+#: src/Admin/SubmissionsPage.php:550
 msgid "Actions"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:391
+#: src/Admin/SubmissionsPage.php:554
 msgid "Status:"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:396
+#: src/Admin/SubmissionsPage.php:559
 msgid "Unstar"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:396
+#: src/Admin/SubmissionsPage.php:559
 msgid "Star"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:449
+#: src/Admin/SubmissionsPage.php:612
 msgid "Contact"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:467
+#: src/Admin/SubmissionsPage.php:630
 msgid "Details"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:476
+#: src/Admin/SubmissionsPage.php:639
 msgid "Source"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:478
+#: src/Admin/SubmissionsPage.php:641
 msgid "IP"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:480
+#: src/Admin/SubmissionsPage.php:643
 msgid "Submitted"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:483
-msgid "Yes"
-msgstr ""
-
-#: src/Admin/SubmissionsPage.php:484
-msgid "No"
-msgstr ""
-
-#: src/Admin/SubmissionsPage.php:485
+#: src/Admin/SubmissionsPage.php:647
+#: src/Admin/SubmissionsPage.php:651
+#: src/Admin/SubmissionsPage.php:664
 msgid "Synced"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:530
+#: src/Admin/SubmissionsPage.php:648
+msgid "Yes"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:652
+msgid "Failed"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:653
+msgid "Error"
+msgstr ""
+
+#. translators: %d: number of attempts
+#: src/Admin/SubmissionsPage.php:658
+msgid "%d attempts"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:665
+msgid "No"
+msgstr ""
+
+#: src/Admin/SubmissionsPage.php:721
 msgid "Selected Samples"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:535
+#: src/Admin/SubmissionsPage.php:726
 msgid "Sample"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:536
+#: src/Admin/SubmissionsPage.php:727
 msgid "Quantity"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:578
+#: src/Admin/SubmissionsPage.php:769
 msgid "Deleted Sample"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:630
+#: src/Admin/SubmissionsPage.php:821
 msgid "deleted"
 msgstr ""
 
-#: src/Admin/SubmissionsPage.php:632
+#: src/Admin/SubmissionsPage.php:823
 msgid "Deleted Product"
 msgstr ""
 
@@ -1421,6 +1613,42 @@ msgstr ""
 
 #: src/Blocks/FormBlock.php:137
 msgid "Please select a form in the block settings."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:241
+msgid "No pending connection. Please try again."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:248
+msgid "Connection state mismatch. Please try again."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:252
+msgid "Connection expired. Please try again."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:256
+msgid "This connection was initiated by a different user. Please ask them to complete it."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:263
+msgid "Invalid callback data."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:269
+msgid "Invalid connection signature."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:276
+msgid "Could not decode connection data."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:282
+msgid "Connection data is incomplete."
+msgstr ""
+
+#: src/Connection/ConnectionManager.php:300
+msgid "Failed to encrypt the connection secret. Please try again."
 msgstr ""
 
 #: src/Elementor/FormWidget.php:39
@@ -1702,7 +1930,7 @@ msgstr ""
 msgid "An error occurred while saving your submission. Please reload the page and try again."
 msgstr ""
 
-#: src/Forms/FormProcessor.php:275
+#: src/Forms/FormProcessor.php:300
 #: src/Forms/FormTemplates.php:346
 #: assets/build/form-builder.js:1
 #: assets/src/js/admin/form-builder/components/FormSettingsPanel.js:31
@@ -1853,43 +2081,82 @@ msgstr ""
 msgid "Request Samples"
 msgstr ""
 
-#: src/Plugin.php:434
-#: src/Plugin.php:460
+#: src/Plugin.php:529
+#: src/Plugin.php:555
 msgid "SampleHQ Form:"
 msgstr ""
 
 #. translators: %s: error reason
-#: src/Plugin.php:438
+#: src/Plugin.php:533
 msgid "Turnstile CAPTCHA verification is currently failing (%s). Form submissions with CAPTCHA enabled will be blocked until the issue resolves."
 msgstr ""
 
-#: src/Plugin.php:461
+#: src/Plugin.php:556
 msgid "The upload directory (wp-content/uploads/shqf/) is publicly accessible. Uploaded files are not protected. If you are using Nginx, add this to your server block:"
 msgstr ""
 
-#: src/Privacy/PrivacyHandler.php:81
+#: src/Privacy/PrivacyHandler.php:90
+#: src/Privacy/PrivacyHandler.php:206
+msgid "Form Submissions"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:91
+msgid "When a visitor submits a form, we collect the information entered in the form fields (such as name, email address, company, phone, address, and selected samples). We also record the page URL where the form was submitted and the submission timestamp. Submissions are stored in the site database and can be exported or deleted through the WordPress personal data tools."
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:93
+msgid "IP Addresses and Browser Data"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:94
+msgid "By default, this plugin records the visitor's IP address and browser user agent string with each form submission. IP addresses are used for spam protection (rate limiting). User agent strings are stored for diagnostic purposes. IP address and user agent collection can be disabled in the plugin settings. When enabled, this data can be configured to be automatically purged after a set number of days."
+msgstr ""
+
 #: src/Privacy/PrivacyHandler.php:96
+msgid "SampleHQ Platform (Optional)"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:97
+msgid "This plugin can optionally connect to SampleHQ (samplehq.io), a sample management platform. When connected, form submission data (name, email, company, phone, address, job title, message, selected samples, custom field values, the page URL where the form was submitted, and the submission timestamp) is sent to your SampleHQ workspace for processing. IP addresses and user agent strings are not sent to SampleHQ. No data is sent unless the site administrator explicitly connects the plugin to SampleHQ."
+msgstr ""
+
+#. translators: %s: URL to SampleHQ privacy policy
+#: src/Privacy/PrivacyHandler.php:100
+msgid "SampleHQ privacy policy: %s"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:104
+msgid "Cloudflare Turnstile (Optional)"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:105
+msgid "When Cloudflare Turnstile is enabled for spam protection, a verification token and the visitor's IP address are sent to the Cloudflare Turnstile API to confirm the submission is not automated. No form field data (name, email, etc.) is sent to Cloudflare. No data is sent to Cloudflare unless the site administrator configures Turnstile credentials in the plugin settings."
+msgstr ""
+
+#. translators: %s: URL to Cloudflare privacy policy
+#: src/Privacy/PrivacyHandler.php:108
+msgid "Cloudflare privacy policy: %s"
+msgstr ""
+
+#: src/Privacy/PrivacyHandler.php:123
+#: src/Privacy/PrivacyHandler.php:138
 msgid "SampleHQ Form Submissions"
 msgstr ""
 
-#: src/Privacy/PrivacyHandler.php:121
+#: src/Privacy/PrivacyHandler.php:163
 msgid "Submission ID"
 msgstr ""
 
-#: src/Privacy/PrivacyHandler.php:133
+#: src/Privacy/PrivacyHandler.php:175
 msgid "Source URL"
 msgstr ""
 
-#: src/Privacy/PrivacyHandler.php:137
+#: src/Privacy/PrivacyHandler.php:179
 msgid "IP Address"
 msgstr ""
 
-#: src/Privacy/PrivacyHandler.php:141
+#: src/Privacy/PrivacyHandler.php:183
 msgid "User Agent"
-msgstr ""
-
-#: src/Privacy/PrivacyHandler.php:161
-msgid "Form Submissions"
 msgstr ""
 
 #: src/Shortcode.php:97

@@ -34,6 +34,7 @@ Thumbs.db
 /phpcs.xml.dist
 /phpcs.xml
 /playwright.config.ts
+/playwright.herd.config.ts
 /playwright.woo.config.ts
 /phpstan.neon
 /phpstan-baseline.neon
