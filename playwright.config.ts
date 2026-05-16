@@ -22,7 +22,7 @@ export default defineConfig( {
 		},
 		{
 			name: 'chromium',
-			testIgnore: /responsive\/|woocommerce\//,
+			testIgnore: /responsive\/|woocommerce\/|connection-flow-herd/,
 			use: {
 				...devices[ 'Desktop Chrome' ],
 				storageState: 'tests/e2e/.auth/admin.json',
