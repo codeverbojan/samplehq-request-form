@@ -13,8 +13,7 @@ module.exports = {
 		'^lucide-react$': '<rootDir>/tests/js/__mocks__/lucide-react.js',
 		'^@dnd-kit/sortable$':
 			'<rootDir>/tests/js/__mocks__/@dnd-kit/sortable.js',
-		'^@dnd-kit/core$':
-			'<rootDir>/tests/js/__mocks__/@dnd-kit/core.js',
+		'^@dnd-kit/core$': '<rootDir>/tests/js/__mocks__/@dnd-kit/core.js',
 		'^@dnd-kit/utilities$':
 			'<rootDir>/tests/js/__mocks__/@dnd-kit/utilities.js',
 		'^@wordpress/components$':

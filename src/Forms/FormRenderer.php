@@ -272,13 +272,6 @@ class FormRenderer {
 
 		$html .= '</form>';
 
-		// Custom CSS (admin-authored, sanitized).
-		// The form wrapper has id="shqf-form-{id}-wrapper" for scoping.
-		$custom_css = $appearance['custom_css'] ?? '';
-		if ( is_string( $custom_css ) && '' !== $custom_css ) {
-			$html .= '<style>' . self::sanitize_custom_css( $custom_css ) . '</style>';
-		}
-
 		$html .= '</div>';
 
 		return $html;
@@ -525,29 +518,5 @@ class FormRenderer {
 		}
 
 		return ' style="' . esc_attr( implode( ';', $props ) ) . '"';
-	}
-
-	/**
-	 * Sanitize custom CSS.
-	 *
-	 * Strips HTML tags, legacy CSS XSS vectors, and external resource loading.
-	 *
-	 * @param string $css Raw CSS input.
-	 * @return string Sanitized CSS.
-	 */
-	private static function sanitize_custom_css( string $css ): string {
-		$css = wp_strip_all_tags( $css );
-
-		// Admin-authored CSS (requires manage_options) — blocklist is defense-in-depth, not exhaustive.
-		$css = preg_replace( '/expression\s*\(/i', '/* blocked */(', $css );
-		$css = preg_replace( '/url\s*\(\s*["\']?\s*javascript\s*:/i', 'url(/* blocked */', $css );
-		$css = preg_replace( '/url\s*\(\s*["\']?\s*data\s*:/i', 'url(/* blocked */', $css );
-		$css = preg_replace( '/behavior\s*:/i', '/* blocked */:', $css );
-		$css = preg_replace( '/-moz-binding\s*:/i', '/* blocked */:', $css );
-
-		// Strip external resource loading.
-		$css = preg_replace( '/@import\b/i', '/* blocked */', $css );
-
-		return $css;
 	}
 }

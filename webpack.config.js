@@ -23,6 +23,14 @@ module.exports = {
 			__dirname,
 			'assets/src/js/public/woo-product-page.js'
 		),
+		'sample-edit-page': path.resolve(
+			__dirname,
+			'assets/src/js/admin/sample-edit-page.js'
+		),
+		'migration-wizard': path.resolve(
+			__dirname,
+			'assets/src/js/admin/migration-wizard.js'
+		),
 		'blocks/form-block/index': path.resolve(
 			__dirname,
 			'assets/src/js/blocks/form-block/index.js'

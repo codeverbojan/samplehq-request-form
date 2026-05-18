@@ -597,7 +597,7 @@ class SettingsPage {
 	}
 
 	/**
-	 * Render the disconnected state of the connection tab.
+	 * Render the Migration settings tab.
 	 *
 	 * @return void
 	 */
@@ -642,207 +642,52 @@ class SettingsPage {
 	}
 
 	/**
-	 * Render the inline JavaScript for the migration wizard.
+	 * Enqueue the migration-wizard script with localized strings.
 	 *
 	 * @return void
 	 */
 	private function render_migration_js(): void {
-		?>
-		<script>
-		(function() {
-			var wizard = document.getElementById('shqf-migration-wizard');
-			if (!wizard) return;
+		wp_enqueue_script(
+			'shqf-migration-wizard',
+			SHQF_URL . 'assets/build/migration-wizard.js',
+			[],
+			SHQF_VERSION,
+			true
+		);
 
-			var restUrl = wizard.getAttribute('data-rest-url');
-			var nonce = wizard.getAttribute('data-nonce');
-			var pollTimer = null;
-			var pollErrors = 0;
-
-			function api(method, endpoint, body) {
-				var opts = {
-					method: method,
-					headers: { 'X-WP-Nonce': nonce, 'Content-Type': 'application/json' }
-				};
-				if (body) opts.body = JSON.stringify(body);
-				return fetch(restUrl + endpoint, opts).then(function(r) {
-					if (!r.ok) {
-						return r.json().catch(function() { return {}; }).then(function(d) {
-							var err = new Error('HTTP ' + r.status);
-							err.data = d;
-							throw err;
-						});
-					}
-					return r.json();
-				});
-			}
-
-			function showStep(id) {
-				['shqf-mig-preview', 'shqf-mig-running', 'shqf-mig-complete'].forEach(function(s) {
-					document.getElementById(s).style.display = (s === id) ? '' : 'none';
-				});
-			}
-
-			function loadPreview() {
-				api('GET', 'preview').then(function(data) {
-					var el = document.getElementById('shqf-mig-preview');
-					if (data.error) {
-						el.innerHTML = '<div class="notice notice-error inline"><p>' + esc(data.error) + '</p></div>';
-						return;
-					}
-
-					var platform = data.platform || {};
-					var maxSamples = platform.max_samples || 0;
-					var currentSamples = platform.current_samples || 0;
-					var available = maxSamples > 0 ? Math.max(0, maxSamples - currentSamples) : data.samples;
-					var limited = maxSamples > 0 && data.samples > available;
-
-					var html = '<p><?php echo esc_js( __( 'Migrate your categories, samples, and optionally submissions to your SampleHQ workspace.', 'samplehq-request-form' ) ); ?></p>';
-					html += '<table class="widefat striped" style="max-width:400px;">';
-					html += '<tr><td><?php echo esc_js( __( 'Categories', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.categories + '</strong></td></tr>';
-					html += '<tr><td><?php echo esc_js( __( 'Samples', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.samples + '</strong>';
-					if (limited) html += ' <em>(<?php echo esc_js( __( 'plan limit:', 'samplehq-request-form' ) ); ?> ' + available + ' <?php echo esc_js( __( 'available', 'samplehq-request-form' ) ); ?>)</em>';
-					html += '</td></tr>';
-					html += '<tr><td><?php echo esc_js( __( 'Submissions', 'samplehq-request-form' ) ); ?></td><td><strong>' + data.submissions + '</strong></td></tr>';
-					html += '</table>';
-
-					if (data.submissions > 0) {
-						html += '<p style="margin-top:12px;"><label><input type="checkbox" id="shqf-mig-include-subs"> <?php echo esc_js( __( 'Also migrate submissions', 'samplehq-request-form' ) ); ?></label></p>';
-					}
-
-					html += '<p style="margin-top:16px;"><button type="button" id="shqf-mig-start" class="button button-primary"><?php echo esc_js( __( 'Start Migration', 'samplehq-request-form' ) ); ?></button></p>';
-
-					if (data.categories === 0 && data.samples === 0 && data.submissions === 0) {
-						html = '<div class="notice notice-info inline"><p><?php echo esc_js( __( 'Nothing to migrate. Your sample library is empty.', 'samplehq-request-form' ) ); ?></p></div>';
-					}
-
-					el.innerHTML = html;
-
-					var startBtn = document.getElementById('shqf-mig-start');
-					if (startBtn) {
-						startBtn.addEventListener('click', function() {
-							startBtn.disabled = true;
-							var cb = document.getElementById('shqf-mig-include-subs');
-							startMigration(cb ? cb.checked : false);
-						});
-					}
-				}).catch(function() {
-					document.getElementById('shqf-mig-preview').innerHTML = '<div class="notice notice-error inline"><p><?php echo esc_js( __( 'Failed to load preview. Please reload the page.', 'samplehq-request-form' ) ); ?></p></div>';
-				});
-			}
-
-			function startMigration(includeSubs) {
-				showStep('shqf-mig-running');
-				api('POST', 'start', { include_submissions: includeSubs }).then(function(data) {
-					startPolling();
-				}).catch(function(err) {
-					var d = err.data || {};
-					if (d.code === 'migration_in_progress') {
-						document.getElementById('shqf-mig-phase').textContent = '<?php echo esc_js( __( 'Migration already running...', 'samplehq-request-form' ) ); ?>';
-						startPolling();
-					} else {
-						showStep('shqf-mig-preview');
-						loadPreview();
-					}
-				});
-			}
-
-			function startPolling() {
-				if (pollTimer) return;
-				pollErrors = 0;
-				pollTimer = setInterval(function() {
-					api('GET', 'progress').then(function(data) {
-						pollErrors = 0;
-						updateProgress(data);
-						if (data.phase === 'complete' || data.phase === 'cancelled' || data.phase === 'error') {
-							clearInterval(pollTimer);
-							pollTimer = null;
-							showComplete(data);
-						}
-					}).catch(function() {
-						pollErrors++;
-						if (pollErrors >= 3) {
-							clearInterval(pollTimer);
-							pollTimer = null;
-							document.getElementById('shqf-mig-phase').textContent = '<?php echo esc_js( __( 'Lost connection. Please reload the page.', 'samplehq-request-form' ) ); ?>';
-						}
-					});
-				}, 2000);
-			}
-
-			function updateProgress(data) {
-				var phases = {
-					categories: '<?php echo esc_js( __( 'Migrating categories...', 'samplehq-request-form' ) ); ?>',
-					samples: '<?php echo esc_js( __( 'Migrating samples...', 'samplehq-request-form' ) ); ?>',
-					submissions: '<?php echo esc_js( __( 'Migrating submissions...', 'samplehq-request-form' ) ); ?>',
-					error: '<?php echo esc_js( __( 'Migration error', 'samplehq-request-form' ) ); ?>',
-					cancelled: '<?php echo esc_js( __( 'Migration cancelled', 'samplehq-request-form' ) ); ?>'
-				};
-				document.getElementById('shqf-mig-phase').textContent = phases[data.phase] || data.phase;
-
-				var total = (data.categories_total || 0) + (data.samples_total || 0) + (data.submissions_total || 0);
-				var done = (data.categories_completed || 0) + (data.samples_completed || 0) + (data.submissions_completed || 0);
-				var pct = total > 0 ? Math.round((done / total) * 100) : 0;
-
-				document.getElementById('shqf-mig-bar').style.width = pct + '%';
-				document.getElementById('shqf-mig-detail').textContent = done + ' / ' + total;
-			}
-
-			function showComplete(data) {
-				showStep('shqf-mig-complete');
-				var el = document.getElementById('shqf-mig-summary');
-				var html = '<table class="widefat striped" style="max-width:500px;margin-top:12px;">';
-				html += '<tr><td><?php echo esc_js( __( 'Categories created', 'samplehq-request-form' ) ); ?></td><td>' + (data.categories_created || 0) + '</td></tr>';
-				html += '<tr><td><?php echo esc_js( __( 'Categories updated', 'samplehq-request-form' ) ); ?></td><td>' + (data.categories_updated || 0) + '</td></tr>';
-				html += '<tr><td><?php echo esc_js( __( 'Samples created', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_created || 0) + '</td></tr>';
-				html += '<tr><td><?php echo esc_js( __( 'Samples updated', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_updated || 0) + '</td></tr>';
-				html += '<tr><td><?php echo esc_js( __( 'Samples skipped', 'samplehq-request-form' ) ); ?></td><td>' + (data.samples_skipped || 0) + '</td></tr>';
-
-				if (data.include_submissions) {
-					html += '<tr><td><?php echo esc_js( __( 'Submissions accepted', 'samplehq-request-form' ) ); ?></td><td>' + (data.submissions_accepted || 0) + '</td></tr>';
-					html += '<tr><td><?php echo esc_js( __( 'Submissions duplicates', 'samplehq-request-form' ) ); ?></td><td>' + (data.submissions_duplicates || 0) + '</td></tr>';
-				}
-
-				html += '</table>';
-
-				if (data.plan_limit_reached) {
-					html += '<div class="notice notice-warning inline" style="margin-top:12px;"><p><?php echo esc_js( __( 'Plan limit reached. Upgrade your plan to migrate more samples.', 'samplehq-request-form' ) ); ?></p></div>';
-				}
-
-				if (data.errors && data.errors.length > 0) {
-					html += '<div class="notice notice-error inline" style="margin-top:12px;"><p>' + data.errors.length + ' <?php echo esc_js( __( 'error(s) occurred during migration.', 'samplehq-request-form' ) ); ?></p></div>';
-				}
-
-				if (data.phase === 'cancelled') {
-					document.querySelector('#shqf-mig-complete .notice-success p strong').textContent = '<?php echo esc_js( __( 'Migration cancelled.', 'samplehq-request-form' ) ); ?>';
-				}
-
-				el.innerHTML = html;
-			}
-
-			function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-			// Cancel handler
-			document.getElementById('shqf-mig-cancel').addEventListener('click', function() {
-				api('POST', 'cancel');
-			});
-
-			// Check for in-progress migration on load
-			api('GET', 'progress').then(function(data) {
-				if (data.phase && data.phase !== 'idle' && data.phase !== 'complete' && data.phase !== 'cancelled' && data.phase !== 'error') {
-					showStep('shqf-mig-running');
-					updateProgress(data);
-					startPolling();
-				} else if (data.phase === 'complete' || data.phase === 'cancelled') {
-					showComplete(data);
-				} else {
-					loadPreview();
-				}
-			}).catch(function() {
-				loadPreview();
-			});
-		})();
-		</script>
-		<?php
+		wp_localize_script(
+			'shqf-migration-wizard',
+			'shqfMigration',
+			[
+				'migrateDescription' => __( 'Migrate your categories, samples, and optionally submissions to your SampleHQ workspace.', 'samplehq-request-form' ),
+				'categories'         => __( 'Categories', 'samplehq-request-form' ),
+				'samples'            => __( 'Samples', 'samplehq-request-form' ),
+				'submissions'        => __( 'Submissions', 'samplehq-request-form' ),
+				'planLimit'          => __( 'plan limit:', 'samplehq-request-form' ),
+				'available'          => __( 'available', 'samplehq-request-form' ),
+				'alsoMigrateSubs'    => __( 'Also migrate submissions', 'samplehq-request-form' ),
+				'startMigration'     => __( 'Start Migration', 'samplehq-request-form' ),
+				'nothingToMigrate'   => __( 'Nothing to migrate. Your sample library is empty.', 'samplehq-request-form' ),
+				'failedPreview'      => __( 'Failed to load preview. Please reload the page.', 'samplehq-request-form' ),
+				'alreadyRunning'     => __( 'Migration already running...', 'samplehq-request-form' ),
+				'lostConnection'     => __( 'Lost connection. Please reload the page.', 'samplehq-request-form' ),
+				'migratingCats'      => __( 'Migrating categories...', 'samplehq-request-form' ),
+				'migratingSamples'   => __( 'Migrating samples...', 'samplehq-request-form' ),
+				'migratingSubs'      => __( 'Migrating submissions...', 'samplehq-request-form' ),
+				'migrationError'     => __( 'Migration error', 'samplehq-request-form' ),
+				'migrationCancelled' => __( 'Migration cancelled', 'samplehq-request-form' ),
+				'catsCreated'        => __( 'Categories created', 'samplehq-request-form' ),
+				'catsUpdated'        => __( 'Categories updated', 'samplehq-request-form' ),
+				'samplesCreated'     => __( 'Samples created', 'samplehq-request-form' ),
+				'samplesUpdated'     => __( 'Samples updated', 'samplehq-request-form' ),
+				'samplesSkipped'     => __( 'Samples skipped', 'samplehq-request-form' ),
+				'subsAccepted'       => __( 'Submissions accepted', 'samplehq-request-form' ),
+				'subsDuplicates'     => __( 'Submissions duplicates', 'samplehq-request-form' ),
+				'planLimitReached'   => __( 'Plan limit reached. Upgrade your plan to migrate more samples.', 'samplehq-request-form' ),
+				'errorsOccurred'     => __( 'error(s) occurred during migration.', 'samplehq-request-form' ),
+				'cancelled'          => __( 'Migration cancelled.', 'samplehq-request-form' ),
+			]
+		);
 	}
 
 	/**

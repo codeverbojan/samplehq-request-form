@@ -331,7 +331,6 @@ class FormTemplates {
 			'border_radius'     => 8,
 			'layout'            => 'single_column',
 			'label_position'    => 'above',
-			'custom_css'        => '',
 		];
 	}
 

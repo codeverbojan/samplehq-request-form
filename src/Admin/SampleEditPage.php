@@ -374,153 +374,32 @@ class SampleEditPage {
 	}
 
 	/**
-	 * Render inline JavaScript for the sample edit page.
-	 *
-	 * Handles WP Media Library uploads and inline category creation.
+	 * Enqueue the sample-edit-page script with localized strings.
 	 *
 	 * @return void
 	 */
 	private function render_media_js(): void {
-		?>
-		<script>
-		jQuery(function($){
-			// --- Image gallery ---
-			var $gallery = $('#shqf-image-gallery');
+		wp_enqueue_script(
+			'shqf-sample-edit',
+			SHQF_URL . 'assets/build/sample-edit-page.js',
+			[ 'jquery', 'wp-api-request' ],
+			SHQF_VERSION,
+			true
+		);
 
-			$('#shqf-add-images').on('click', function(e) {
-				e.preventDefault();
-				var frame = wp.media({
-					title: <?php echo wp_json_encode( __( 'Select Sample Images', 'samplehq-request-form' ) ); ?>,
-					button: { text: <?php echo wp_json_encode( __( 'Add Images', 'samplehq-request-form' ) ); ?> },
-					multiple: true
-				});
-				frame.on('select', function() {
-					var selection = frame.state().get('selection');
-					selection.each(function(attachment) {
-						var data = attachment.toJSON();
-						var url  = data.sizes && data.sizes.thumbnail
-							? data.sizes.thumbnail.url
-							: data.url;
-						// Skip if already in gallery.
-						if ($gallery.find('[data-id="' + data.id + '"]').length) return;
-						var $item = $('<div class="shqf-gallery-item" data-id="' + data.id + '">'
-							+ '<img src="' + url + '" alt="" />'
-							+ '<button type="button" class="shqf-gallery-remove" aria-label="<?php echo esc_attr__( 'Remove image', 'samplehq-request-form' ); ?>">&times;</button>'
-							+ '<input type="hidden" name="image_ids[]" value="' + data.id + '" />'
-							+ '</div>');
-						$gallery.append($item);
-					});
-				});
-				frame.open();
-			});
-
-			$gallery.on('click', '.shqf-gallery-remove', function(e) {
-				e.preventDefault();
-				$(this).closest('.shqf-gallery-item').remove();
-			});
-
-			// --- Custom fields ---
-			$('#shqf-add-custom-field').on('click', function() {
-				var row = '<tr class="shqf-cf-row">'
-					+ '<td><input type="text" name="cf_keys[]" class="widefat" placeholder="<?php echo esc_attr__( 'Name', 'samplehq-request-form' ); ?>" /></td>'
-					+ '<td><input type="text" name="cf_values[]" class="widefat" placeholder="<?php echo esc_attr__( 'Value', 'samplehq-request-form' ); ?>" /></td>'
-					+ '<td><button type="button" class="button shqf-cf-remove">&times;</button></td>'
-					+ '</tr>';
-				$('#shqf-custom-fields tbody').append(row);
-			});
-
-			$('#shqf-custom-fields').on('click', '.shqf-cf-remove', function() {
-				$(this).closest('tr').remove();
-			});
-
-			// --- Inline category creation ---
-			var $addForm    = $('#shqf-add-category-form'),
-				$addToggle  = $('#shqf-add-cat-toggle'),
-				$addCancel  = $('#shqf-add-cat-cancel'),
-				$addBtn     = $('#shqf-add-cat-btn'),
-				$nameInput  = $('#shqf-new-cat-name'),
-				$parentSel  = $('#shqf-new-cat-parent'),
-				$spinner    = $('#shqf-add-cat-spinner'),
-				$checklist  = $('#shqf-category-checklist');
-
-			$addToggle.on('click', function(e) {
-				e.preventDefault();
-				$addForm.slideDown(200);
-				$nameInput.focus();
-			});
-
-			$addCancel.on('click', function(e) {
-				e.preventDefault();
-				$addForm.slideUp(200);
-				$nameInput.val('');
-				$parentSel.val('0');
-			});
-
-			$addBtn.on('click', function() {
-				var name     = $.trim($nameInput.val()),
-					parentId = parseInt($parentSel.val(), 10) || 0;
-
-				if (!name) {
-					$nameInput.focus();
-					return;
-				}
-
-				$addBtn.prop('disabled', true);
-				$spinner.addClass('is-active');
-
-				wp.apiRequest({
-					path: '/samplehq-form/v1/categories',
-					method: 'POST',
-					data: { name: name, parent_id: parentId }
-				}).done(function(cat) {
-					// Add to checklist (checked by default).
-					var $li = $('<li><label><input type="checkbox" name="categories[]" value="' + cat.id + '" checked /> ' + $('<span>').text(cat.name).html() + '</label></li>');
-
-					if (parentId > 0) {
-						// Find parent li and append as nested ul.
-						var $parentLi = $checklist.find('input[value="' + parentId + '"]').closest('li');
-						var $subUl = $parentLi.children('ul.categorychecklist');
-						if (!$subUl.length) {
-							$subUl = $('<ul class="categorychecklist"></ul>').appendTo($parentLi);
-						}
-						$subUl.append($li);
-					} else {
-						var $topUl = $checklist.children('ul.categorychecklist');
-						if (!$topUl.length) {
-							$checklist.empty();
-							$topUl = $('<ul class="categorychecklist"></ul>').appendTo($checklist);
-						}
-						$topUl.append($li);
-					}
-
-					// Add to parent dropdown for future subcategories.
-					$parentSel.append('<option value="' + cat.id + '">' + $('<span>').text(cat.name).html() + '</option>');
-
-					// Reset.
-					$nameInput.val('');
-					$parentSel.val('0');
-					$nameInput.focus();
-				}).fail(function(resp) {
-					var msg = resp.responseJSON && resp.responseJSON.message
-						? resp.responseJSON.message
-						: <?php echo wp_json_encode( __( 'Failed to create category.', 'samplehq-request-form' ) ); ?>;
-					window.alert(msg);
-				}).always(function() {
-					$addBtn.prop('disabled', false);
-					$spinner.removeClass('is-active');
-				});
-			});
-
-			// Allow Enter in name field to submit.
-			$nameInput.on('keypress', function(e) {
-				if (e.which === 13) {
-					e.preventDefault();
-					$addBtn.trigger('click');
-				}
-			});
-		});
-		</script>
-		<?php
+		wp_localize_script(
+			'shqf-sample-edit',
+			'shqfSampleEdit',
+			[
+				'selectTitle'      => __( 'Select Sample Images', 'samplehq-request-form' ),
+				'addButton'        => __( 'Add Images', 'samplehq-request-form' ),
+				'removeLabel'      => __( 'Remove image', 'samplehq-request-form' ),
+				'namePlaceholder'  => __( 'Name', 'samplehq-request-form' ),
+				'valuePlaceholder' => __( 'Value', 'samplehq-request-form' ),
+				'createCatFail'    => __( 'Failed to create category.', 'samplehq-request-form' ),
+				'catEndpoint'      => '/samplehq-form/v1/categories',
+			]
+		);
 	}
 
 	/**
