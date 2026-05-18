@@ -29,6 +29,10 @@ module.exports = {
 			__dirname,
 			'assets/src/js/admin/sample-edit-page.js'
 		),
+		'admin-utils': path.resolve(
+			__dirname,
+			'assets/src/js/admin/admin-utils.js'
+		),
 		'migration-wizard': path.resolve(
 			__dirname,
 			'assets/src/js/admin/migration-wizard.js'

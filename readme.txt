@@ -4,7 +4,7 @@ Tags: sample request, form builder, product samples, sample management, request 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -171,6 +171,10 @@ screen reader announcements, and focus management following WCAG 2.2 Level AA pr
 8. Email notification settings with admin and submitter confirmation options.
 
 == Changelog ==
+
+= 1.0.6 =
+* Fixed: moved inline JavaScript event handlers to enqueued admin-utils.js file
+* Fixed: replaced upsell language in migration wizard plan-limit message
 
 = 1.0.5 =
 * Fixed: scoped admin notices to plugin pages only (guideline 11 compliance)

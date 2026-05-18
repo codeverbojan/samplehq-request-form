@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.6] - 2026-05-18
+
+### Fixed
+
+- Moved inline JavaScript event handlers (`onclick`, `onchange`) to enqueued `admin-utils.js` file
+- Replaced upsell language in migration wizard plan-limit message
+
 ## [1.0.5] - 2026-05-18
 
 ### Fixed

@@ -136,8 +136,8 @@ class CategoryListTable extends \WP_List_Table {
 
 		$actions = [
 			'edit'   => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'samplehq-request-form' ) . '</a>',
-			'delete' => '<a href="' . esc_url( $delete_url ) . '" class="delete" onclick="return confirm(\''
-				. esc_js( __( 'Delete this category?', 'samplehq-request-form' ) ) . '\');">'
+			'delete' => '<a href="' . esc_url( $delete_url ) . '" class="delete" data-shqf-confirm="'
+				. esc_attr__( 'Delete this category?', 'samplehq-request-form' ) . '">'
 				. esc_html__( 'Delete', 'samplehq-request-form' ) . '</a>',
 		];
 

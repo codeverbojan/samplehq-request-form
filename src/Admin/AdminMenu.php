@@ -140,6 +140,14 @@ class AdminMenu {
 			[],
 			SHQF_VERSION
 		);
+
+		wp_enqueue_script(
+			'shqf-admin-utils',
+			SHQF_URL . 'assets/build/admin-utils.js',
+			[],
+			SHQF_VERSION,
+			true
+		);
 	}
 
 	/**

@@ -233,11 +233,7 @@ class DashboardPage {
 			echo '<label for="shqf-dashboard-form-filter" class="screen-reader-text">';
 			echo esc_html__( 'Filter by form', 'samplehq-request-form' );
 			echo '</label>';
-			echo '<select id="shqf-dashboard-form-filter" onchange="if(this.value){location.href=\'';
-			echo esc_url( admin_url( 'admin.php?page=shqf-dashboard' ) );
-			echo '&dashboard_form=\'+this.value}else{location.href=\'';
-			echo esc_url( admin_url( 'admin.php?page=shqf-dashboard' ) );
-			echo '\'}">';
+			echo '<select id="shqf-dashboard-form-filter" data-shqf-filter-url="' . esc_url( admin_url( 'admin.php?page=shqf-dashboard' ) ) . '">';
 			echo '<option value="">' . esc_html__( 'All Forms', 'samplehq-request-form' ) . '</option>';
 			foreach ( $form_options as $fid => $ftitle ) {
 				echo '<option value="' . esc_attr( (string) $fid ) . '"' . selected( $filter_form_id, $fid, false ) . '>';

@@ -351,8 +351,8 @@ class SubmissionListTable extends \WP_List_Table {
 					admin_url( 'admin.php?page=shqf-submissions&action=delete_permanently&id=' . $id ),
 					'shqf_submission_action_' . $id
 				)
-			) . '" class="delete" onclick="return confirm(\''
-				. esc_js( __( 'Delete permanently?', 'samplehq-request-form' ) ) . '\');">'
+			) . '" class="delete" data-shqf-confirm="'
+				. esc_attr__( 'Delete permanently?', 'samplehq-request-form' ) . '">'
 				. esc_html__( 'Delete', 'samplehq-request-form' ) . '</a>';
 		}
 

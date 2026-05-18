@@ -600,8 +600,8 @@ class SubmissionsPage {
 				admin_url( 'admin.php?page=shqf-submissions&action=delete_permanently&id=' . $id ),
 				'shqf_submission_action_' . $id
 			);
-			echo '<a href="' . esc_url( $delete_url ) . '" class="button delete" onclick="return confirm(\''
-				. esc_js( __( 'Delete permanently?', 'samplehq-request-form' ) ) . '\');" style="margin-bottom:6px;">';
+			echo '<a href="' . esc_url( $delete_url ) . '" class="button delete" data-shqf-confirm="'
+				. esc_attr__( 'Delete permanently?', 'samplehq-request-form' ) . '" style="margin-bottom:6px;">';
 			echo esc_html__( 'Delete Permanently', 'samplehq-request-form' ) . '</a>';
 		}
 

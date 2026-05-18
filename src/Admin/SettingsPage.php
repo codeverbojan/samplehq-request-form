@@ -589,7 +589,7 @@ class SettingsPage {
 				admin_url( 'admin.php?page=shqf-settings&tab=connection&action=disconnect' ),
 				'shqf_disconnect'
 			)
-		) . '" class="button" onclick="return confirm(\'' . esc_attr__( 'Disconnect from SampleHQ? Submission sync will stop.', 'samplehq-request-form' ) . '\');">';
+		) . '" class="button" data-shqf-confirm="' . esc_attr__( 'Disconnect from SampleHQ? Submission sync will stop.', 'samplehq-request-form' ) . '">';
 		echo esc_html__( 'Disconnect', 'samplehq-request-form' ) . '</a>';
 		echo '</p>';
 
@@ -683,7 +683,7 @@ class SettingsPage {
 				'samplesSkipped'     => __( 'Samples skipped', 'samplehq-request-form' ),
 				'subsAccepted'       => __( 'Submissions accepted', 'samplehq-request-form' ),
 				'subsDuplicates'     => __( 'Submissions duplicates', 'samplehq-request-form' ),
-				'planLimitReached'   => __( 'Plan limit reached. Upgrade your plan to migrate more samples.', 'samplehq-request-form' ),
+				'planLimitReached'   => __( 'Plan limit reached. Not all samples could be migrated.', 'samplehq-request-form' ),
 				'errorsOccurred'     => __( 'error(s) occurred during migration.', 'samplehq-request-form' ),
 				'cancelled'          => __( 'Migration cancelled.', 'samplehq-request-form' ),
 			]
