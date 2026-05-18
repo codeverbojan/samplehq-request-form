@@ -326,6 +326,13 @@ class Plugin {
 					exit;
 				}
 
+				$auto_login_url = $result['auto_login_url'] ?? '';
+				if ( '' !== $auto_login_url && wp_http_validate_url( $auto_login_url ) ) {
+					self::allow_redirect_host( $auto_login_url );
+					wp_safe_redirect( $auto_login_url );
+					exit;
+				}
+
 				wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection&shqf_connected=1' ) );
 				exit;
 			},
@@ -464,6 +471,27 @@ class Plugin {
 	 */
 	public static function register_elementor_widget( object $widgets_manager ): void {
 		$widgets_manager->register( new Elementor\FormWidget() );
+	}
+
+	/**
+	 * Allow a URL's host in wp_safe_redirect() for one request.
+	 *
+	 * @param string $url External URL whose host should be temporarily allowed.
+	 * @return void
+	 */
+	public static function allow_redirect_host( string $url ): void {
+		$parsed = wp_parse_url( $url );
+		if ( empty( $parsed['host'] ) ) {
+			return;
+		}
+		$host = $parsed['host'];
+		add_filter(
+			'allowed_redirect_hosts',
+			static function ( array $hosts ) use ( $host ): array {
+				$hosts[] = $host;
+				return $hosts;
+			}
+		);
 	}
 
 	/**

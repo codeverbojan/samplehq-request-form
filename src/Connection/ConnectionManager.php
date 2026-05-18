@@ -232,7 +232,7 @@ class ConnectionManager {
 	 *
 	 * @param array<string, string> $post_data The $_POST data (state, connection_token, signature).
 	 * @param int                   $user_id   The current logged-in user's ID.
-	 * @return array{workspace_url: string, workspace_id: int, workspace_name: string, connection_secret: string, connected_by: string}|\WP_Error Decoded token data or error.
+	 * @return array{workspace_url: string, workspace_id: int, workspace_name: string, connection_secret: string, connected_by: string, auto_login_url?: string}|\WP_Error Decoded token data or error.
 	 */
 	public function validate_callback( array $post_data, ?int $user_id = null ): array|\WP_Error {
 		$state = get_option( self::STATE_OPTION, [] );

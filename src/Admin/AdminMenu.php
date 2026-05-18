@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace SampleHQForm\Admin;
 
 use SampleHQForm\Connection\ConnectionManager;
+use SampleHQForm\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -306,10 +307,9 @@ class AdminMenu {
 				wp_die( esc_html__( 'Unauthorized.', 'samplehq-request-form' ) );
 			}
 			check_admin_referer( 'shqf_connect' );
-			// State token is generated here (on click), not during page render.
 			$connect_url = $this->connection_manager->get_connect_url( wp_get_current_user() );
-			// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- external redirect to SampleHQ platform.
-			wp_redirect( $connect_url );
+			Plugin::allow_redirect_host( $connect_url );
+			wp_safe_redirect( $connect_url );
 			exit;
 		}
 
