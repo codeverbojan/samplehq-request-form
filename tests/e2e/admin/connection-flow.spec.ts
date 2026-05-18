@@ -206,15 +206,8 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 		} );
 
 		await page.locator( 'a.button', { hasText: 'Disconnect' } ).click();
-		await page.waitForURL( /tab=connection/ );
 
-		// Verify the option was actually deleted from the database.
-		const optionValue = wpEval(
-			`echo get_option( "shqf_connection" ) ? "EXISTS" : "GONE";`
-		);
-		expect( optionValue ).toBe( 'GONE' );
-
-		// UI shows disconnected state.
+		// Wait for the full disconnect round-trip (navigate → server deletes → redirect → render).
 		await expect(
 			page.locator( '.shqf-connection-status--disconnected' )
 		).toBeVisible();
@@ -223,6 +216,12 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 				hasText: 'Connect to SampleHQ',
 			} )
 		).toBeVisible();
+
+		// Verify the option was actually deleted from the database.
+		const optionValue = wpEval(
+			`echo get_option( "shqf_connection" ) ? "EXISTS" : "GONE";`
+		);
+		expect( optionValue ).toBe( 'GONE' );
 	} );
 
 	test( 'E2E-5: error notice displays and XSS is escaped', async ( {
