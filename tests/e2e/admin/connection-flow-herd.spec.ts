@@ -172,7 +172,7 @@ test.describe( 'E2E-6: Full connection flow (Herd)', () => {
 		).toBeVisible();
 
 		// Step 2: Click "Connect to SampleHQ" -- redirects to platform.
-		const connectButton = page.locator( 'a.button-primary', {
+		const connectButton = page.locator( 'button.button-primary', {
 			hasText: 'Connect to SampleHQ',
 		} );
 		await expect( connectButton ).toBeVisible();

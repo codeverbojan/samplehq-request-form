@@ -52,7 +52,7 @@ test.describe( 'Connection tab', () => {
 		).toBeVisible();
 		await expect( page.locator( 'text=Not connected' ) ).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', {
+			page.locator( 'button.button-primary', {
 				hasText: 'Connect to SampleHQ',
 			} )
 		).toBeVisible();
@@ -152,7 +152,7 @@ test.describe( 'Connection tab', () => {
 		).toBeVisible();
 		await expect( page.locator( 'text=Not connected' ) ).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', {
+			page.locator( 'button.button-primary', {
 				hasText: 'Connect to SampleHQ',
 			} )
 		).toBeVisible();

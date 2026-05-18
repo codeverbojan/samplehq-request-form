@@ -212,7 +212,7 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 			page.locator( '.shqf-connection-status--disconnected' )
 		).toBeVisible();
 		await expect(
-			page.locator( 'a.button-primary', {
+			page.locator( 'button.button-primary', {
 				hasText: 'Connect to SampleHQ',
 			} )
 		).toBeVisible();
