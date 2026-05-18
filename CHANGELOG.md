@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.3] - 2026-05-18
+
+### Fixed
+
+- Removed arbitrary CSS injection feature flagged by wp.org review
+- Moved inline `<script>` tags to external enqueued JS files (SampleEditPage, SettingsPage)
+- Added file upload validation: extension check, finfo MIME check, `is_uploaded_file()` guard
+- Added recursive sanitization for imported JSON form configs (`sanitize_config_recursive`)
+- Sanitized `connection_token` input with `sanitize_text_field()`
+- Removed redundant `wpApiSettings` localization (wp-api-fetch already provides it)
+- Fixed React Hook `exhaustive-deps` warnings in FormBuilder.js
+
+### Added
+
+- Source code section in readme.txt linking to public GitHub repository
+- Source/license banner in all built JS files via webpack BannerPlugin
+- TerserPlugin override to preserve `/*!` comments through minification
+- 14 new unit tests for `sanitize_config_recursive` edge cases
+
 ## [1.0.2] - 2026-05-16
 
 ### Added

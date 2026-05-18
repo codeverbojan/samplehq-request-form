@@ -40,16 +40,6 @@ class Assets {
 		);
 
 		wp_set_script_translations( 'shqf-' . $handle, 'samplehq-request-form' );
-
-		// Ensure the REST API nonce is available for apiFetch.
-		wp_localize_script(
-			'shqf-' . $handle,
-			'wpApiSettings',
-			[
-				'root'  => esc_url_raw( rest_url() ),
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-			]
-		);
 	}
 
 	/**

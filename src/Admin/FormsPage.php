@@ -458,9 +458,32 @@ class FormsPage {
 			return;
 		}
 
+		if ( ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) !== UPLOAD_ERR_OK ) {
+			AdminNotice::error( __( 'File upload failed.', 'samplehq-request-form' ) );
+			return;
+		}
+
+		$extension = strtolower( pathinfo( $file['name'] ?? '', PATHINFO_EXTENSION ) );
+		if ( 'json' !== $extension ) {
+			AdminNotice::error( __( 'Only .json files are accepted.', 'samplehq-request-form' ) );
+			return;
+		}
+
+		$finfo     = new \finfo( FILEINFO_MIME_TYPE );
+		$mime_type = $finfo->file( $file['tmp_name'] );
+		if ( ! in_array( $mime_type, [ 'application/json', 'text/plain' ], true ) ) {
+			AdminNotice::error( __( 'Invalid file type. Only JSON files are accepted.', 'samplehq-request-form' ) );
+			return;
+		}
+
 		// Validate file size (max 1MB).
 		if ( ( $file['size'] ?? 0 ) > 1048576 ) {
 			AdminNotice::error( __( 'File is too large. Maximum size is 1 MB.', 'samplehq-request-form' ) );
+			return;
+		}
+
+		if ( ! is_uploaded_file( $file['tmp_name'] ) ) {
+			AdminNotice::error( __( 'File upload failed.', 'samplehq-request-form' ) );
 			return;
 		}
 
@@ -498,6 +521,7 @@ class FormsPage {
 		// Only allow known config keys to prevent arbitrary data injection.
 		$allowed_keys = [ 'schema_version', 'fields', 'appearance', 'behavior' ];
 		$config       = array_intersect_key( $config, array_flip( $allowed_keys ) );
+		$config       = self::sanitize_config_recursive( $config );
 
 		try {
 			/* translators: %s: original form title */
@@ -516,5 +540,33 @@ class FormsPage {
 		} catch ( \Exception $e ) {
 			AdminNotice::error( __( 'Failed to import form.', 'samplehq-request-form' ) );
 		}
+	}
+
+	/**
+	 * Recursively sanitize an imported config array.
+	 *
+	 * @param array<int|string, mixed> $data The config data to sanitize.
+	 * @return array<int|string, mixed> Sanitized config.
+	 */
+	public static function sanitize_config_recursive( array $data ): array {
+		$clean = [];
+		foreach ( $data as $key => $value ) {
+			$clean_key = is_int( $key ) ? $key : sanitize_text_field( (string) $key );
+
+			if ( is_array( $value ) ) {
+				$clean[ $clean_key ] = self::sanitize_config_recursive( $value );
+			} elseif ( is_bool( $value ) ) {
+				$clean[ $clean_key ] = $value;
+			} elseif ( is_int( $value ) ) {
+				$clean[ $clean_key ] = $value;
+			} elseif ( is_float( $value ) ) {
+				$clean[ $clean_key ] = $value;
+			} elseif ( is_string( $value ) ) {
+				$clean[ $clean_key ] = sanitize_text_field( $value );
+			} else {
+				$clean[ $clean_key ] = null;
+			}
+		}
+		return $clean;
 	}
 }

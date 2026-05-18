@@ -78,26 +78,34 @@ export default function FormBuilder( {
 		}
 	}, [ selectedId, selectedField ] );
 
-	const addField = useCallback( ( type ) => {
-		const newField = createField( type );
-		setFields( ( prev ) => [ ...prev, newField ] );
-		setSelectedId( newField.id );
-		// Scroll to the new field after React renders it.
-		window.requestAnimationFrame( () => {
-			const el =
-				document.querySelector(
-					`[data-id="${ newField.id }"], #${ newField.id }`
-				) ||
-				document.querySelector( '.shqf-builder-canvas > :last-child' );
-			el?.scrollIntoView( { behavior: 'smooth', block: 'center' } );
-		} );
-	}, [] );
+	const addField = useCallback(
+		( type ) => {
+			const newField = createField( type );
+			setFields( ( prev ) => [ ...prev, newField ] );
+			setSelectedId( newField.id );
+			// Scroll to the new field after React renders it.
+			window.requestAnimationFrame( () => {
+				const el =
+					document.querySelector(
+						`[data-id="${ newField.id }"], #${ newField.id }`
+					) ||
+					document.querySelector(
+						'.shqf-builder-canvas > :last-child'
+					);
+				el?.scrollIntoView( { behavior: 'smooth', block: 'center' } );
+			} );
+		},
+		[ setFields ]
+	);
 
-	const removeField = useCallback( ( id ) => {
-		setFields( ( prev ) => removeFieldFromTree( prev, id ) );
-		setSelectedId( ( prev ) => ( prev === id ? null : prev ) );
-		setConfirmingDeleteId( null );
-	}, [] );
+	const removeField = useCallback(
+		( id ) => {
+			setFields( ( prev ) => removeFieldFromTree( prev, id ) );
+			setSelectedId( ( prev ) => ( prev === id ? null : prev ) );
+			setConfirmingDeleteId( null );
+		},
+		[ setFields ]
+	);
 
 	const requestDelete = useCallback(
 		( id ) => {
@@ -110,115 +118,135 @@ export default function FormBuilder( {
 		[ confirmingDeleteId, removeField ]
 	);
 
-	const updateField = useCallback( ( updatedField ) => {
-		setFields( ( prev ) => updateFieldInTree( prev, updatedField ) );
-	}, [] );
+	const updateField = useCallback(
+		( updatedField ) => {
+			setFields( ( prev ) => updateFieldInTree( prev, updatedField ) );
+		},
+		[ setFields ]
+	);
 
-	const duplicateField = useCallback( ( id ) => {
-		setFields( ( prev ) => {
-			const source = findFieldInTree( prev, id );
-			if ( ! source ) {
-				return prev;
-			}
-
-			let clone;
-			if ( source.type === 'row' ) {
-				// Deep clone: new IDs for the row and all children.
-				const newRowId =
-					'row_' + Math.random().toString( 36 ).substring( 2, 9 );
-				clone = {
-					...source,
-					id: newRowId,
-					columns: ( source.columns || [] ).map( ( col ) => ( {
-						...col,
-						fields: ( col.fields || [] ).map( ( child ) => {
-							const childId = generateFieldId();
-							const childBaseKey = child.key.replace(
-								/_copy.*$/,
-								''
-							);
-							return {
-								...child,
-								id: childId,
-								key: childBaseKey + '_' + childId.slice( 2 ),
-							};
-						} ),
-					} ) ),
-				};
-			} else {
-				const newId = generateFieldId();
-				const baseKey = source.key.replace( /_copy.*$/, '' );
-				clone = {
-					...source,
-					id: newId,
-					key: baseKey + '_' + newId.slice( 2 ),
-					label:
-						source.label +
-						' ' +
-						__( '(Copy)', 'samplehq-request-form' ),
-				};
-			}
-
-			return insertAfterInTree( prev, id, clone );
-		} );
-	}, [] );
-
-	const reorderFields = useCallback( ( activeId, overId ) => {
-		setFields( ( prev ) => {
-			const activeLoc = findFieldLocation( prev, activeId );
-			const overLoc = findFieldLocation( prev, overId );
-			if ( ! activeLoc || ! overLoc ) {
-				return prev;
-			}
-
-			// Prevent dropping a row inside another row.
-			const activeField = findFieldInTree( prev, activeId );
-			if ( activeField?.type === 'row' && overLoc.container !== 'top' ) {
-				return prev;
-			}
-
-			if ( activeLoc.container === overLoc.container ) {
-				if ( activeLoc.container === 'top' ) {
-					return arrayMove( prev, activeLoc.index, overLoc.index );
+	const duplicateField = useCallback(
+		( id ) => {
+			setFields( ( prev ) => {
+				const source = findFieldInTree( prev, id );
+				if ( ! source ) {
+					return prev;
 				}
-				return reorderInColumn(
-					prev,
-					activeLoc.rowId,
-					activeLoc.colIndex,
-					activeLoc.index,
-					overLoc.index
-				);
-			}
-			// Cross-container: remove then insert at target position.
-			if ( ! activeField ) {
-				return prev;
-			}
-			let next = removeFieldFromTree( prev, activeId );
-			next = insertBeforeInTree( next, overId, activeField );
-			return next;
-		} );
-	}, [] );
 
-	const moveToColumn = useCallback( ( fieldId, rowId, colIndex ) => {
-		setFields( ( prev ) => {
-			const field = findFieldInTree( prev, fieldId );
-			if ( ! field ) {
-				return prev;
-			}
-			// Prevent dropping a row into another row.
-			if ( field.type === 'row' ) {
-				return prev;
-			}
-			// Prevent dropping a field into its own row (it's already there).
-			const loc = findFieldLocation( prev, fieldId );
-			if ( loc && loc.rowId === rowId && loc.colIndex === colIndex ) {
-				return prev;
-			}
-			let next = removeFieldFromTree( prev, fieldId );
-			next = insertIntoColumn( next, rowId, colIndex, field );
-			return next;
-		} );
-	}, [] );
+				let clone;
+				if ( source.type === 'row' ) {
+					// Deep clone: new IDs for the row and all children.
+					const newRowId =
+						'row_' + Math.random().toString( 36 ).substring( 2, 9 );
+					clone = {
+						...source,
+						id: newRowId,
+						columns: ( source.columns || [] ).map( ( col ) => ( {
+							...col,
+							fields: ( col.fields || [] ).map( ( child ) => {
+								const childId = generateFieldId();
+								const childBaseKey = child.key.replace(
+									/_copy.*$/,
+									''
+								);
+								return {
+									...child,
+									id: childId,
+									key:
+										childBaseKey + '_' + childId.slice( 2 ),
+								};
+							} ),
+						} ) ),
+					};
+				} else {
+					const newId = generateFieldId();
+					const baseKey = source.key.replace( /_copy.*$/, '' );
+					clone = {
+						...source,
+						id: newId,
+						key: baseKey + '_' + newId.slice( 2 ),
+						label:
+							source.label +
+							' ' +
+							__( '(Copy)', 'samplehq-request-form' ),
+					};
+				}
+
+				return insertAfterInTree( prev, id, clone );
+			} );
+		},
+		[ setFields ]
+	);
+
+	const reorderFields = useCallback(
+		( activeId, overId ) => {
+			setFields( ( prev ) => {
+				const activeLoc = findFieldLocation( prev, activeId );
+				const overLoc = findFieldLocation( prev, overId );
+				if ( ! activeLoc || ! overLoc ) {
+					return prev;
+				}
+
+				// Prevent dropping a row inside another row.
+				const activeField = findFieldInTree( prev, activeId );
+				if (
+					activeField?.type === 'row' &&
+					overLoc.container !== 'top'
+				) {
+					return prev;
+				}
+
+				if ( activeLoc.container === overLoc.container ) {
+					if ( activeLoc.container === 'top' ) {
+						return arrayMove(
+							prev,
+							activeLoc.index,
+							overLoc.index
+						);
+					}
+					return reorderInColumn(
+						prev,
+						activeLoc.rowId,
+						activeLoc.colIndex,
+						activeLoc.index,
+						overLoc.index
+					);
+				}
+				// Cross-container: remove then insert at target position.
+				if ( ! activeField ) {
+					return prev;
+				}
+				let next = removeFieldFromTree( prev, activeId );
+				next = insertBeforeInTree( next, overId, activeField );
+				return next;
+			} );
+		},
+		[ setFields ]
+	);
+
+	const moveToColumn = useCallback(
+		( fieldId, rowId, colIndex ) => {
+			setFields( ( prev ) => {
+				const field = findFieldInTree( prev, fieldId );
+				if ( ! field ) {
+					return prev;
+				}
+				// Prevent dropping a row into another row.
+				if ( field.type === 'row' ) {
+					return prev;
+				}
+				// Prevent dropping a field into its own row (it's already there).
+				const loc = findFieldLocation( prev, fieldId );
+				if ( loc && loc.rowId === rowId && loc.colIndex === colIndex ) {
+					return prev;
+				}
+				let next = removeFieldFromTree( prev, fieldId );
+				next = insertIntoColumn( next, rowId, colIndex, field );
+				return next;
+			} );
+		},
+		[ setFields ]
+	);
 
 	// Refs tracking last-saved state for dirty detection.
 	const savedFieldsRef = useRef(

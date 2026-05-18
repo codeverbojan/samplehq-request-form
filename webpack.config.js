@@ -6,6 +6,8 @@
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const path = require( 'path' );
+const { BannerPlugin } = require( 'webpack' );
+const TerserPlugin = require( 'terser-webpack-plugin' );
 const CopyPlugin = require( 'copy-webpack-plugin' );
 
 module.exports = {
@@ -40,6 +42,26 @@ module.exports = {
 		...defaultConfig.output,
 		path: path.resolve( __dirname, 'assets/build' ),
 	},
+	optimization: {
+		...defaultConfig.optimization,
+		minimizer: [
+			new TerserPlugin( {
+				parallel: true,
+				terserOptions: {
+					output: {
+						comments: /translators:|^!/i,
+					},
+					compress: {
+						passes: 2,
+					},
+					mangle: {
+						reserved: [ '__', '_n', '_nx', '_x' ],
+					},
+				},
+				extractComments: false,
+			} ),
+		],
+	},
 	plugins: [
 		...( defaultConfig.plugins || [] ),
 		new CopyPlugin( {
@@ -65,6 +87,10 @@ module.exports = {
 					),
 				},
 			],
+		} ),
+		new BannerPlugin( {
+			banner: '/*! SampleHQ Request Form | Source: https://github.com/codeverbojan/samplehq-request-form | License: GPLv2+ */',
+			raw: true,
 		} ),
 	],
 };

@@ -4,7 +4,7 @@ Tags: sample request, form builder, product samples, sample management, request 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,18 @@ No data is sent to Cloudflare unless you configure a Turnstile site key and secr
 * Service URL: [https://www.cloudflare.com/products/turnstile/](https://www.cloudflare.com/products/turnstile/)
 * Terms of Service: [https://www.cloudflare.com/website-terms/](https://www.cloudflare.com/website-terms/)
 * Privacy Policy: [https://www.cloudflare.com/privacypolicy/](https://www.cloudflare.com/privacypolicy/)
+
+== Source Code ==
+
+The full source code, including unminified JavaScript and build tools, is available at:
+https://github.com/codeverbojan/samplehq-request-form
+
+To build from source:
+
+1. Clone the repository
+2. Run `composer install`
+3. Run `npm install`
+4. Run `npm run build`
 
 == Installation ==
 
@@ -159,6 +171,17 @@ screen reader announcements, and focus management following WCAG 2.2 Level AA pr
 8. Email notification settings with admin and submitter confirmation options.
 
 == Changelog ==
+
+= 1.0.3 =
+* Fixed: removed arbitrary CSS injection feature (wp.org review)
+* Fixed: moved inline scripts to external enqueued JS files
+* Fixed: added file upload validation (extension, MIME, is_uploaded_file)
+* Fixed: added recursive sanitization for imported JSON form configs
+* Fixed: sanitized connection_token input with sanitize_text_field
+* Fixed: removed redundant wpApiSettings localization (wp-api-fetch provides it)
+* Added: source code section in readme.txt with GitHub repo link
+* Added: source/license banner in all built JS files via BannerPlugin
+* Fixed: React Hook exhaustive-deps warnings in FormBuilder
 
 = 1.0.2 =
 * Added optional SampleHQ platform connection with submission sync and data migration

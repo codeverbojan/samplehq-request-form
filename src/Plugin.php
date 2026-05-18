@@ -304,8 +304,7 @@ class Plugin {
 				$result = $connection_manager->validate_callback(
 					[
 						'state'            => sanitize_text_field( wp_unslash( $_POST['state'] ?? '' ) ),
-						// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-						'connection_token' => (string) wp_unslash( $_POST['connection_token'] ?? '' ),
+						'connection_token' => sanitize_text_field( wp_unslash( $_POST['connection_token'] ?? '' ) ),
 						'signature'        => sanitize_text_field( wp_unslash( $_POST['signature'] ?? '' ) ),
 					]
 				);

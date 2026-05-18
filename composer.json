@@ -2,7 +2,7 @@
 	"name": "samplehq/request-form",
 	"description": "SampleHQ Request Form - Sample request management for WordPress",
 	"type": "wordpress-plugin",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
