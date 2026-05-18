@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.7] - 2026-05-18
+
+### Changed
+
+- Connection flow opens SampleHQ in a new tab with AJAX polling for auto-refresh on completion
+
+### Added
+
+- `connection-poll.js` script with polling, timeout, cancel, and retry states
+- AJAX endpoint `shqf_check_connection` for connection status polling
+
 ## [1.0.6] - 2026-05-18
 
 ### Fixed

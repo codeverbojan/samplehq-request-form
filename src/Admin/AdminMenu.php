@@ -119,6 +119,7 @@ class AdminMenu {
 		add_action( 'admin_init', [ $this, 'handle_early_redirects' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		add_filter( 'set-screen-option', [ $this, 'save_screen_option' ], 10, 3 );
+		add_action( 'wp_ajax_shqf_check_connection', [ $this, 'ajax_check_connection' ] );
 	}
 
 	/**
@@ -568,5 +569,23 @@ class AdminMenu {
 			'shqf-settings',
 			[ $this->settings, 'render' ]
 		);
+	}
+
+	/**
+	 * AJAX handler: check whether the site is connected to SampleHQ.
+	 *
+	 * @return void
+	 */
+	public function ajax_check_connection(): void {
+		check_ajax_referer( 'shqf_connection_poll' );
+
+		if ( ! current_user_can( self::CAPABILITY ) ) {
+			wp_send_json_error( [ 'message' => 'Unauthorized' ], 403 );
+		}
+
+		$connected = $this->connection_manager instanceof ConnectionManager
+			&& $this->connection_manager->is_connected();
+
+		wp_send_json_success( [ 'connected' => $connected ] );
 	}
 }

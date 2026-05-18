@@ -33,6 +33,10 @@ module.exports = {
 			__dirname,
 			'assets/src/js/admin/admin-utils.js'
 		),
+		'connection-poll': path.resolve(
+			__dirname,
+			'assets/src/js/admin/connection-poll.js'
+		),
 		'migration-wizard': path.resolve(
 			__dirname,
 			'assets/src/js/admin/migration-wizard.js'

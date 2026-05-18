@@ -39,7 +39,7 @@ class AdminMenuTest extends TestCase {
 	 */
 	public function test_register_hooks_admin_menu(): void {
 		Monkey\Functions\expect( 'add_action' )
-			->times( 3 );
+			->times( 4 );
 
 		Monkey\Functions\expect( 'add_filter' )
 			->once();
@@ -346,6 +346,9 @@ class AdminMenuTest extends TestCase {
 			'wp_unslash'          => static fn( $s ) => $s,
 			'get_transient'       => static fn() => false,
 			'get_current_user_id' => static fn() => 1,
+			'wp_enqueue_script'   => static fn() => null,
+			'wp_localize_script'  => static fn() => null,
+			'wp_create_nonce'     => static fn() => 'test_nonce',
 		] );
 	}
 
@@ -419,7 +422,7 @@ class AdminMenuTest extends TestCase {
 	}
 
 	/**
-	 * Connection tab shows disconnected state with nonce-protected connect link.
+	 * Connection tab shows disconnected state with connect button and polling states.
 	 */
 	public function test_connection_tab_disconnected(): void {
 		$this->setup_settings_stubs();
@@ -439,8 +442,7 @@ class AdminMenuTest extends TestCase {
 		$this->assertStringContainsString( 'shqf-connection-status--disconnected', $output );
 		$this->assertStringContainsString( 'Not connected', $output );
 		$this->assertStringContainsString( 'Connect to SampleHQ', $output );
-		$this->assertStringContainsString( 'action=connect', $output );
-		$this->assertStringContainsString( '_wpnonce=', $output );
+		$this->assertStringContainsString( 'shqf-connect-btn', $output );
 		$this->assertStringContainsString( 'button-primary', $output );
 		$this->assertStringContainsString( 'cloud sync', $output );
 		$this->assertStringNotContainsString( 'Connection will be available', $output );
@@ -500,9 +502,9 @@ class AdminMenuTest extends TestCase {
 	}
 
 	/**
-	 * Connect link is an <a> tag (not a disabled button) pointing to the connect action.
+	 * Connect button opens in new tab via JS (button element, not anchor link).
 	 */
-	public function test_connection_tab_disconnected_renders_link_not_button(): void {
+	public function test_connection_tab_disconnected_renders_button_for_new_tab(): void {
 		$this->setup_settings_stubs();
 
 		Monkey\Functions\stubs( [
@@ -517,10 +519,11 @@ class AdminMenuTest extends TestCase {
 		$settings->render();
 		$output = ob_get_clean();
 
-		$this->assertStringNotContainsString( '<button', $output );
-		$this->assertStringNotContainsString( 'disabled', $output );
+		$this->assertStringContainsString( '<button', $output );
+		$this->assertStringContainsString( 'shqf-connect-btn', $output );
 		$this->assertStringContainsString( 'button-primary', $output );
-		$this->assertStringContainsString( 'action=connect', $output );
+		$this->assertStringContainsString( 'shqf-connect-waiting', $output );
+		$this->assertStringContainsString( 'shqf-connect-timeout', $output );
 
 		unset( $_GET['tab'] );
 	}
@@ -531,7 +534,7 @@ class AdminMenuTest extends TestCase {
 	public function test_admin_menu_accepts_connection_manager(): void {
 		$cm = \Mockery::mock( ConnectionManager::class );
 
-		Monkey\Functions\expect( 'add_action' )->times( 3 );
+		Monkey\Functions\expect( 'add_action' )->times( 4 );
 		Monkey\Functions\expect( 'add_filter' )->once();
 
 		$menu = new AdminMenu( null, null, $cm );

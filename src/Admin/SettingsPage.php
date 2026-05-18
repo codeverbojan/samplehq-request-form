@@ -714,15 +714,69 @@ class SettingsPage {
 			'shqf_connect'
 		);
 
+		// Initial state: connect button.
+		echo '<div id="shqf-connect-initial">';
 		echo '<p style="margin-top:16px;">';
-		echo '<a href="' . esc_url( $connect_action_url ) . '" class="button button-primary">';
-		echo esc_html__( 'Connect to SampleHQ', 'samplehq-request-form' ) . '</a>';
+		echo '<button type="button" id="shqf-connect-btn" class="button button-primary">';
+		echo esc_html__( 'Connect to SampleHQ', 'samplehq-request-form' ) . '</button>';
 		echo '</p>';
+		echo '</div>';
+
+		// Waiting state: spinner + cancel.
+		echo '<div id="shqf-connect-waiting" style="display:none;">';
+		echo '<div class="shqf-connect-waiting-content" style="margin-top:16px;">';
+		echo '<span class="spinner is-active" style="float:none;"></span>';
+		echo '<span>' . esc_html__( 'Waiting for connection...', 'samplehq-request-form' ) . '</span>';
+		echo '</div>';
+		echo '<p style="margin-top:8px;">';
+		echo '<button type="button" id="shqf-connect-cancel" class="button">';
+		echo esc_html__( 'Cancel', 'samplehq-request-form' ) . '</button>';
+		echo '</p>';
+		echo '</div>';
+
+		// Timeout state: retry message + retry button.
+		echo '<div id="shqf-connect-timeout" style="display:none;">';
+		echo '<p style="margin-top:16px;">';
+		echo esc_html__( 'Connection not detected. Please complete the setup in the SampleHQ tab, then click Retry.', 'samplehq-request-form' );
+		echo '</p>';
+		echo '<p style="margin-top:8px;">';
+		echo '<button type="button" id="shqf-connect-retry" class="button button-primary">';
+		echo esc_html__( 'Retry', 'samplehq-request-form' ) . '</button>';
+		echo '</p>';
+		echo '</div>';
 
 		echo '<p class="description" style="margin-top:12px;">';
 		echo esc_html__( 'The plugin works fully without connecting. Connecting enables cloud sync for submissions.', 'samplehq-request-form' );
 		echo '</p>';
 
 		echo '</div></div>';
+
+		$this->enqueue_connection_poll_js( $connect_action_url );
+	}
+
+	/**
+	 * Enqueue the connection-poll script with localized data.
+	 *
+	 * @param string $connect_url The URL that initiates the platform connection flow.
+	 * @return void
+	 */
+	private function enqueue_connection_poll_js( string $connect_url ): void {
+		wp_enqueue_script(
+			'shqf-connection-poll',
+			SHQF_URL . 'assets/build/connection-poll.js',
+			[],
+			SHQF_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'shqf-connection-poll',
+			'shqfConnectionPoll',
+			[
+				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'nonce'      => wp_create_nonce( 'shqf_connection_poll' ),
+				'connectUrl' => $connect_url,
+			]
+		);
 	}
 }
