@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Boots the plugin via a static factory method. Not a singleton -- returns a new
  * instance on first boot. Subsequent calls return the same instance (boot guard).
- * The instance is stored in $GLOBALS['samplehq_request_form'] by the main plugin file.
+ * The instance is stored in $GLOBALS['shqf_plugin'] by the main plugin file.
  */
 class Plugin {
 
@@ -285,7 +285,7 @@ class Plugin {
 		add_action(
 			'template_redirect',
 			static function () use ( $connection_manager ): void {
-				$uri = wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH );
+				$uri = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), PHP_URL_PATH );
 
 				if ( rtrim( (string) $uri, '/' ) !== '/shqf-connect-callback' ) {
 					return;
@@ -295,7 +295,7 @@ class Plugin {
 				header( 'X-Robots-Tag: noindex, nofollow' );
 				header( 'Cache-Control: no-store' );
 
-				if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+				if ( 'POST' !== sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
 					wp_safe_redirect( admin_url( 'admin.php?page=shqf-settings&tab=connection' ) );
 					exit;
 				}
@@ -327,7 +327,8 @@ class Plugin {
 				}
 
 				$auto_login_url = $result['auto_login_url'] ?? '';
-				if ( '' !== $auto_login_url && wp_http_validate_url( $auto_login_url ) ) {
+				$parsed_login   = wp_parse_url( $auto_login_url );
+				if ( '' !== $auto_login_url && ! empty( $parsed_login['host'] ) && 'https' === ( $parsed_login['scheme'] ?? '' ) ) {
 					self::allow_redirect_host( $auto_login_url );
 					wp_safe_redirect( $auto_login_url );
 					exit;

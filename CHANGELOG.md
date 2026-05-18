@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.4] - 2026-05-18
+
+### Fixed
+
+- Restored auto-login redirect after platform connection (was never committed)
+- Replaced `wp_redirect()` with `wp_safe_redirect()` + `allowed_redirect_hosts` filter for all external redirects
+- Sanitized `$_SERVER` inputs in connection callback handler
+- Prefixed template variables and global plugin instance for WP.org guideline compliance
+- Corrected `auto_login_url` type annotation in `ConnectionManager::validate_callback()` PHPDoc
+- Replaced `wp_http_validate_url()` with scheme/host validation for auto-login URL (SSRF check was blocking local dev)
+
 ## [1.0.3] - 2026-05-18
 
 ### Fixed

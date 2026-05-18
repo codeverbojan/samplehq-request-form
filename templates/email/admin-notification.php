@@ -28,17 +28,17 @@ printf(
 </h2>
 
 <table style="border-collapse:collapse;width:100%;max-width:600px;">
-<?php foreach ( $meta as $key => $value ) : ?>
+<?php foreach ( $meta as $shqf_key => $shqf_value ) : ?>
 	<?php
 	// Skip internal meta keys (email logs, etc.).
-	if ( str_starts_with( $key, '_' ) ) {
+	if ( str_starts_with( $shqf_key, '_' ) ) {
 		continue;
 	}
-	$display = \SampleHQForm\Admin\SubmissionsPage::format_meta_value( $key, $value );
+	$shqf_display = \SampleHQForm\Admin\SubmissionsPage::format_meta_value( $shqf_key, $shqf_value );
 	?>
 	<tr>
-		<td style="padding:8px;border:1px solid #ddd;font-weight:bold;"><?php echo esc_html( $key ); ?></td>
-		<td style="padding:8px;border:1px solid #ddd;"><?php echo esc_html( $display ); ?></td>
+		<td style="padding:8px;border:1px solid #ddd;font-weight:bold;"><?php echo esc_html( $shqf_key ); ?></td>
+		<td style="padding:8px;border:1px solid #ddd;"><?php echo esc_html( $shqf_display ); ?></td>
 	</tr>
 <?php endforeach; ?>
 </table>
