@@ -11,7 +11,7 @@
  * Plugin Name:       SampleHQ Request Form
  * Plugin URI:        https://samplehq.io/wordpress-plugin
  * Description:       A complete sample request management system with a sample library, visual form builder, and submissions dashboard.
- * Version:           1.0.4
+ * Version:           1.0.5
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            SampleHQ
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Keep version in sync with the plugin header above.
 if ( ! defined( 'SHQF_VERSION' ) ) {
-	define( 'SHQF_VERSION', '1.0.4' );
+	define( 'SHQF_VERSION', '1.0.5' );
 }
 if ( ! defined( 'SHQF_FILE' ) ) {
 	define( 'SHQF_FILE', __FILE__ );

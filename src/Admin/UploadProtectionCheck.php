@@ -69,7 +69,6 @@ class UploadProtectionCheck {
 				$probe_url,
 				[
 					'timeout'     => 5,
-					'sslverify'   => false,
 					'redirection' => 0,
 				]
 			);

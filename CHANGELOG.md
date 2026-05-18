@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.5] - 2026-05-18
+
+### Fixed
+
+- Scoped admin notices (Turnstile failure, upload exposure) to plugin pages only (guideline 11)
+- Removed `sslverify => false` from upload protection self-check
+- Include `assets/src/` in distribution zip so source code ships alongside built files
+
 ## [1.0.4] - 2026-05-18
 
 ### Fixed

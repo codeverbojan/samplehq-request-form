@@ -548,6 +548,11 @@ class Plugin {
 			return;
 		}
 
+		$screen = get_current_screen();
+		if ( null === $screen || ( 0 !== strpos( $screen->id, 'toplevel_page_shqf' ) && 0 !== strpos( $screen->id, 'samplehq-forms_page_shqf' ) ) ) {
+			return;
+		}
+
 		$failure = Spam\TurnstileVerifier::get_recent_failure();
 		if ( false === $failure ) {
 			return;
@@ -572,6 +577,11 @@ class Plugin {
 	 */
 	public function render_upload_protection_notice(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( null === $screen || ( 0 !== strpos( $screen->id, 'toplevel_page_shqf' ) && 0 !== strpos( $screen->id, 'samplehq-forms_page_shqf' ) ) ) {
 			return;
 		}
 

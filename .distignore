@@ -45,8 +45,7 @@ Thumbs.db
 /jest.config.js
 /jest.config.ts
 
-# Source JS/CSS, dependencies, and test output.
-/assets/src
+# Dependencies and test output.
 /node_modules
 /vendor
 /tests
