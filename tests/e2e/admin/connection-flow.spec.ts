@@ -218,9 +218,15 @@ test.describe( 'Connection flow (callback endpoint)', () => {
 		).toBeVisible();
 
 		// Verify the option was actually deleted from the database.
-		const optionValue = wpEval(
-			`echo get_option( "shqf_connection" ) ? "EXISTS" : "GONE";`
-		);
+		// Retry a few times — the CLI container may read a slightly stale snapshot.
+		let optionValue = 'EXISTS';
+		for ( let i = 0; i < 5; i++ ) {
+			optionValue = wpEval(
+				`echo get_option( "shqf_connection" ) ? "EXISTS" : "GONE";`
+			);
+			if ( optionValue === 'GONE' ) break;
+			await new Promise( ( r ) => setTimeout( r, 500 ) );
+		}
 		expect( optionValue ).toBe( 'GONE' );
 	} );
 
