@@ -92,7 +92,7 @@ class CsvExporter {
 		// UTF-8 BOM for Excel compatibility.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 		fwrite( $output, "\xEF\xBB\xBF" );
-		fputcsv( $output, $headers );
+		fputcsv( $output, $headers, ',', '"', '\\' );
 
 		// Data rows.
 		foreach ( $rows as $row ) {
@@ -115,7 +115,7 @@ class CsvExporter {
 				$csv_row[] = self::safe( (string) $val );
 			}
 
-			fputcsv( $output, $csv_row );
+			fputcsv( $output, $csv_row, ',', '"', '\\' );
 		}
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose

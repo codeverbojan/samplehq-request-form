@@ -89,7 +89,7 @@ class CsvImporter {
 		}
 
 		// Read header row.
-		$header = fgetcsv( $handle );
+		$header = fgetcsv( $handle, 0, ',', '"', '\\' );
 		if ( false === $header || empty( $header ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 			fclose( $handle );
@@ -109,7 +109,7 @@ class CsvImporter {
 
 		$row_num = 1;
 
-		while ( false !== ( $row = fgetcsv( $handle ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
+		while ( false !== ( $row = fgetcsv( $handle, 0, ',', '"', '\\' ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 			++$row_num;
 
 			$data = $this->map_row( $header, $row );

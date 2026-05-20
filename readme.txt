@@ -2,9 +2,9 @@
 Contributors: josifoskibojan
 Tags: sample request, form builder, product samples, sample management, request form
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -171,6 +171,11 @@ screen reader announcements, and focus management following WCAG 2.2 Level AA pr
 8. Email notification settings with admin and submitter confirmation options.
 
 == Changelog ==
+
+= 1.0.8 =
+* Compatibility: tested and verified with WordPress 7.0
+* Fixed: PHP 8.4 deprecation in fgetcsv() escape parameter for CSV imports
+* Added: WordPress Playground blueprint for live preview on wordpress.org
 
 = 1.0.7 =
 * Changed: connection flow opens SampleHQ in a new tab with AJAX polling for auto-refresh

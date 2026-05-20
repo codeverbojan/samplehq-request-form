@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.8] - 2026-05-20
+
+### Fixed
+
+- PHP 8.4 deprecation: added explicit `$escape` parameter to `fgetcsv()` calls in CsvImporter
+
+### Added
+
+- WordPress Playground blueprint for live preview on wordpress.org
+- WordPress 7.0 to CI integration test matrix
+
+### Changed
+
+- Tested up to WordPress 7.0
+
 ## [1.0.7] - 2026-05-18
 
 ### Changed
