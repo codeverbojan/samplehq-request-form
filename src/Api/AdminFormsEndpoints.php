@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SampleHQForm\Database\FormsTable;
+use SampleHQForm\Database\RateLimitsTable;
+use SampleHQForm\Database\SubmissionMetaTable;
+use SampleHQForm\Database\SubmissionsTable;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -31,12 +34,44 @@ class AdminFormsEndpoints extends AdminEndpointBase {
 	private FormsTable $forms;
 
 	/**
+	 * Submissions repository.
+	 *
+	 * @var SubmissionsTable
+	 */
+	private SubmissionsTable $submissions;
+
+	/**
+	 * Submission meta repository.
+	 *
+	 * @var SubmissionMetaTable
+	 */
+	private SubmissionMetaTable $submission_meta;
+
+	/**
+	 * Rate limits repository.
+	 *
+	 * @var RateLimitsTable
+	 */
+	private RateLimitsTable $rate_limits;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param FormsTable $forms Forms repo.
+	 * @param FormsTable          $forms           Forms repo.
+	 * @param SubmissionsTable    $submissions     Submissions repo.
+	 * @param SubmissionMetaTable $submission_meta Submission meta repo.
+	 * @param RateLimitsTable     $rate_limits     Rate limits repo.
 	 */
-	public function __construct( FormsTable $forms ) {
-		$this->forms = $forms;
+	public function __construct(
+		FormsTable $forms,
+		SubmissionsTable $submissions,
+		SubmissionMetaTable $submission_meta,
+		RateLimitsTable $rate_limits
+	) {
+		$this->forms           = $forms;
+		$this->submissions     = $submissions;
+		$this->submission_meta = $submission_meta;
+		$this->rate_limits     = $rate_limits;
 	}
 
 	/**
@@ -210,7 +245,29 @@ class AdminFormsEndpoints extends AdminEndpointBase {
 			return new WP_REST_Response( [ 'message' => __( 'Form not found.', 'samplehq-request-form' ) ], 404 );
 		}
 
+		// Cascade: delete submissions + meta + rate limits for this form.
+		$max_batches = 200;
+		do {
+			$subs = $this->submissions->list_all(
+				[
+					'form_id' => $id,
+					'limit'   => 500,
+				]
+			);
+			foreach ( $subs as $sub ) {
+				$this->submission_meta->delete_all( (int) $sub['id'] );
+				$this->submissions->delete( (int) $sub['id'] );
+			}
+			--$max_batches;
+		} while ( ! empty( $subs ) && $max_batches > 0 );
+
+		$this->rate_limits->clear_for_form( $id );
 		$this->forms->delete( $id );
+
+		if ( (int) get_option( 'shqf_woo_form_id', 0 ) === $id ) {
+			delete_option( 'shqf_woo_form_id' );
+		}
+
 		return new WP_REST_Response( [ 'deleted' => true ], 200 );
 	}
 }

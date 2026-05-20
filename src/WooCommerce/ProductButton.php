@@ -17,19 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Renders a "Request a Sample" button on WooCommerce pages.
  *
  * Single product page:
- *   Hook: woocommerce_after_add_to_cart_form (OUTSIDE form.cart).
- *   This fires after the </form> tag in ALL product type templates
- *   (simple, variable, grouped, external) and in the WC add-to-cart-form
- *   block. Placing the button outside the form avoids the CSS grid layout
- *   inside form.cart that block themes use (grid-column: 1/-1 on all
- *   non-quantity children). The button renders in the normal document
- *   flow below the add-to-cart form, styled as a secondary/outline CTA.
+ *   Hook: woocommerce_after_add_to_cart_button (INSIDE form.cart).
+ *   Renders right after the Add to Cart button as an inline sibling,
+ *   using WooCommerce's native button classes (button, alt, wp-element-button)
+ *   so it inherits theme styling and participates in the form layout grid.
  *
  * Shop/archive loop:
- *   Filter: woocommerce_loop_add_to_cart_link (3 params).
- *   Appends a small text badge after the Add to Cart link HTML.
- *   Works in both classic templates and the WC product-button block
- *   (which applies this filter on its output).
+ *   Hook: woocommerce_after_shop_loop_item (priority 15, after Add to Cart).
+ *   Renders a small text badge inside the product card linking to the
+ *   product page with #request-sample to auto-open the modal.
  */
 class ProductButton {
 
@@ -49,19 +45,15 @@ class ProductButton {
 	 * @return void
 	 */
 	public function register(): void {
-		// Single product: after the add-to-cart form closes.
-		add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'render_single' ] );
-
-		// Shop loop: append badge to the add-to-cart link via filter.
-		add_filter( 'woocommerce_loop_add_to_cart_link', [ $this, 'filter_loop_link' ], 10, 3 );
+		add_action( 'woocommerce_after_add_to_cart_button', [ $this, 'render_single' ] );
+		add_action( 'woocommerce_after_shop_loop_item', [ $this, 'render_loop_badge' ], 15 );
 	}
 
 	/**
 	 * Render the button on a single product page.
 	 *
-	 * Hooked to woocommerce_after_add_to_cart_form -- renders OUTSIDE
-	 * the form.cart element so it is not affected by the WC block theme
-	 * CSS grid layout.
+	 * Hooked to woocommerce_after_add_to_cart_button -- renders INSIDE
+	 * form.cart as an inline sibling to the Add to Cart button.
 	 *
 	 * @return void
 	 */
@@ -79,7 +71,7 @@ class ProductButton {
 		$button_text = $this->get_button_text();
 
 		printf(
-			'<div class="shqf-woo-request-wrap"><button type="button" class="shqf-woo-request-btn" data-product-id="%s" data-product-name="%s" data-product-sku="%s">%s</button></div>',
+			'<button type="button" class="single_add_to_cart_button button alt wp-element-button shqf-woo-request-btn" data-product-id="%s" data-product-name="%s" data-product-sku="%s">%s</button>',
 			esc_attr( (string) $product->get_id() ),
 			esc_attr( $product->get_name() ),
 			esc_attr( $product->get_sku() ),
@@ -88,25 +80,26 @@ class ProductButton {
 	}
 
 	/**
-	 * Append a "Free sample available" badge after the Add to Cart link in shop loops.
+	 * Render a "Free sample available" badge inside the product card.
 	 *
-	 * @param string               $link    The existing Add to Cart link HTML.
-	 * @param \WC_Product          $product The product.
-	 * @param array<string, mixed> $args    Optional button args (may not be passed by all callers).
-	 * @return string Modified HTML with sample badge appended.
+	 * Hooked to woocommerce_after_shop_loop_item at priority 15
+	 * (after the Add to Cart button at priority 10).
+	 *
+	 * @return void
 	 */
-	public function filter_loop_link( string $link, $product, $args = [] ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args required by woocommerce_loop_add_to_cart_link filter signature.
+	public function render_loop_badge(): void {
+		global $product;
+
 		if ( ! $product instanceof \WC_Product ) {
-			return $link;
+			return;
 		}
 
-		// Allow hiding the shop loop badge entirely.
 		if ( ! get_option( 'shqf_woo_show_loop_badge', '1' ) ) {
-			return $link;
+			return;
 		}
 
 		if ( ! $this->is_sample_eligible( $product ) ) {
-			return $link;
+			return;
 		}
 
 		$badge_text = (string) get_option( 'shqf_woo_badge_text', __( 'Free sample available', 'samplehq-request-form' ) );
@@ -114,7 +107,7 @@ class ProductButton {
 			$badge_text = __( 'Free sample available', 'samplehq-request-form' );
 		}
 
-		$badge = sprintf(
+		printf(
 			'<a href="%s#request-sample" class="shqf-woo-sample-badge" data-product-id="%s" aria-label="%s">%s</a>',
 			esc_url( get_permalink( $product->get_id() ) ),
 			esc_attr( (string) $product->get_id() ),
@@ -122,8 +115,6 @@ class ProductButton {
 			esc_attr( sprintf( __( 'Request free sample of %s', 'samplehq-request-form' ), $product->get_name() ) ),
 			esc_html( $badge_text )
 		);
-
-		return $link . $badge;
 	}
 
 	/**

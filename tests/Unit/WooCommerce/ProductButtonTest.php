@@ -58,7 +58,8 @@ class ProductButtonTest extends TestCase {
 		$this->assertStringContainsString( 'data-product-name="Kraft Mailer Box"', $html );
 		$this->assertStringContainsString( 'data-product-sku="KMB-001"', $html );
 		$this->assertStringContainsString( 'shqf-woo-request-btn', $html );
-		$this->assertStringContainsString( 'shqf-woo-request-wrap', $html );
+		$this->assertStringContainsString( 'single_add_to_cart_button', $html );
+		$this->assertStringContainsString( 'wp-element-button', $html );
 		$this->assertStringContainsString( 'Request a Sample', $html );
 
 		unset( $GLOBALS['product'] );
@@ -163,27 +164,21 @@ class ProductButtonTest extends TestCase {
 	public function test_register_hooks(): void {
 		$hooks = [];
 		Functions\expect( 'add_action' )
-			->once()
+			->twice()
 			->andReturnUsing( static function ( $hook ) use ( &$hooks ) {
-				$hooks[] = [ 'action', $hook ];
-			} );
-		Functions\expect( 'add_filter' )
-			->once()
-			->andReturnUsing( static function ( $hook, $cb, $pri, $args ) use ( &$hooks ) {
-				$hooks[] = [ 'filter', $hook, $args ];
+				$hooks[] = $hook;
 			} );
 
 		( new ProductButton() )->register();
 
-		$this->assertSame( 'woocommerce_after_add_to_cart_form', $hooks[0][1] );
-		$this->assertSame( 'woocommerce_loop_add_to_cart_link', $hooks[1][1] );
-		$this->assertSame( 3, $hooks[1][2] ); // 3 accepted args.
+		$this->assertSame( 'woocommerce_after_add_to_cart_button', $hooks[0] );
+		$this->assertSame( 'woocommerce_after_shop_loop_item', $hooks[1] );
 	}
 
-	// --- filter_loop_link ---
+	// --- render_loop_badge ---
 
-	public function test_filter_loop_link_appends_badge(): void {
-		$product = new \WC_Product( [
+	public function test_render_loop_badge_outputs_badge(): void {
+		$GLOBALS['product'] = new \WC_Product( [
 			'id' => 33, 'name' => 'Kraft', 'sku' => 'K-1',
 			'stock_status' => 'instock', 'status' => 'publish', 'type' => 'simple',
 		] );
@@ -194,17 +189,19 @@ class ProductButtonTest extends TestCase {
 			default                     => $d,
 		} );
 
-		$result = ( new ProductButton() )->filter_loop_link( '<a>Add to cart</a>', $product );
+		ob_start();
+		( new ProductButton() )->render_loop_badge();
+		$html = ob_get_clean();
 
-		$this->assertStringContainsString( 'Add to cart</a>', $result );
-		$this->assertStringContainsString( 'shqf-woo-sample-badge', $result );
-		$this->assertStringContainsString( '#request-sample', $result );
-		$this->assertStringContainsString( 'Free sample available', $result );
-		$this->assertStringContainsString( 'aria-label', $result );
+		$this->assertStringContainsString( 'shqf-woo-sample-badge', $html );
+		$this->assertStringContainsString( '#request-sample', $html );
+		$this->assertStringContainsString( 'Free sample available', $html );
+		$this->assertStringContainsString( 'aria-label', $html );
+		unset( $GLOBALS['product'] );
 	}
 
-	public function test_filter_loop_link_uses_custom_badge_text(): void {
-		$product = new \WC_Product( [
+	public function test_render_loop_badge_uses_custom_text(): void {
+		$GLOBALS['product'] = new \WC_Product( [
 			'id' => 33, 'name' => 'Kraft', 'sku' => 'K-1',
 			'stock_status' => 'instock', 'status' => 'publish', 'type' => 'simple',
 		] );
@@ -215,14 +212,17 @@ class ProductButtonTest extends TestCase {
 			default                     => $d,
 		} );
 
-		$result = ( new ProductButton() )->filter_loop_link( '<a>Add to cart</a>', $product );
+		ob_start();
+		( new ProductButton() )->render_loop_badge();
+		$html = ob_get_clean();
 
-		$this->assertStringContainsString( 'Get a free sample', $result );
-		$this->assertStringNotContainsString( 'Free sample available', $result );
+		$this->assertStringContainsString( 'Get a free sample', $html );
+		$this->assertStringNotContainsString( 'Free sample available', $html );
+		unset( $GLOBALS['product'] );
 	}
 
-	public function test_filter_loop_link_hidden_when_badge_disabled(): void {
-		$product = new \WC_Product( [
+	public function test_render_loop_badge_hidden_when_disabled(): void {
+		$GLOBALS['product'] = new \WC_Product( [
 			'id' => 33, 'name' => 'Kraft', 'sku' => 'K-1',
 			'stock_status' => 'instock', 'status' => 'publish', 'type' => 'simple',
 		] );
@@ -232,13 +232,14 @@ class ProductButtonTest extends TestCase {
 			default                     => $d,
 		} );
 
-		$result = ( new ProductButton() )->filter_loop_link( '<a>Add to cart</a>', $product );
-
-		$this->assertSame( '<a>Add to cart</a>', $result );
+		ob_start();
+		( new ProductButton() )->render_loop_badge();
+		$this->assertEmpty( ob_get_clean() );
+		unset( $GLOBALS['product'] );
 	}
 
-	public function test_filter_loop_link_empty_badge_text_uses_default(): void {
-		$product = new \WC_Product( [
+	public function test_render_loop_badge_empty_text_uses_default(): void {
+		$GLOBALS['product'] = new \WC_Product( [
 			'id' => 33, 'name' => 'Kraft', 'sku' => 'K-1',
 			'stock_status' => 'instock', 'status' => 'publish', 'type' => 'simple',
 		] );
@@ -249,20 +250,26 @@ class ProductButtonTest extends TestCase {
 			default                     => $d,
 		} );
 
-		$result = ( new ProductButton() )->filter_loop_link( '<a>Add to cart</a>', $product );
+		ob_start();
+		( new ProductButton() )->render_loop_badge();
+		$html = ob_get_clean();
 
-		$this->assertStringContainsString( 'Free sample available', $result );
+		$this->assertStringContainsString( 'Free sample available', $html );
+		unset( $GLOBALS['product'] );
 	}
 
-	public function test_filter_loop_link_skips_external(): void {
-		$product = new \WC_Product( [
+	public function test_render_loop_badge_skips_external(): void {
+		$GLOBALS['product'] = new \WC_Product( [
 			'id' => 40, 'stock_status' => 'instock', 'status' => 'publish', 'type' => 'external',
 		] );
 		Functions\when( 'get_option' )->alias( static fn( $k, $d = false ) => match ( $k ) {
 			'shqf_woo_show_loop_badge' => '1',
 			default                    => $d,
 		} );
-		$result = ( new ProductButton() )->filter_loop_link( '<a>Buy</a>', $product );
-		$this->assertSame( '<a>Buy</a>', $result );
+
+		ob_start();
+		( new ProductButton() )->render_loop_badge();
+		$this->assertEmpty( ob_get_clean() );
+		unset( $GLOBALS['product'] );
 	}
 }

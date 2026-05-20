@@ -69,24 +69,27 @@ class ProductPageAssets {
 	}
 
 	/**
-	 * Enqueue modal assets on WooCommerce single product pages.
+	 * Enqueue modal assets on WooCommerce pages.
+	 *
+	 * Single product pages get the full stack (form + modal JS/CSS).
+	 * Shop/archive pages get only the CSS for the sample badge.
 	 *
 	 * @return void
 	 */
 	public function maybe_enqueue(): void {
-		if ( ! $this->is_eligible_product_page() ) {
+		if ( $this->is_eligible_product_page() ) {
+			Assets::enqueue_google_fonts();
+			Assets::enqueue_public_script( 'form-frontend' );
+			Assets::enqueue_public_style( 'form-frontend' );
+			Assets::maybe_enqueue_turnstile();
+			Assets::enqueue_public_script( 'woo-product-page' );
+			Assets::enqueue_public_style( 'woo-product-page' );
 			return;
 		}
 
-		// Enqueue the form assets (same as shortcode/block).
-		Assets::enqueue_google_fonts();
-		Assets::enqueue_public_script( 'form-frontend' );
-		Assets::enqueue_public_style( 'form-frontend' );
-		Assets::maybe_enqueue_turnstile();
-
-		// Enqueue the modal-specific JS and CSS.
-		Assets::enqueue_public_script( 'woo-product-page' );
-		Assets::enqueue_public_style( 'woo-product-page' );
+		if ( $this->is_wc_shop_or_archive() ) {
+			Assets::enqueue_public_style( 'woo-product-page' );
+		}
 	}
 
 	/**
@@ -102,12 +105,7 @@ class ProductPageAssets {
 			return;
 		}
 
-		$form_id = $this->get_configured_form_id();
-		if ( 0 === $form_id ) {
-			return;
-		}
-
-		$form = $this->forms->get( $form_id );
+		$form = $this->resolve_woo_form();
 		if ( null === $form ) {
 			return;
 		}
@@ -116,6 +114,7 @@ class ProductPageAssets {
 			return;
 		}
 
+		$form_id     = (int) $form['id'];
 		$config      = $form['config'] ?? [];
 		$token_value = $this->token->generate( $form_id );
 		$action_url  = rest_url( 'samplehq-form/v1/submissions' );
@@ -140,8 +139,8 @@ class ProductPageAssets {
 			]
 		);
 
-		$close_label = esc_attr__( 'Close', 'samplehq-request-form' );
-		$title       = esc_html( $form['title'] ?? __( 'Request a Sample', 'samplehq-request-form' ) );
+		$close_label = __( 'Close', 'samplehq-request-form' );
+		$title       = $form['title'] ?? __( 'Request a Sample', 'samplehq-request-form' );
 
 		echo '<div id="shqf-woo-modal" class="shqf-woo-modal" role="dialog" aria-modal="true"';
 		echo ' aria-labelledby="shqf-woo-modal-title" style="display:none;">';
@@ -165,38 +164,48 @@ class ProductPageAssets {
 	 * @return bool
 	 */
 	private function is_eligible_product_page(): bool {
-		if ( ! function_exists( 'is_product' ) || ! is_product() ) {
-			return false;
-		}
-
-		return true;
+		return function_exists( 'is_product' ) && is_product();
 	}
 
 	/**
-	 * Get the configured form ID for WooCommerce requests.
+	 * Check if the current page is a WC shop or product archive.
 	 *
-	 * Falls back to the first published form if no specific form is configured.
-	 *
-	 * @return int Form ID or 0 if no form available.
+	 * @return bool
 	 */
-	private function get_configured_form_id(): int {
+	private function is_wc_shop_or_archive(): bool {
+		if ( ! function_exists( 'is_shop' ) ) {
+			return false;
+		}
+
+		return is_shop() || is_product_category() || is_product_tag();
+	}
+
+	/**
+	 * Resolve the form to use for the WooCommerce modal.
+	 *
+	 * Returns the configured form if it still exists, otherwise falls back
+	 * to the first published form. This prevents a deleted/trashed form
+	 * from silently breaking the modal.
+	 *
+	 * @return array<string, mixed>|null Form row or null if no form available.
+	 */
+	private function resolve_woo_form(): ?array {
 		$form_id = (int) get_option( 'shqf_woo_form_id', 0 );
 
 		if ( $form_id > 0 ) {
-			return $form_id;
+			$form = $this->forms->get( $form_id );
+			if ( null !== $form && 'trash' !== ( $form['status'] ?? '' ) ) {
+				return $form;
+			}
 		}
 
-		// Fallback: use the first published form (limit 1 to avoid loading all forms).
 		$forms = $this->forms->list_all(
 			[
 				'status' => 'published',
 				'limit'  => 1,
 			]
 		);
-		if ( ! empty( $forms ) ) {
-			return (int) $forms[0]['id'];
-		}
 
-		return 0;
+		return ! empty( $forms ) ? $forms[0] : null;
 	}
 }

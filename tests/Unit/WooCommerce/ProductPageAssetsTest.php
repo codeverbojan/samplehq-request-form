@@ -88,16 +88,17 @@ class ProductPageAssetsTest extends TestCase {
 	}
 
 	/**
-	 * maybe_enqueue does nothing when not on a product page.
+	 * maybe_enqueue does nothing when not on a WooCommerce page.
 	 */
-	public function test_enqueue_skipped_when_not_product_page(): void {
+	public function test_enqueue_skipped_when_not_wc_page(): void {
 		Functions\when( 'is_product' )->justReturn( false );
+		Functions\when( 'is_shop' )->justReturn( false );
+		Functions\when( 'is_product_category' )->justReturn( false );
+		Functions\when( 'is_product_tag' )->justReturn( false );
 
 		$assets = new ProductPageAssets( $this->forms, $this->renderer, $this->token );
 		$assets->maybe_enqueue();
 
-		// No assertions needed beyond verifying no errors -- if enqueue methods
-		// were called, they'd error because WP functions aren't loaded.
 		$this->assertTrue( true );
 	}
 
@@ -200,15 +201,13 @@ class ProductPageAssetsTest extends TestCase {
 
 		$this->forms->shouldReceive( 'list_all' )
 			->with( [ 'status' => 'published', 'limit' => 1 ] )
-			->andReturn( [ [ 'id' => 3 ] ] );
-
-		$this->forms->shouldReceive( 'get' )
-			->with( 3 )
 			->andReturn( [
-				'id'     => 3,
-				'title'  => 'Default Form',
-				'status' => 'published',
-				'config' => [],
+				[
+					'id'     => 3,
+					'title'  => 'Default Form',
+					'status' => 'published',
+					'config' => [],
+				],
 			] );
 
 		$this->token->shouldReceive( 'generate' )->andReturn( 'tok' );
@@ -227,6 +226,82 @@ class ProductPageAssetsTest extends TestCase {
 		$html = ob_get_clean();
 
 		$this->assertStringContainsString( 'Default Form', $html );
+	}
+
+	/**
+	 * Falls back to first published form when configured form was deleted.
+	 */
+	public function test_render_modal_fallback_when_configured_form_deleted(): void {
+		Functions\when( 'is_product' )->justReturn( true );
+
+		Functions\when( 'get_option' )->alias( static function ( $key, $default = false ) {
+			return match ( $key ) {
+				'shqf_woo_form_id' => 99,
+				default            => $default,
+			};
+		} );
+
+		$this->forms->shouldReceive( 'get' )
+			->with( 99 )
+			->andReturn( null );
+
+		$this->forms->shouldReceive( 'list_all' )
+			->with( [ 'status' => 'published', 'limit' => 1 ] )
+			->andReturn( [
+				[
+					'id'     => 2,
+					'title'  => 'Fallback Form',
+					'status' => 'published',
+					'config' => [],
+				],
+			] );
+
+		$this->token->shouldReceive( 'generate' )->andReturn( 'tok' );
+		Functions\expect( 'rest_url' )->andReturn( 'https://example.com/api' );
+		Functions\expect( 'wp_localize_script' )->once();
+		Functions\expect( 'current_user_can' )->andReturn( false );
+
+		$this->renderer->shouldReceive( 'render' )
+			->once()
+			->andReturn( '<form>...</form>' );
+
+		$assets = new ProductPageAssets( $this->forms, $this->renderer, $this->token );
+
+		ob_start();
+		$assets->maybe_render_modal();
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( 'Fallback Form', $html );
+	}
+
+	/**
+	 * Trashed configured form triggers fallback for non-admins.
+	 */
+	public function test_render_modal_skipped_for_trashed_configured_form(): void {
+		Functions\when( 'is_product' )->justReturn( true );
+
+		Functions\when( 'get_option' )->alias( static function ( $key, $default = false ) {
+			return match ( $key ) {
+				'shqf_woo_form_id' => 8,
+				default            => $default,
+			};
+		} );
+
+		$this->forms->shouldReceive( 'get' )
+			->with( 8 )
+			->andReturn( [ 'id' => 8, 'title' => 'Trashed', 'status' => 'trash', 'config' => [] ] );
+
+		$this->forms->shouldReceive( 'list_all' )
+			->with( [ 'status' => 'published', 'limit' => 1 ] )
+			->andReturn( [] );
+
+		$assets = new ProductPageAssets( $this->forms, $this->renderer, $this->token );
+
+		ob_start();
+		$assets->maybe_render_modal();
+		$html = ob_get_clean();
+
+		$this->assertEmpty( $html );
 	}
 
 	/**

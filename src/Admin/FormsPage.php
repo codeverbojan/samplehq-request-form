@@ -154,10 +154,15 @@ class FormsPage {
 			'restore' => 'draft',
 		];
 
+		$woo_form_id = (int) get_option( 'shqf_woo_form_id', 0 );
+
 		if ( isset( $status_map[ $bulk_action ] ) ) {
 			$new_status = $status_map[ $bulk_action ];
 			foreach ( $form_ids as $fid ) {
 				$forms_table->update( $fid, [ 'status' => $new_status ] );
+				if ( 'trash' === $new_status && $woo_form_id === $fid ) {
+					delete_option( 'shqf_woo_form_id' );
+				}
 				++$count;
 			}
 		} elseif ( 'delete_permanent' === $bulk_action ) {
@@ -167,6 +172,7 @@ class FormsPage {
 
 			foreach ( $form_ids as $fid ) {
 				// Delete in batches to handle forms with many submissions.
+				$max_batches = 200;
 				do {
 					$subs = $submissions_table->list_all(
 						[
@@ -178,10 +184,14 @@ class FormsPage {
 						$submission_meta->delete_all( (int) $sub['id'] );
 						$submissions_table->delete( (int) $sub['id'] );
 					}
-				} while ( ! empty( $subs ) );
+					--$max_batches;
+				} while ( ! empty( $subs ) && $max_batches > 0 );
 
 				$rate_limits->clear_for_form( $fid );
 				$forms_table->delete( $fid );
+				if ( $woo_form_id === $fid ) {
+					delete_option( 'shqf_woo_form_id' );
+				}
 				++$count;
 			}
 		}

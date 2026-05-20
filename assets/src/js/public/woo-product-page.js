@@ -15,57 +15,85 @@ import '../../css/public/woo-modal.css';
 
 	const MODAL_ID = 'shqf-woo-modal';
 	let modal = null;
-	// eslint-disable-next-line no-unused-vars -- Retained for future focus-management use.
-	let triggerButton = null;
+	let modalHandlersBound = false;
 	let previouslyFocused = null;
 
 	/**
-	 * Initialize: attach click handlers to all request buttons.
+	 * Initialize button click delegation and modal handlers.
 	 */
 	function init() {
 		modal = document.getElementById( MODAL_ID );
-		if ( ! modal ) {
-			return;
-		}
 
-		// Button click handler (delegated to body for dynamic content).
-		document.body.addEventListener( 'click', ( e ) => {
-			const btn = e.target.closest( '.shqf-woo-request-btn' );
-			if ( btn ) {
+		// Capture-phase delegation: fires before WooCommerce/jQuery bubbling
+		// handlers and works for buttons added after page load (block hydration).
+		document.addEventListener(
+			'click',
+			( e ) => {
+				const btn = e.target.closest( '.shqf-woo-request-btn' );
+				if ( ! btn ) {
+					return;
+				}
 				e.preventDefault();
+				e.stopPropagation();
+				if ( ! modal ) {
+					modal = document.getElementById( MODAL_ID );
+				}
+				if ( modal ) {
+					bindModalHandlers();
+				}
 				openModal( btn );
-			}
-		} );
+			},
+			true
+		);
 
-		// Backdrop click closes modal.
-		const backdrop = modal.querySelector( '.shqf-woo-modal__backdrop' );
-		if ( backdrop ) {
-			backdrop.addEventListener( 'click', closeModal );
-		}
-
-		// Close button.
-		const closeBtn = modal.querySelector( '.shqf-woo-modal__close' );
-		if ( closeBtn ) {
-			closeBtn.addEventListener( 'click', closeModal );
-		}
-
-		// Escape key closes modal.
+		// Escape key closes modal (always safe to register).
 		document.addEventListener( 'keydown', ( e ) => {
 			if ( e.key === 'Escape' && isOpen() ) {
 				closeModal();
 			}
 		} );
 
-		// Focus trap.
-		modal.addEventListener( 'keydown', trapFocus );
+		if ( modal ) {
+			bindModalHandlers();
+		}
 
 		// Auto-open modal if URL has #request-sample (from shop loop link).
 		if ( window.location.hash === '#request-sample' ) {
-			const btn = document.querySelector( '.shqf-woo-request-btn' );
-			if ( btn ) {
-				openModal( btn );
+			if ( ! modal ) {
+				modal = document.getElementById( MODAL_ID );
+			}
+			if ( modal ) {
+				bindModalHandlers();
+				const btn = document.querySelector( '.shqf-woo-request-btn' );
+				if ( btn ) {
+					openModal( btn );
+				}
 			}
 		}
+	}
+
+	/**
+	 * Bind modal-specific handlers (backdrop, close button, focus trap).
+	 *
+	 * Safe to call multiple times — runs only once.
+	 */
+	function bindModalHandlers() {
+		if ( modalHandlersBound || ! modal ) {
+			return;
+		}
+		modalHandlersBound = true;
+
+		const backdrop = modal.querySelector( '.shqf-woo-modal__backdrop' );
+		if ( backdrop ) {
+			backdrop.addEventListener( 'click', closeModal );
+		}
+
+		const closeBtn = modal.querySelector( '.shqf-woo-modal__close' );
+		if ( closeBtn ) {
+			closeBtn.addEventListener( 'click', closeModal );
+		}
+
+		modal.addEventListener( 'keydown', trapFocus );
 	}
 
 	/**
@@ -78,7 +106,6 @@ import '../../css/public/woo-modal.css';
 			return;
 		}
 
-		triggerButton = btn;
 		// eslint-disable-next-line @wordpress/no-global-active-element -- No component ref available in vanilla JS context.
 		previouslyFocused = document.activeElement;
 
@@ -123,7 +150,6 @@ import '../../css/public/woo-modal.css';
 			previouslyFocused.focus();
 		}
 
-		triggerButton = null;
 		previouslyFocused = null;
 	}
 

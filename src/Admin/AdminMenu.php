@@ -431,6 +431,10 @@ class AdminMenu {
 			$forms_table = new \SampleHQForm\Database\FormsTable( $wpdb );
 			$forms_table->update( $id, [ 'status' => 'trash' ] );
 
+			if ( (int) get_option( 'shqf_woo_form_id', 0 ) === $id ) {
+				delete_option( 'shqf_woo_form_id' );
+			}
+
 			AdminNotice::success( __( 'Form moved to trash.', 'samplehq-request-form' ) );
 			wp_safe_redirect( admin_url( 'admin.php?page=shqf-forms' ) );
 			exit;
@@ -460,6 +464,7 @@ class AdminMenu {
 			$rate_limits       = new \SampleHQForm\Database\RateLimitsTable( $wpdb );
 
 			// Cascade: delete submissions + meta + rate limits for this form.
+			$max_batches = 200;
 			do {
 				$form_submissions = $submissions_table->list_all(
 					[
@@ -471,9 +476,14 @@ class AdminMenu {
 					$submission_meta->delete_all( (int) $sub['id'] );
 					$submissions_table->delete( (int) $sub['id'] );
 				}
-			} while ( ! empty( $form_submissions ) );
+				--$max_batches;
+			} while ( ! empty( $form_submissions ) && $max_batches > 0 );
 			$rate_limits->clear_for_form( $id );
 			$forms_table->delete( $id );
+
+			if ( (int) get_option( 'shqf_woo_form_id', 0 ) === $id ) {
+				delete_option( 'shqf_woo_form_id' );
+			}
 
 			AdminNotice::success( __( 'Form permanently deleted.', 'samplehq-request-form' ) );
 			wp_safe_redirect( admin_url( 'admin.php?page=shqf-forms' ) );

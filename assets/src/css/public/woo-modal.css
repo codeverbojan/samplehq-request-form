@@ -147,52 +147,44 @@ html.shqf-modal-open {
 /* ==========================================================================
    "Request a Sample" button -- Single Product Page.
 
-   Rendered OUTSIDE form.cart via woocommerce_after_add_to_cart_form.
-   No CSS grid hacks needed -- the button is in the normal document flow.
-   Styled as an outline/ghost button for secondary visual hierarchy:
-   Add to Cart = primary (theme-styled, filled), Sample = secondary (outline).
+   Rendered INSIDE form.cart via woocommerce_after_add_to_cart_button.
+   Uses WooCommerce native classes (single_add_to_cart_button, button, alt,
+   wp-element-button) so it inherits full theme styling — same as the
+   Add to Cart button. No visual overrides; the button looks native.
+
+   Block themes: WooCommerce's add-to-cart-form block uses a CSS grid
+   (grid-template-columns: min-content auto auto) with all
+   .single_add_to_cart_button in column 2. The two "auto" columns
+   split remaining space equally, creating a huge gap. We swap them
+   to max-content so columns only take what their buttons need, and
+   place our button in column 3 on row 1.
    ========================================================================== */
 
-.shqf-woo-request-wrap {
-	margin: 12px 0;
+/* stylelint-disable selector-class-pattern -- WooCommerce block classes */
+.wp-block-woocommerce-add-to-cart-form form.cart:has(> .shqf-woo-request-btn) {
+	grid-template-columns: min-content max-content max-content;
 }
 
-.shqf-woo-request-btn {
-	display: inline-block;
-	padding: 0.6em 1.5em;
-	font-size: inherit;
-	font-weight: 500;
-	line-height: 1.5;
-	color: #333;
-	background: transparent;
-	border: 1.5px solid #888;
-	border-radius: 4px;
-	cursor: pointer;
-	transition: background-color 0.15s, border-color 0.15s;
+.wp-block-woocommerce-add-to-cart-form form.cart > .single_add_to_cart_button.shqf-woo-request-btn {
+	grid-column: 3 / 4;
+	grid-row: 1;
+	justify-self: start;
+	margin-left: 4px;
 }
 
-.shqf-woo-request-btn:hover {
-	background: rgba(0, 0, 0, 0.04);
-	border-color: #555;
-}
-
-.shqf-woo-request-btn:focus-visible {
-	outline: 2px solid #2271b1;
-	outline-offset: 2px;
-}
+/* stylelint-enable selector-class-pattern */
 
 /* ==========================================================================
    "Free sample available" -- Shop/Archive Loop Badge.
 
-   Appended to the Add to Cart link via woocommerce_loop_add_to_cart_link
-   filter. Small text link, centered, unobtrusive.
+   Rendered via woocommerce_after_shop_loop_item inside the product card.
    ========================================================================== */
 
 .shqf-woo-sample-badge {
 	display: block;
 	margin-top: 0.5em;
 	padding: 0;
-	font-size: 0.8em;
+	font-size: 0.85em;
 	color: #0f766e;
 	text-decoration: none;
 	text-align: center;
@@ -205,8 +197,7 @@ html.shqf-modal-open {
 
 @media (prefers-reduced-motion: reduce) {
 
-	.shqf-woo-modal__close,
-	.shqf-woo-request-btn {
+	.shqf-woo-modal__close {
 		transition-duration: 0.01ms;
 	}
 }

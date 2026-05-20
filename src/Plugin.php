@@ -241,7 +241,7 @@ class Plugin {
 		$admin_categories_api = new Api\AdminCategoriesEndpoints( $categories );
 		$admin_categories_api->register();
 
-		$admin_forms_api = new Api\AdminFormsEndpoints( $forms_table );
+		$admin_forms_api = new Api\AdminFormsEndpoints( $forms_table, $submissions, $submission_meta, $rate_limits );
 		$admin_forms_api->register();
 
 		$admin_submissions_api = new Api\AdminSubmissionsEndpoints( $submissions, $submission_meta );
